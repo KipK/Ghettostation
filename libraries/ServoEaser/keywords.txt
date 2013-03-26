@@ -1,0 +1,36 @@
+#######################################
+# Syntax Coloring Map For ServoEaser
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ServoMove KEYWORD1
+ServoEaser KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin KEYWORD2
+reset KEYWORD2
+setMinMaxMicroseconds KEYWORD2
+play KEYWORD2
+getNextPos KEYWORD2
+easeTo KEYWORD2
+update KEYWORD2
+start KEYWORD2
+stop KEYWORD2
+setEasingFunc KEYWORD2
+setArrivedFunc KEYWORD2
+hasArrived KEYWORD2
+isRunning KEYWORD2
+useMicroseconds KEYWORD2
+usingMicroseconds KEYWORD2
+
+#
+#######################################
+# Constants (LITERAL1)
+#######################################
+

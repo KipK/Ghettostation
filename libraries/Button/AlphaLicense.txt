@@ -1,0 +1,72 @@
+/*
+||
+|| @file AlphaLicense.txt
+|| @version 1.0
+|| @author Alexander Brevig
+|| @contact alexanderbrevig@gmail.com
+||
+|| @description
+|| | Describe the rights and expectations when using my code
+|| #
+||
+|| @license
+|| | Copyright (c) 2009 Alexander Brevig. All rights reserved.
+|| | http://www.gnu.org/licenses/lgpl.html
+|| #
+
+updated for Arduino 1.0 by Tom Igoe, 27 April 2011
+
+||
+*/
+
+
+All content is released into the public domain, under the terms of the GNU LGPL (latest version).
+All code is intellectual property, unless stated otherwise.
+All usage of my code is permitted, as long as the headers stay intact ( from /* to */ ) or comply to these rules:
+*) You are not permitted to change any of these fields, and they should stay as is:
+    @file
+    @version
+    @author
+    @contact
+    @licence
+*) You are permitted to modify the @description field, remember to update the changelog
+*) You are permitted to add these fields
+    @contribution
+        This field has to be inserted immediatly after the @contact with a 'blank' line above and below (blank as in '||')
+        The changelog should indicate what is contributed
+    @dependencies
+        This field has to be inserted immediatly after the @description with a 'blank' line above and below (blank as in '||')
+    @configuration
+        This field has to be inserted immediatly after the @description or, if existant, the @dependencies with a 'blank' line above and below (blank as in '||')
+*) You are permitted and expected to add to the changelog, if changes or contributions are made.
+
+Example Header (the header to this file modified according to rules)
+/*
+||
+|| @file AlphaLicense.txt
+|| @version 1.0
+|| @author Alexander Brevig
+|| @contact alexanderbrevig@gmail.com
+||
+|| @contribution
+|| | Name Surname - www.domain.com - contact@domain.com
+|| #
+||
+|| @description
+|| | Descripbe the rights and expectations when using my code
+|| #
+||
+|| @dependencies
+|| | This file depends on the user having accsess to the internet, in order to read the LGPL
+|| #
+||
+|| @configuration
+|| | No configuration needed
+|| #
+||
+|| @license
+|| | Copyright (c) 2009 Alexander Brevig. All rights reserved.
+|| | http://www.gnu.org/licenses/lgpl.html
+|| #
+||
+*/
