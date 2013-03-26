@@ -44,7 +44,7 @@ ServoEaser tilt_servoEaser;
 Metro telemetryMetro = Metro(100);
 //setting lcd refresh rate at 10hz.
 Metro lcdMetro = Metro(100);
-//setting tracking loop at 5hz ( same as gps rate on uav )
+//setting tracking loop at 5hz ( same as gps rate on uav, servo loops are running at 50hz)
 Metro trackingMetro = Metro(200);
 //setting button check metro for long press
 Metro buttonMetro = Metro(1500,1);
@@ -55,6 +55,9 @@ Metro activityMetro = Metro(200);
 Button right_button = Button(RIGHT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 Button left_button = Button(LEFT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 Button enter_button = Button(ENTER_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
+
+//##### MENU
+//Menu const* displaymenu_current = displaymenu.get_current_menu();
 
 //#################################### SETUP LOOP ####################################################
 void setup() {
@@ -124,16 +127,18 @@ void setup() {
        
        // setup button callback events
        enter_button.clickHandler(enterButtonClickEvents);
-       enter_button.holdHandler(enterButtonHoldEvents,1000);
+       enter_button.holdHandler(enterButtonHoldEvents,2000);
        left_button.clickHandler(leftButtonClickEvents);
-       left_button.holdHandler(leftButtonHoldEvents,1000);
+       left_button.holdHandler(leftButtonHoldEvents,2000);
        right_button.clickHandler(rightButtonClickEvents);
-       right_button.holdHandler(rightButtonHoldEvents,1000);
-		
+       right_button.holdHandler(rightButtonHoldEvents,2000);
+       
+
 }
 
 //######################################## MAIN LOOP #####################################################################
 void loop() {
+  
         //update buttons internal states
         enter_button.isPressed();
         left_button.isPressed();
@@ -143,11 +148,10 @@ void loop() {
 	pan_servoEaser.update();
 	tilt_servoEaser.update();
         
-
-	//lcd refresh loop running
+	//lcd refresh loop ( default 10hz )
 	refresh_lcd();
 
-	//get telemetry data
+	//get telemetry data ( default at at 10hz)
 	//get_telemetry();
 	
 	//checking activity

@@ -60,25 +60,7 @@ void display_menu() {
 		
 }
 
-//navigate menu
-void navigate_menu() {;
-//        //differenciate long press from unique press
-//	if (islong_press(enter_button) == 1) {
-//		displaymenu.select();
-//	}
-//        else if (islong_press(enter_button) == 2) {
-//          //long press means exit
-//                displaymenu.back();
-//        }
-//	if (left_button.uniquePress()) {
-//		displaymenu.prev();
-//	
-//	}
-//	if (right_button.uniquePress()) {
-//		displaymenu.next();
-//	}
 
-}
 //menu item callback functions
 
 void screen_tracking(MenuItem* p_menu_item) {
@@ -131,4 +113,38 @@ void configure_baudrate(MenuItem* p_menu_item) {
 	current_activity = "SET_RATE";
 }
 
+// SERVO CONFIGURATION
+
+int config_servo(int servotype, int valuetype, int &param ) {
+	// servo configuration screen function return configured value
+        String currentline;
+        char string_buffer[21];
+        
+	if (servotype=1) {
+	  store_lcdline(1,"    [PAN SERVO]     ");
+	}
+	else if (servotype==2) {
+	  store_lcdline(1,"    [TILT SERVO]    ");
+	}
+	store_lcdline(2,"                    ");
+	if (valuetype=1) {	//minpwm
+          currentline = "min endpoint: " + param;
+          currentline += "   ";
+	}
+	else if (valuetype=2) { //minangle
+          currentline = "min angle: " + param;
+          currentline += "        ";
+	}
+	else if (valuetype=3) {	//maxpwm
+	  currentline = "max endpoint: " + param;
+          currentline += "  ";
+	}
+	else if (valuetype=4) { //maxangle
+	  currentline = "max angle: " + param;
+          currentline += "        ";
+	}
+        currentline.toCharArray(string_buffer,21);
+	store_lcdline(3,string_buffer);
+	store_lcdline(4," Long press to quit ");
+}
 

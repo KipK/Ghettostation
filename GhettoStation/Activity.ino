@@ -3,8 +3,7 @@
 void check_activity() {
     if (activityMetro.check() == 1) 
       {
-        //Serial.print("activity: ");
-        //Serial.println(current_activity);
+ 
         
    	  if (current_activity == "MENU") {
 		display_menu();
