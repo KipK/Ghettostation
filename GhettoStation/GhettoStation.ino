@@ -127,9 +127,9 @@ void setup() {
        
        // setup button callback events
        enter_button.clickHandler(enterButtonClickEvents);
-       enter_button.holdHandler(enterButtonHoldEvents,2000);
+       enter_button.holdHandler(enterButtonHoldEvents,1300);
        left_button.clickHandler(leftButtonClickEvents);
-       left_button.holdHandler(leftButtonHoldEvents,2000);
+       left_button.holdHandler(leftButtonHoldEvents,1300);
        right_button.clickHandler(rightButtonClickEvents);
        right_button.holdHandler(rightButtonHoldEvents,2000);
        
