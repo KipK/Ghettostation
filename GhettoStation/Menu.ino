@@ -62,17 +62,15 @@ void init_menu() {
 
 void display_menu() {
         Menu const* displaymenu_current = displaymenu.get_current_menu();
-		//Serial.print("current menu = ");
-		//Serial.println(displaymenu_current->get_cur_menu_component_num());
+		Serial.print("cur_menu_component_num= ");
+		Serial.println(displaymenu_current->get_cur_menu_component_num());
 	MenuComponent const* displaymenu_sel = displaymenu_current->get_selected();
-          
+
         for (int n = 1; n < 5; ++n) {
           char string_buffer[21];
 	//
             if ( (displaymenu_current->get_num_menu_components()) >= n ) {
                 
-      		  
-      		
       		  MenuComponent const* displaymenu_comp = displaymenu_current->get_menu_component(n-1);
       		  String getname = displaymenu_comp->get_name();
 			  for ( int l = getname.length()-1 ; l<20 ; l++ ) {

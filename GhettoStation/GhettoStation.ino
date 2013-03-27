@@ -87,7 +87,7 @@ void setup() {
 	//start serial com	
 	init_serial();
         delay(100);
-        	Serial.print("version: ");
+        Serial.print("version: ");
         Serial.println(configuration.config_crc);
         Serial.println("tilt_minangle: ");
         Serial.println(configuration.tilt_minangle);
