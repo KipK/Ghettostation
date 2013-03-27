@@ -67,7 +67,7 @@ void leftButtonClickEvents(Button &btn)
     if (current_activity=="MENU") {
         Serial.println("MENU LEFT");
         displaymenu.prev();
-     enu const* displaymenu_current = displaymenu.get_current_menu();  
+     Menu const* displaymenu_current = displaymenu.get_current_menu();  
      Serial.print("cur_menu_comp_num: ");
      Serial.println(displaymenu_current->get_cur_menu_component_num()); 
     }
