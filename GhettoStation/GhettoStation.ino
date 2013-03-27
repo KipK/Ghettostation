@@ -46,8 +46,8 @@ Metro telemetryMetro = Metro(100);
 Metro lcdMetro = Metro(100);
 //setting tracking loop at 5hz ( same as gps rate on uav, servo loops are running at 50hz)
 Metro trackingMetro = Metro(200);
-//setting button check metro for long press
-Metro buttonMetro = Metro(1500,1);
+//setting button status check loop
+Metro buttonMetro = Metro(50);
 //setting activity loop time
 Metro activityMetro = Metro(200);
 
@@ -140,10 +140,11 @@ void setup() {
 void loop() {
   
         //update buttons internal states
+        if (buttonMetro.check() == 1) {
         enter_button.isPressed();
         left_button.isPressed();
         right_button.isPressed();
-        
+        }
 	//update servos at SERVO_REFRESH_INTERVAL defined rate.
 	pan_servoEaser.update();
 	tilt_servoEaser.update();

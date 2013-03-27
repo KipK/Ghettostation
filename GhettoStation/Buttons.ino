@@ -8,14 +8,18 @@ void enterButtonClickEvents(Button &btn)
  {
      Serial.print("cur_activity: ");
      Serial.println(current_activity);
-     
-
-     if ( !btholdstate ) {// normal press
+     Menu const* displaymenu_current = displaymenu.get_current_menu();  
+     Serial.print("cur_menu_comp_num: ");
+     Serial.println(displaymenu_current->get_cur_menu_component_num());  
+     if ( !btholdstate ) { // normal press
        
         if ( current_activity == "MENU" ) { //button action depends activity state
             Serial.println("MENU SELECT");
             displaymenu.select();
-            }
+           }
+        else {
+              //do nothing
+          }
         }
       else  {          //long press
             if ( current_activity == "MENU" ) {          
@@ -25,7 +29,8 @@ void enterButtonClickEvents(Button &btn)
             }
             else if ( current_activity != "MENU" && current_activity != "TRACKING" && current_activity != "SET_HOME" ) {
               //We're in a setting area so ENTER & ENTER long press means save setting & get back to menu.
-               Serial.println("SAVE SETTINGS");
+               Serial.println("SAVE SETTINGS");   
+       
                EEPROM_write(0, configuration); 
                //displaymenu.back();
                current_activity="MENU";
@@ -47,8 +52,8 @@ void enterButtonHoldEvents(Button &btn)   //Hold
   //Serial.println("enter hold");
   //button action depends activity state
    // if (current_activity=="MENU" ) {
-     
-        btholdstate = true;   
+        btholdstate = true;
+
    // } 
     
 }
@@ -56,11 +61,15 @@ void enterButtonHoldEvents(Button &btn)   //Hold
 // left button
 void leftButtonClickEvents(Button &btn)
 {
+
   //Serial.println("left click");
   //button action depends activity state
     if (current_activity=="MENU") {
         Serial.println("MENU LEFT");
         displaymenu.prev();
+     enu const* displaymenu_current = displaymenu.get_current_menu();  
+     Serial.print("cur_menu_comp_num: ");
+     Serial.println(displaymenu_current->get_cur_menu_component_num()); 
     }
 }
 
@@ -75,9 +84,14 @@ void leftButtonHoldEvents(Button &btn)   //Hold
 //right button
 void rightButtonClickEvents(Button &btn)
 {
+
+     
     if (current_activity=="MENU") {
         Serial.println("MENU RIGHT");
         displaymenu.next();
+      Menu const* displaymenu_current = displaymenu.get_current_menu();  
+     Serial.print("cur_menu_comp_num: ");
+     Serial.println(displaymenu_current->get_cur_menu_component_num()); 
     }
   //Serial.println("right click");
   

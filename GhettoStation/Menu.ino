@@ -12,16 +12,54 @@ void init_menu() {
 				m1m3m1m1Menu.add_item(&m1m3m1m1l3Item, &configure_pan_maxpwm); // pan max pwm
 				m1m3m1m1Menu.add_item(&m1m3m1m1l4Item, &configure_pan_maxangle); // pan max angle
 			m1m3m1Menu.add_menu(&m1m3m1m2Menu); //config tilt
-				m1m3m1m2Menu.add_item(&m1m3m1m2l1Item, &configure_pan_minpwm); // tilt min pwm
-				m1m3m1m2Menu.add_item(&m1m3m1m2l2Item, &configure_pan_minangle); // tilt min angle
-				m1m3m1m2Menu.add_item(&m1m3m1m2l3Item, &configure_pan_maxpwm); // tilt max pwm
-				m1m3m1m2Menu.add_item(&m1m3m1m2l4Item, &configure_pan_maxangle); // tilt max angle
+				m1m3m1m2Menu.add_item(&m1m3m1m2l1Item, &configure_tilt_minpwm); // tilt min pwm
+				m1m3m1m2Menu.add_item(&m1m3m1m2l2Item, &configure_tilt_minangle); // tilt min angle
+				m1m3m1m2Menu.add_item(&m1m3m1m2l3Item, &configure_tilt_maxpwm); // tilt max pwm
+				m1m3m1m2Menu.add_item(&m1m3m1m2l4Item, &configure_tilt_maxangle); // tilt max angle
                         m1m3m1Menu.add_item(&m1m3m1i3Item, &configure_test_servo);
 		m1m3Menu.add_item(&m1m3l2Item, &configure_baudrate); //config baudrate
 	displaymenu.set_root_menu(&rootMenu);
 }
 
 //display menu
+//void display_menu() {
+//        Menu const* displaymenu_current = displaymenu.get_current_menu();
+//		//Serial.print("current menu = ");
+//		//Serial.println(displaymenu_current->get_cur_menu_component_num());
+//	MenuComponent const* displaymenu_sel = displaymenu_current->get_selected();
+//          
+//        for (int n = 1; n < 5; ++n) {
+//          char string_buffer[21];
+//	//
+//            if ( (displaymenu_current->get_num_menu_components()) >= n ) {
+//                
+//      		  
+//      		
+//      		  MenuComponent const* displaymenu_comp = displaymenu_current->get_menu_component(n-1);
+//      		  String getname = displaymenu_comp->get_name();
+//			  for ( int l = getname.length()-1 ; l<20 ; l++ ) {
+//				getname = getname + " ";
+//				}			  
+//
+//      		  if (displaymenu_sel == displaymenu_comp) {
+// 
+//      				getname.setCharAt(19,'<');
+//      		  } else {
+//      		  		getname.setCharAt(19, ' ');
+//      		  }
+//      	
+//      		  getname.toCharArray(string_buffer,21);
+//                
+//            }
+//            else {
+//               empty_line.toCharArray(string_buffer,21);
+//            }
+//		store_lcdline(n, string_buffer);
+//		
+//	};
+//		
+//}
+
 void display_menu() {
         Menu const* displaymenu_current = displaymenu.get_current_menu();
 		//Serial.print("current menu = ");
@@ -59,7 +97,6 @@ void display_menu() {
 	};
 		
 }
-
 
 //menu item callback functions
 
