@@ -148,5 +148,27 @@ int config_servo(int servotype, int valuetype, int value ) {
         currentline.toCharArray(string_buffer,21);
 	store_lcdline(3,string_buffer);
 	store_lcdline(4," Long press to quit ");
+           if (right_button.heldFor(800)) {
+              if (current_activity == "PAN_MINPWM") configuration.pan_minpwm++;		 
+              if (current_activity == "PAN_MINANGLE") configuration.pan_minangle++;
+              if (current_activity == "PAN_MAXPWM") configuration.pan_maxpwm++;
+              if (current_activity == "PAN_MAXANGLE") configuration.pan_maxangle++;
+              if (current_activity == "TILT_MINPWM") configuration.tilt_minpwm++;
+              if (current_activity == "TILT_MINANGLE") configuration.tilt_minangle++;        
+              if (current_activity == "TILT_MAXPWM") configuration.tilt_maxpwm++;
+              if (current_activity == "TILT_MAXANGLE") configuration.tilt_maxangle++;
+              //delay(200);
+            }
+            else if (left_button.heldFor(800)) {
+              if (current_activity == "PAN_MINPWM") configuration.pan_minpwm--;		 
+              if (current_activity == "PAN_MINANGLE") configuration.pan_minangle--;
+              if (current_activity == "PAN_MAXPWM") configuration.pan_maxpwm--;
+              if (current_activity == "PAN_MAXANGLE") configuration.pan_maxangle--;
+              if (current_activity == "TILT_MINPWM") configuration.tilt_minpwm--;
+              if (current_activity == "TILT_MINANGLE") configuration.tilt_minangle--;        
+              if (current_activity == "TILT_MAXPWM") configuration.tilt_maxpwm--;
+              if (current_activity == "TILT_MAXANGLE") configuration.tilt_maxangle--;
+              //delay(200);
+            }
 }
 

@@ -62,8 +62,6 @@ void init_menu() {
 
 void display_menu() {
         Menu const* displaymenu_current = displaymenu.get_current_menu();
-		Serial.print("cur_menu_component_num= ");
-		Serial.println(displaymenu_current->get_cur_menu_component_num());
 	MenuComponent const* displaymenu_sel = displaymenu_current->get_selected();
 
         for (int n = 1; n < 5; ++n) {

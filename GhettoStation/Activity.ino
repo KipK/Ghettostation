@@ -18,15 +18,14 @@ void check_activity() {
           if (current_activity == "SET_HOME") {
              //TO DO 
           }
-          if (current_activity == "PAN_MINPWM") {
-             config_servo(1, 1, configuration.pan_minpwm );
-			 
-          }
           
+          if (current_activity == "PAN_MINPWM") {
+             config_servo(1, 1, configuration.pan_minpwm );	 
+          }
           if (current_activity == "PAN_MINANGLE") {
              config_servo(1, 2, configuration.pan_minangle );
+             
           }
-          
           if (current_activity == "PAN_MAXPWM") {
              config_servo(1, 3, configuration.pan_maxpwm );
           }

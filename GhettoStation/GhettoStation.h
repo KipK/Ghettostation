@@ -41,6 +41,7 @@ boolean gps_fix;
 boolean btholdstate = false;
 
 
+
 //Configuration stored in EEprom
 struct config_t
 {

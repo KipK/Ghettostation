@@ -47,9 +47,9 @@ Metro lcdMetro = Metro(100);
 //setting tracking loop at 5hz ( same as gps rate on uav, servo loops are running at 50hz)
 Metro trackingMetro = Metro(200);
 //setting button status check loop
-Metro buttonMetro = Metro(50);
+Metro buttonMetro = Metro(100);
 //setting activity loop time
-Metro activityMetro = Metro(200);
+Metro activityMetro = Metro(100);
 
 //##### BUTTONS 
 Button right_button = Button(RIGHT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
@@ -126,12 +126,12 @@ void setup() {
        //tilt_servoEaser.easeTo( 40, 2000);
        
        // setup button callback events
-       enter_button.clickHandler(enterButtonClickEvents);
-       enter_button.holdHandler(enterButtonHoldEvents,1300);
+       enter_button.releaseHandler(enterButtonReleaseEvents);
+       enter_button.holdHandler(enterButtonHoldEvents,800);
        left_button.clickHandler(leftButtonClickEvents);
-       left_button.holdHandler(leftButtonHoldEvents,1300);
+       left_button.holdHandler(leftButtonHoldEvents,800);
        right_button.clickHandler(rightButtonClickEvents);
-       right_button.holdHandler(rightButtonHoldEvents,2000);
+       right_button.holdHandler(rightButtonHoldEvents,800);
        
 
 }
