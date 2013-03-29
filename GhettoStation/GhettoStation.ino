@@ -76,13 +76,18 @@ void setup() {
 	
 	// retrieve configuration from EEPROM
 	EEPROM_read(0, configuration);
+        // set temp value for servo pwm config
+        servoconf_tmp[0] = configuration.pan_minpwm;
+        servoconf_tmp[1] = configuration.pan_maxpwm;
+        servoconf_tmp[2] = configuration.tilt_minpwm;
+        servoconf_tmp[3] = configuration.tilt_maxpwm;
         delay(20);
 	//clear eeprom & write default parameters if config is empty or wrong
 	if (configuration.config_crc != CONFIG_VERSION) {
 		clear_eeprom();
                 delay(20);
 		}
-
+        
         
 	//start serial com	
 	init_serial();
@@ -96,42 +101,21 @@ void setup() {
         Serial.println(configuration.tilt_maxangle);
 	
 	// attach servos 
-	attach_servo(pan_servo,PAN_SERVOPIN);
-	attach_servo(tilt_servo,TILT_SERVOPIN);
+	attach_servo(pan_servo, pan_servoEaser, PAN_SERVOPIN, configuration.pan_minpwm, configuration.pan_maxpwm);
+	attach_servo(tilt_servo, tilt_servoEaser, TILT_SERVOPIN, configuration.tilt_minpwm, configuration.tilt_maxpwm); 
+
         
-        
-	pan_servoEaser.begin( pan_servo, SERVO_REFRESH_INTERVAL );
-	tilt_servoEaser.begin( tilt_servo, SERVO_REFRESH_INTERVAL );
-        //pan_servoEaser.setArrivedFunc(pan_taskfinished);
-        
-        
-        pan_servoEaser.setMinMaxMicroseconds( configuration.pan_minpwm, configuration.pan_maxpwm );
-        tilt_servoEaser.setMinMaxMicroseconds( configuration.tilt_minpwm, configuration.tilt_maxpwm );
-        
-        #if defined(PAN_SERVOREVERSED)
-        pan_servoEaser.setFlipped(true);
-        #endif
-        #if defined(TILT_SERVOREVERSED)
-        tilt_servoEaser.setFlipped(true);
-        #endif
-        
-	// make ServoEaser use microseconds
-	pan_servoEaser.useMicroseconds(true);
-	tilt_servoEaser.useMicroseconds(true);
 	// move servo to neutral pan & 45° tilt at startup to prevent forcing on endpoints if misconfigured
-	//move_servo(pan_servoEaser, 1, 240, configuration.pan_minpwm, configuration.pan_minangle, configuration.pan_maxpwm, configuration.pan_maxangle);
-	//move_servo(tilt_servoEaser, 2, 30, configuration.tilt_minpwm, configuration.tilt_minangle, configuration.tilt_maxpwm, configuration.tilt_maxangle);
-        servoPathfinder(0, 10);
-       //pan_servoEaser.easeTo( 0, 2000);
-       //tilt_servoEaser.easeTo( 40, 2000);
+	//move_servo(pan_servoEaser, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
+	//move_servo(tilt_servoEaser, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);
+        //servoPathfinder(0, 0);
+       pan_servoEaser.easeTo( 0, 2000);
+       tilt_servoEaser.easeTo( 0, 2000);
        
        // setup button callback events
        enter_button.releaseHandler(enterButtonReleaseEvents);
-       enter_button.holdHandler(enterButtonHoldEvents,800);
-       left_button.clickHandler(leftButtonClickEvents);
-       left_button.holdHandler(leftButtonHoldEvents,800);
-       right_button.clickHandler(rightButtonClickEvents);
-       right_button.holdHandler(rightButtonHoldEvents,800);
+       left_button.releaseHandler(leftButtonReleaseEvents);
+       right_button.releaseHandler(rightButtonReleaseEvents);
        
 
 }
@@ -146,8 +130,11 @@ void loop() {
         right_button.isPressed();
         }
 	//update servos at SERVO_REFRESH_INTERVAL defined rate.
+        if ( current_activity != "PAN_MINPWM" && current_activity != "PAN_MAXPWM" && current_activity != "TILT_MINPWM" && current_activity != "TILT_MAXPWM" ) {
+          // ignoring configuring min/max endpoints
 	pan_servoEaser.update();
-	tilt_servoEaser.update();
+        tilt_servoEaser.update();
+        }
         
 	//lcd refresh loop ( default 10hz )
 	refresh_lcd();

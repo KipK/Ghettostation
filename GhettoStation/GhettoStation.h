@@ -40,6 +40,9 @@ String current_activity = "MENU"; //default activity
 boolean gps_fix;
 boolean btholdstate = false;
 
+//servo temp configuration before saving
+int servoconf_tmp[4];
+
 
 
 //Configuration stored in EEprom
@@ -67,13 +70,13 @@ Menu m1m3Menu("CONFIGURE");
 	Menu m1m3m1Menu("SERVOS");	
 		Menu m1m3m1m1Menu("PAN");
 				MenuItem m1m3m1m1l1Item("PAN MINPWM");
-				MenuItem m1m3m1m1l2Item("PAN MINANGLE");
-				MenuItem m1m3m1m1l3Item("PAN MAXPWM");
+				MenuItem m1m3m1m1l2Item("PAN MAXPWM");
+				MenuItem m1m3m1m1l3Item("PAN MINANGLE");
 				MenuItem m1m3m1m1l4Item("PAN MAXANGLE");			
 		Menu m1m3m1m2Menu("TILT");
 				MenuItem m1m3m1m2l1Item("TILT MINPWM");
-				MenuItem m1m3m1m2l2Item("TIT MINANGLE");
-				MenuItem m1m3m1m2l3Item("TILT MAXPWM");
-				MenuItem m1m3m1m2l4Item("TILT MINPWM");			
+				MenuItem m1m3m1m2l2Item("TILT MAXPWM");
+				MenuItem m1m3m1m2l3Item("TILT MINANGLE");
+				MenuItem m1m3m1m2l4Item("TILT MAXANGLE");			
 		MenuItem m1m3m1i3Item("TEST");
 	MenuItem m1m3l2Item("BAUDRATE");

@@ -1,16 +1,25 @@
 //SERVO FUNCTIONS
 
-void attach_servo(Servo &s, int p) {
+void attach_servo(Servo &s, ServoEaser &e, int p, int min, int max) {
 // called at setup() or after a servo configuration change in the menu
 	if (s.attached()) {
 	s.detach();
 	}
-	s.attach(p);
+	s.attach(p, min, max);
+        e.begin( s, SERVO_REFRESH_INTERVAL );
+        e.useMicroseconds(true);
+        e.setMinMaxMicroseconds( min, max );
+        #if defined(PAN_SERVOREVERSED) || defined(TILT_SERVOREVERSED)
+        e.setFlipped(true);
+        #endif
+        // make ServoEaser use microseconds
+	
+        Serial.println("servo attached");
         
 }
 
 
-void move_servo(ServoEaser &s, int stype, float a, int minp, int mina, int maxp, int maxa) {
+void move_servo(ServoEaser &s, int stype, float a, int mina, int maxa) {
 
  
  float new_angle;
@@ -108,8 +117,8 @@ void servoPathfinder(float angle_b, float angle_a){
 		}
 	}
 
-	move_servo(pan_servoEaser, 1, angle_b, configuration.pan_minpwm, configuration.pan_minangle, configuration.pan_maxpwm, configuration.pan_maxangle);
-	move_servo(tilt_servoEaser, 2, angle_a, configuration.tilt_minpwm, configuration.tilt_minangle, configuration.tilt_maxpwm, configuration.tilt_maxangle);
+	move_servo(pan_servoEaser, 1, angle_b, configuration.pan_minangle, configuration.pan_maxangle);
+	move_servo(tilt_servoEaser, 2, angle_a, configuration.tilt_minangle, configuration.tilt_maxangle);
 }
 
 
@@ -148,27 +157,14 @@ int config_servo(int servotype, int valuetype, int value ) {
         currentline.toCharArray(string_buffer,21);
 	store_lcdline(3,string_buffer);
 	store_lcdline(4," Long press to quit ");
+        //checking long press left righthere
            if (right_button.heldFor(800)) {
-              if (current_activity == "PAN_MINPWM") configuration.pan_minpwm++;		 
-              if (current_activity == "PAN_MINANGLE") configuration.pan_minangle++;
-              if (current_activity == "PAN_MAXPWM") configuration.pan_maxpwm++;
-              if (current_activity == "PAN_MAXANGLE") configuration.pan_maxangle++;
-              if (current_activity == "TILT_MINPWM") configuration.tilt_minpwm++;
-              if (current_activity == "TILT_MINANGLE") configuration.tilt_minangle++;        
-              if (current_activity == "TILT_MAXPWM") configuration.tilt_maxpwm++;
-              if (current_activity == "TILT_MAXANGLE") configuration.tilt_maxangle++;
-              //delay(200);
+            value++;
             }
             else if (left_button.heldFor(800)) {
-              if (current_activity == "PAN_MINPWM") configuration.pan_minpwm--;		 
-              if (current_activity == "PAN_MINANGLE") configuration.pan_minangle--;
-              if (current_activity == "PAN_MAXPWM") configuration.pan_maxpwm--;
-              if (current_activity == "PAN_MAXANGLE") configuration.pan_maxangle--;
-              if (current_activity == "TILT_MINPWM") configuration.tilt_minpwm--;
-              if (current_activity == "TILT_MINANGLE") configuration.tilt_minangle--;        
-              if (current_activity == "TILT_MAXPWM") configuration.tilt_maxpwm--;
-              if (current_activity == "TILT_MAXANGLE") configuration.tilt_maxangle--;
-              //delay(200);
+            value--;
             }
+return value;
+           
 }
 
