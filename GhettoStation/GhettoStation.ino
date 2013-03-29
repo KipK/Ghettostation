@@ -35,9 +35,9 @@ LCD03_I2C LCD(0x63,20,4);
 //##### SERVOS 
 //Declaring pan/tilt servos using ServoEaser library
 Servo pan_servo;
-ServoEaser pan_servoEaser;
+//ServoEaser pan_servoEaser;
 Servo tilt_servo;
-ServoEaser tilt_servoEaser;
+//ServoEaser tilt_servoEaser;
 
 //#####	RATE LOOPS 
 //setting telemetry refresh rate at 10hz.
@@ -101,16 +101,16 @@ void setup() {
         Serial.println(configuration.tilt_maxangle);
 	
 	// attach servos 
-	attach_servo(pan_servo, pan_servoEaser, PAN_SERVOPIN, configuration.pan_minpwm, configuration.pan_maxpwm);
-	attach_servo(tilt_servo, tilt_servoEaser, TILT_SERVOPIN, configuration.tilt_minpwm, configuration.tilt_maxpwm); 
+	attach_servo(pan_servo, PAN_SERVOPIN, configuration.pan_minpwm, configuration.pan_maxpwm);
+	attach_servo(tilt_servo, TILT_SERVOPIN, configuration.tilt_minpwm, configuration.tilt_maxpwm); 
 
         
 	// move servo to neutral pan & 45° tilt at startup to prevent forcing on endpoints if misconfigured
-	//move_servo(pan_servoEaser, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
-	//move_servo(tilt_servoEaser, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);
+	move_servo(pan_servo, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
+	move_servo(tilt_servo, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);
         //servoPathfinder(0, 0);
-       pan_servoEaser.easeTo( 0, 2000);
-       tilt_servoEaser.easeTo( 0, 2000);
+//       pan_servoEaser.easeTo( 0, 2000);
+//       tilt_servoEaser.easeTo( 0, 2000);
        
        // setup button callback events
        enter_button.releaseHandler(enterButtonReleaseEvents);
@@ -130,11 +130,11 @@ void loop() {
         right_button.isPressed();
         }
 	//update servos at SERVO_REFRESH_INTERVAL defined rate.
-        if ( current_activity != "PAN_MINPWM" && current_activity != "PAN_MAXPWM" && current_activity != "TILT_MINPWM" && current_activity != "TILT_MAXPWM" ) {
+        //if ( current_activity != "PAN_MINPWM" && current_activity != "PAN_MAXPWM" && current_activity != "TILT_MINPWM" && current_activity != "TILT_MAXPWM" ) {
           // ignoring configuring min/max endpoints
-	pan_servoEaser.update();
-        tilt_servoEaser.update();
-        }
+	//pan_servoEaser.update();
+        //tilt_servoEaser.update();
+        //}
         
 	//lcd refresh loop ( default 10hz )
 	refresh_lcd();

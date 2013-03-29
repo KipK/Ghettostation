@@ -33,13 +33,13 @@ void leftButtonReleaseEvents(Button &btn)
     
     else if ( current_activity != "MENU" && current_activity != "TRACKING" && current_activity != "SET_HOME" ) {
               //We're in a setting area: Left button decrase current value.
-          if (current_activity == "PAN_MINPWM") configuration.pan_minpwm--;		 
+          if (current_activity == "PAN_MINPWM") servoconf_tmp[0]--;		 
           if (current_activity == "PAN_MINANGLE") configuration.pan_minangle--;
-          if (current_activity == "PAN_MAXPWM") configuration.pan_maxpwm--;
+          if (current_activity == "PAN_MAXPWM") servoconf_tmp[1]--;
           if (current_activity == "PAN_MAXANGLE") configuration.pan_maxangle--;
-          if (current_activity == "TILT_MINPWM") configuration.tilt_minpwm--;
+          if (current_activity == "TILT_MINPWM") servoconf_tmp[2]--;
           if (current_activity == "TILT_MINANGLE") configuration.tilt_minangle--;        
-          if (current_activity == "TILT_MAXPWM") configuration.tilt_maxpwm--;
+          if (current_activity == "TILT_MAXPWM") servoconf_tmp[3]--;
           if (current_activity == "TILT_MAXANGLE") configuration.tilt_maxangle--;
     }
   }
@@ -57,13 +57,13 @@ void rightButtonReleaseEvents(Button &btn)
     }
     else if ( current_activity != "MENU" && current_activity != "TRACKING" && current_activity != "SET_HOME" ) {
               //We're in a setting area: Right button decrase current value.
-          if (current_activity == "PAN_MINPWM") configuration.pan_minpwm++;		 
+          if (current_activity == "PAN_MINPWM") servoconf_tmp[0]++;		 
           if (current_activity == "PAN_MINANGLE") configuration.pan_minangle++;
-          if (current_activity == "PAN_MAXPWM") configuration.pan_maxpwm++;
+          if (current_activity == "PAN_MAXPWM") servoconf_tmp[1]++;
           if (current_activity == "PAN_MAXANGLE") configuration.pan_maxangle++;
-          if (current_activity == "TILT_MINPWM") configuration.tilt_minpwm++;
+          if (current_activity == "TILT_MINPWM") servoconf_tmp[2]++;
           if (current_activity == "TILT_MINANGLE") configuration.tilt_minangle++;        
-          if (current_activity == "TILT_MAXPWM") configuration.tilt_maxpwm++;
+          if (current_activity == "TILT_MAXPWM") servoconf_tmp[3]++;
           if (current_activity == "TILT_MAXANGLE") configuration.tilt_maxangle++;
     }
   }

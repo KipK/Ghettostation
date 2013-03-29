@@ -1,17 +1,17 @@
 //SERVO FUNCTIONS
 
-void attach_servo(Servo &s, ServoEaser &e, int p, int min, int max) {
+void attach_servo(Servo &s, int p, int min, int max) {
 // called at setup() or after a servo configuration change in the menu
 	if (s.attached()) {
 	s.detach();
 	}
-	s.attach(p, min, max);
-        e.begin( s, SERVO_REFRESH_INTERVAL );
-        e.useMicroseconds(true);
-        e.setMinMaxMicroseconds( min, max );
-        #if defined(PAN_SERVOREVERSED) || defined(TILT_SERVOREVERSED)
-        e.setFlipped(true);
-        #endif
+	s.attach(p,min,max);
+        //e.begin( s, SERVO_REFRESH_INTERVAL );
+        //e.useMicroseconds(true);
+        //e.setMinMaxMicroseconds( min, max );
+        //#if defined(PAN_SERVOREVERSED) || defined(TILT_SERVOREVERSED)
+        //e.setFlipped(true);
+        //#endif
         // make ServoEaser use microseconds
 	
         Serial.println("servo attached");
@@ -19,7 +19,7 @@ void attach_servo(Servo &s, ServoEaser &e, int p, int min, int max) {
 }
 
 
-void move_servo(ServoEaser &s, int stype, float a, int mina, int maxa) {
+void move_servo(Servo &s, int stype, float a, int mina, int maxa) {
 
  
  float new_angle;
@@ -46,13 +46,7 @@ void move_servo(ServoEaser &s, int stype, float a, int mina, int maxa) {
 		new_angle = map(a, configuration.tilt_minangle, configuration.tilt_maxangle, 0, 180); //map configured tilt settings to default arduino lib 0-180° servo range
 
 	}
- //assign servo move duration to be proportional to requested course travel ( from 20ms to 800ms )
-	 if ((new_angle - s.getCurrPos()) >= 0) {
-		t = map(new_angle - s.getCurrPos(), 0, 180, 20,800);
-	} else {
-		t = map(s.getCurrPos() - new_angle, 0, 180, 20,800);
-		}
-	s.easeTo( new_angle, t);
+	s.write( new_angle);
 }
 
 void servoPathfinder(float angle_b, float angle_a){
@@ -117,8 +111,8 @@ void servoPathfinder(float angle_b, float angle_a){
 		}
 	}
 
-	move_servo(pan_servoEaser, 1, angle_b, configuration.pan_minangle, configuration.pan_maxangle);
-	move_servo(tilt_servoEaser, 2, angle_a, configuration.tilt_minangle, configuration.tilt_maxangle);
+	move_servo(pan_servo, 1, angle_b, configuration.pan_minangle, configuration.pan_maxangle);
+	move_servo(tilt_servo, 2, angle_a, configuration.tilt_minangle, configuration.tilt_maxangle);
 }
 
 
