@@ -6,17 +6,38 @@
 // enter button
 void enterButtonReleaseEvents(Button &btn)
  {
-     Serial.print("enter click");
+     //Serial.print("enter click");
      //Serial.println(current_activity);  
      if ( enter_button.holdTime() < 1000 ) { // norman press
        
-        if ( current_activity == "MENU" ) { //button action depends activity state
-            Serial.println("MENU SELECT");
+        if ( current_activity == "MENU" ) { //button action depends activity state;
             displaymenu.select();
            }
-         }
 
- }
+        else if ( current_activity == "SET_HOME" ) {
+            if (gps_fix && !home_pos) {
+              //saving home position
+              home_lat = uav_lat;
+              home_lon = uav_lon;
+              home_alt = uav_alt;
+            }
+            
+            else if (gps_fix && home_pos && (!home_bear)) {
+             // saving home bearing 
+             home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // storing bearing relative to north
+              
+            }
+            else if (gps_fix && home_pos && (home_bear)) {
+              // START TRACKING 
+
+            }
+        } 
+     }
+     else {    //Long Press Enter
+
+           }
+           
+}
 
 
 // left button
@@ -42,7 +63,13 @@ void leftButtonReleaseEvents(Button &btn)
           if (current_activity == "TILT_MAXPWM") servoconf_tmp[3]--;
           if (current_activity == "TILT_MAXANGLE") configuration.tilt_maxangle--;
     }
-  }
+    
+   else if (current_activity=="SET_HOME") {
+               if (gps_fix && home_pos && (home_bear)) {
+                  current_activity = "MENU";
+                }
+          }
+    }
 }
 
 
@@ -65,6 +92,14 @@ void rightButtonReleaseEvents(Button &btn)
           if (current_activity == "TILT_MINANGLE") configuration.tilt_minangle++;        
           if (current_activity == "TILT_MAXPWM") servoconf_tmp[3]++;
           if (current_activity == "TILT_MAXANGLE") configuration.tilt_maxangle++;
+    }
+    
+    if (current_activity=="SET_HOME") {
+           if (gps_fix && home_pos && (home_bear)) {
+              // reset home pos
+              home_pos = false;
+              home_bearing == false; 
+           }
     }
   }
 }

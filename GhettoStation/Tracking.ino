@@ -1,24 +1,3 @@
-int set_home(){
-//Record home position
-		if (gps_fix) {
-  		  home_lon = uav_lon;
-  		  home_lat = uav_lat;
-  		  return 1;
-		} else return false;
-}
-		
-int set_homebearing() {
-//Record home bearing relative to north
-		if ((gps_fix)&&(!home_lon==0)) {
-		// user go 20m away facing relative 0°.
-		home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // storing bearing relative to north
-		
-		//to do: write home gps & bearing values in EEprom
-		
-		return 1;
-		} else return false;
-}
-
 
 boolean antenna_tracking() {
 // Tracking general function

@@ -27,6 +27,7 @@
 
 
 #ifdef PROTOCOL_UAVTALK
+
 #include "UAVTalk.h"
 //#define DEBUG
 
@@ -300,6 +301,7 @@ int uavtalk_read(void) {
 				case FLIGHTTELEMETRYSTATS_OBJID:
 					switch (msg.Data[FLIGHTTELEMETRYSTATS_OBJ_STATUS]) {
 						case TELEMETRYSTATS_STATE_DISCONNECTED:
+                                                        telemetry_ok = false;
 							gcstelemetrystatus = TELEMETRYSTATS_STATE_HANDSHAKEREQ;
 							uavtalk_send_gcstelemetrystats();
 						break;
@@ -309,6 +311,7 @@ int uavtalk_read(void) {
 						break;
 						case TELEMETRYSTATS_STATE_CONNECTED:
 							gcstelemetrystatus = TELEMETRYSTATS_STATE_CONNECTED;
+                                                        telemetry_ok = true;
 							last_flighttelemetry_connect = millis();
 						break;
 					}

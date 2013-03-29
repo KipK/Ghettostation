@@ -12,6 +12,7 @@ void get_telemetry() {
         
 #if defined(PROTOCOL_UAVTALK)
          uavtalk_read(); // uavtalk serial reading
+         if (uav_fix == 3) gps_fix = true;
 #endif
 
       }

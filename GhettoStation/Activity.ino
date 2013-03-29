@@ -18,7 +18,9 @@ void check_activity() {
           }
           
           if (current_activity == "SET_HOME") {
-             //TO DO 
+            if (!home_pos) lcddisp_sethome();
+            else if (home_pos && (!home_bear)) lcddisp_setbearing();
+            else if (home_pos && (home_bear)) lcddisp_homeok();
           }
           
           if (current_activity == "PAN_MINPWM") {
