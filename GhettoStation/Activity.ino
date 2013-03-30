@@ -14,13 +14,15 @@ void check_activity() {
 
 	  }
           if (current_activity == "TRACK") {
-             //TO DO 
+             lcddisp_tracking();
           }
           
           if (current_activity == "SET_HOME") {
-            if (!home_pos) lcddisp_sethome();
-            else if (home_pos && (!home_bear)) lcddisp_setbearing();
-            else if (home_pos && (home_bear)) lcddisp_homeok();
+            if (!home_pos) { lcddisp_sethome(); }
+            else if (home_pos) {
+              if (!home_bear) { lcddisp_setbearing(); }
+              else { lcddisp_homeok(); }
+            }
           }
           
           if (current_activity == "PAN_MINPWM") {
@@ -39,7 +41,7 @@ void check_activity() {
                 }
           }
           if (current_activity == "PAN_MINANGLE") {
-             config_servo(1, 2, configuration.pan_minangle );
+             configuration.pan_minangle = config_servo(1, 2, configuration.pan_minangle );
              pan_servo.writeMicroseconds(configuration.pan_minpwm);
              if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press handled here for menu because of unkown race condition
                EEPROM_write(0, configuration);
@@ -64,7 +66,7 @@ void check_activity() {
           }
           
           if (current_activity == "PAN_MAXANGLE") {
-             config_servo(1, 4, configuration.pan_maxangle );
+             configuration.pan_maxangle = config_servo(1, 4, configuration.pan_maxangle );
             pan_servo.writeMicroseconds(configuration.pan_maxpwm);
              if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press handled here for menu because of unkown race condition
                EEPROM_write(0, configuration);
@@ -89,7 +91,7 @@ void check_activity() {
           }
           
           if (current_activity == "TILT_MINANGLE") {
-             config_servo(2, 2, configuration.tilt_minangle ); 
+             configuration.tilt_minangle = config_servo(2, 2, configuration.tilt_minangle ); 
              tilt_servo.writeMicroseconds(configuration.tilt_minpwm);
              if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press handled here for menu because of unkown race condition
                EEPROM_write(0, configuration);
@@ -114,7 +116,7 @@ void check_activity() {
           }
           
           if (current_activity == "TILT_MAXANGLE") {
-             config_servo(2, 4, configuration.tilt_maxangle );
+             configuration.tilt_maxangle = config_servo(2, 4, configuration.tilt_maxangle );
              tilt_servo.write(configuration.tilt_maxpwm);
              if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press handled here for menu because of unkown race condition
                EEPROM_write(0, configuration);

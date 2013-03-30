@@ -17,10 +17,10 @@
 
 #include <LCD03_I2C.h>
 #include <Metro.h>
-#include <stdlib.h>
 #include <MenuSystem.h>
 #include <Button.h>
 #include <Servo.h>
+#include <ServoEaser.h>
 #include <EEPROM.h>
 #include "Eepromlazy.h"
 #include "UAVTalk.h"
@@ -140,7 +140,7 @@ void loop() {
 	refresh_lcd();
 
 	//get telemetry data ( default at at 10hz)
-	get_telemetry();
+	//get_telemetry();
 	
 	//checking activity
         check_activity();     

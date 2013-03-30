@@ -29,7 +29,7 @@
 #ifndef UAVTALK_H_
 #define UAVTALK_H_
 
-String protocol = "UAVTk";
+
 
 //#define VERSION_RELEASE_12_10_1	// OpenPilot-RELEASE 12.10.1	Release from 2012.10.26
 #define VERSION_RELEASE_12_10_2		// OpenPilot-RELEASE 12.10.2	Release from 2012.12.21	'Mayan Apocalypse'
