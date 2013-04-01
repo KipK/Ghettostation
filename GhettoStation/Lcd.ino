@@ -50,7 +50,7 @@ void refresh_lcd() {
 void lcddisp_sethome() {
    for ( int i = 1 ; i<5; i++ ) {
      char extract[21];
-     char string_buffer[20];
+     char string_buffer[21];
      String currentline;
      switch (i) {
            case 1:
@@ -65,10 +65,10 @@ void lcddisp_sethome() {
                 break;
             case 2:
                  //line 2
-                 if (!telemetry_ok) currentline = String(string_shome1.copy(extract));
+                 if (!telemetry_ok) currentline = String(string_shome1.copy(extract)); // waiting for data
                  else {
-                   if (!gps_fix) currentline = String(string_shome2.copy(extract));
-                   else currentline = String(string_shome3.copy(extract));
+                   if (!gps_fix) currentline = String(string_shome2.copy(extract));  // waiting for gps fix
+                   else currentline = String(string_shome3.copy(extract)); // fix ok save home
                  }
                  break;
       
@@ -92,7 +92,7 @@ void lcddisp_sethome() {
     for ( int l = currentline.length() ; l<21 ; l++ ) {
 	 currentline += " ";
 	 }
-    currentline.toCharArray(string_buffer,20);
+    currentline.toCharArray(string_buffer,21);
     store_lcdline(i,string_buffer);
    } 
 }
@@ -100,8 +100,8 @@ void lcddisp_sethome() {
 
 void lcddisp_setbearing() {
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[20];
-       char extract[20];
+       char string_buffer[21];
+       char extract[21];
        String currentline="";
        switch (i) {
            case 1: 
@@ -124,15 +124,15 @@ void lcddisp_setbearing() {
        for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
 	 currentline = currentline + " ";
 	 }
-       currentline.toCharArray(string_buffer,20);
+       currentline.toCharArray(string_buffer,21);
        store_lcdline(i,string_buffer);
     }
 }
 
 void lcddisp_homeok() {
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[20];
-       char extract[20];
+       char string_buffer[21];
+       char extract[21];
        String currentline="";
        switch (i) {
            case 1: 
@@ -155,14 +155,14 @@ void lcddisp_homeok() {
        for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
          currentline = currentline + " ";
          }
-       currentline.toCharArray(string_buffer,20);
+       currentline.toCharArray(string_buffer,21);
        store_lcdline(i,string_buffer);
        }
 }
 
 void lcddisp_tracking(){
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[20];
+       char string_buffer[21];
        String currentline="";
        switch (i) {
            case 1: 
@@ -201,7 +201,7 @@ void lcddisp_tracking(){
        for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
 	 currentline = currentline + " ";
 	 }
-       currentline.toCharArray(string_buffer,20);
+       currentline.toCharArray(string_buffer,21);
        store_lcdline(i,string_buffer);
     }
 }

@@ -25,7 +25,6 @@ void init_menu() {
 
 
 void display_menu() {
-        Serial.print("displaymenu");
         Menu const* displaymenu_current = displaymenu.get_current_menu();
 	MenuComponent const* displaymenu_sel = displaymenu_current->get_selected();
 
