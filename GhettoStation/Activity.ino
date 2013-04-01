@@ -1,7 +1,10 @@
 //ACTIVITY
 
 void check_activity() {
+    
     if (activityMetro.check() == 1) 
+
+      if (uav_fix_type == 3) { gps_fix = true; }
     
       {
  
@@ -17,7 +20,8 @@ void check_activity() {
           if (current_activity == 1 ) { //TRACK
            if ((!home_pos) || (!home_bear)) {  // check if home is set before start tracking
              current_activity = 2;
-           } else {
+           } else if (home_bear) {
+             antenna_tracking();
              lcddisp_tracking();
                 if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press handled here for menu because of unkown race condition
                    current_activity = 0;

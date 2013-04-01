@@ -55,9 +55,9 @@ void lcddisp_sethome() {
      switch (i) {
            case 1:
                 //line1
-                if (!telemetry_ok) String c="NO";
-                else String c=protocol;
-                currentline = "L:" + protocol;
+                if (!telemetry_ok) { currentline = "L:NO"; }
+                else if (telemetry_ok) { currentline = "L:" + protocol;}
+                //currentline = "L:" + c;
                 currentline += " SATS:";
                 currentline += String(uav_satellites_visible);
                 currentline += " FIX:";
@@ -105,9 +105,8 @@ void lcddisp_setbearing() {
        String currentline="";
        switch (i) {
            case 1: 
-                        if (!telemetry_ok) String c="NO";
-                        else String c=protocol;
-                        currentline = "L:" + protocol;
+                        if (!telemetry_ok) { currentline = "L:NO"; }
+                else if (telemetry_ok) { currentline = "L:" + protocol;}
                         currentline += "SATS:";
                         currentline += String(uav_satellites_visible);
                         currentline += " FIX:";
@@ -136,9 +135,8 @@ void lcddisp_homeok() {
        String currentline="";
        switch (i) {
            case 1: 
-                        if (!telemetry_ok) String c="NO";
-                        else String c=protocol;
-                        currentline = "L:" + protocol;
+                        if (!telemetry_ok) { currentline = "L:NO"; }
+                        else if (telemetry_ok) { currentline = "L:" + protocol;}
                         currentline += "SATS:";
                         currentline += String(uav_satellites_visible);
                         currentline += " FIX:";
@@ -166,9 +164,8 @@ void lcddisp_tracking(){
        String currentline="";
        switch (i) {
            case 1: 
-                        if (!telemetry_ok) String c="NO";
-                        else String c=protocol;
-                        currentline = "L:" + protocol;
+                        if (!telemetry_ok) { currentline = "L:NO"; }
+                        else if (telemetry_ok) { currentline = "L:" + protocol;}
                         currentline += "SATS:";
                         currentline += String(uav_satellites_visible);
                         currentline += " FIX:";
@@ -192,9 +189,9 @@ void lcddisp_tracking(){
            case 4:      
                         char bufferl[10];
                         char bufferL[10];
-                        currentline = String(dtostrf(uav_lat, 5, 5, bufferl));
+                        currentline = String(dtostrf(uav_lat, 5, 6, bufferl));
                         currentline += " ";
-                        currentline += String(dtostrf(uav_lon, 5, 5, bufferL));
+                        currentline += String(dtostrf(uav_lon, 5, 6, bufferL));
                         break;
 
        }

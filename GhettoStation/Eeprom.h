@@ -57,8 +57,7 @@ FLASH_STRING(string_shome8, " Move UAV 20m ahead ");
 FLASH_STRING(string_shome9, " & press enter      ");
 FLASH_STRING(string_shome10, "    HOME IS SET     ");
 FLASH_STRING(string_shome11, "Enter:Start Tracking");
-FLASH_STRING(string_shome12, "    HOME IS SET     ");
-FLASH_STRING(string_shome13, "<< Menu     Reset >>");
+FLASH_STRING(string_shome12, "<< Menu     Reset >>");
 
 
 

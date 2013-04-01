@@ -45,12 +45,12 @@ Servo tilt_servo;
 //ServoEaser tilt_servoEaser;
 
 //#####	RATE LOOPS 
-//setting telemetry refresh rate at 10hz.
-Metro telemetryMetro = Metro(100);
-//setting lcd refresh rate at 10hz.
-Metro lcdMetro = Metro(100);
+//setting telemetry refresh rate.
+Metro telemetryMetro = Metro(20);
+//setting lcd refresh rate at 5hz.
+Metro lcdMetro = Metro(200);
 //setting tracking loop at 5hz ( same as gps rate on uav, servo loops are running at 50hz)
-Metro trackingMetro = Metro(200);
+//Metro trackingMetro = Metro(100);
 //setting button status check loop
 Metro buttonMetro = Metro(100);
 //setting activity loop time
@@ -103,9 +103,9 @@ void setup() {
 
         
 	// move servo to neutral pan & 45° tilt at startup to prevent forcing on endpoints if misconfigured
-	move_servo(pan_servo, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
-	move_servo(tilt_servo, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);
-        //servoPathfinder(0, 0);
+//	move_servo(pan_servo, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
+//	move_servo(tilt_servo, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);
+        servoPathfinder(0, 0);
 //       pan_servoEaser.easeTo( 0, 2000);
 //       tilt_servoEaser.easeTo( 0, 2000);
        
@@ -125,16 +125,15 @@ void loop() {
         left_button.isPressed();
         right_button.isPressed();
         }
-        
-	//lcd refresh loop ( default 10hz )
-	refresh_lcd();
 
-	//get telemetry data ( default at at 10hz)
+	//get telemetry data ( default at 10hz)
 	
         get_telemetry();
 	
 	//checking activity
         check_activity();     
+        //lcd refresh loop ( default 10hz )
+	refresh_lcd();
       
         
 }

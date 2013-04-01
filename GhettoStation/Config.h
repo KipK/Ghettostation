@@ -1,7 +1,7 @@
 //CONFIGURATION                        
 //Flycontroller serial telemetry protocol
 #define PROTOCOL_UAVTALK      //UAVTalk from OpenPilot
-                               
+#define UAVTALK_MODE_PASSIVE  // define if you already have GCS or OSD running.
 
 #define TELEMETRY_BAUD  57600		//Telemetry baudrate used
 #define MIN_SPEED

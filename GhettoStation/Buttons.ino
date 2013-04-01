@@ -18,12 +18,13 @@ void enterButtonReleaseEvents(Button &btn)
               home_lat = uav_lat;
               home_lon = uav_lon;
               home_alt = uav_alt;
+              home_pos = true;
             }
             
             else if ((gps_fix) && (home_pos) && (!home_bear)) {
              // saving home bearing 
              home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // storing bearing relative to north
-             
+             home_bear = true;
               
             }
             else if ((gps_fix) && (home_pos) && (home_bear)) {

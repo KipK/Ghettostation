@@ -1,4 +1,4 @@
-boolean antenna_tracking() {
+void antenna_tracking() {
 // Tracking general function
 
 	
@@ -10,24 +10,25 @@ boolean antenna_tracking() {
 	
 	if(Bearing > home_bearing){
           Bearing=(Bearing-home_bearing);
-          return true;
         }
         else
         {
           Bearing=(360-home_bearing+Bearing);
-          return true;
         }
 	// serv command
-	
 	servoPathfinder(Bearing,Azimuth);
-	
-	
+//        Serial.print("Bearing:");
+//        Serial.println(Bearing);
+//        Serial.print("Azim:");
+//        Serial.println(Azimuth);
+//	
+//	
 
 }
 
 
 
-long calc_tracking(float lon1, float lat1, float lon2, float lat2, int alt) {
+void calc_tracking(float lon1, float lat1, float lon2, float lat2, int alt) {
 // (homelon, homelat, uavlon, uavlat, uavalt ) 
 // Return Bearing & Azimuth angles in degree
   float a, tc1, R, c, d, dLat, dLon;
@@ -49,7 +50,7 @@ long calc_tracking(float lon1, float lat1, float lon2, float lat2, int alt) {
 }
 
 
-long calc_bearing(float lon1, float lat1, float lon2, float lat2) {
+float calc_bearing(float lon1, float lat1, float lon2, float lat2) {
 // bearing calc, feeded in radian, output degrees
 	float a;
 	//calculating bearing in degree
@@ -59,7 +60,7 @@ long calc_bearing(float lon1, float lat1, float lon2, float lat2) {
 	return a;
 }
 
-long calc_azimuth(float lon1, float lat1, float lon2, float lat2, int alt) {
+float calc_azimuth(float lon1, float lat1, float lon2, float lat2, int alt) {
 //Azimuth cacl, feeded in radian, output in degrees
   float a, az, c, d, R, dLat, dLon;
   //calculating distance between uav & home
@@ -69,20 +70,22 @@ long calc_azimuth(float lon1, float lat1, float lon2, float lat2, int alt) {
   a = sin(dLat/2) * sin(dLat/2) + sin(dLon/2) * sin(dLon/2) * cos(lat1) * cos(lat2);
   c = 2* asin(sqrt(a));  
   d = R * c;
+  home_dist = d;
   az=atan(alt/d);// in radian
   az=toDeg(az); // in degree
-  return az;
+  return (int) az;
 }
 
-long toRad(float angle) {
+float toRad(float angle) {
 // convert degrees to radians
 	angle = angle/180*PI;
 	return angle;
 }
 
-long toDeg(float angle) {
+float toDeg(float angle) {
 // convert radians to degrees.
 	angle = angle*180/PI;
+        return angle;
 }
 	
 
