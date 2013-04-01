@@ -1,4 +1,6 @@
-//MENU FUNCTIONS
+
+
+
 
 //create menu
 void init_menu() {
@@ -23,6 +25,7 @@ void init_menu() {
 
 
 void display_menu() {
+        Serial.print("displaymenu");
         Menu const* displaymenu_current = displaymenu.get_current_menu();
 	MenuComponent const* displaymenu_sel = displaymenu_current->get_selected();
 
@@ -48,7 +51,8 @@ void display_menu() {
                 
             }
             else {
-               empty_line.toCharArray(string_buffer,21);
+               //empty_line.toCharArray(string_buffer,21);
+               string_load2.copy(string_buffer);
             }
 		store_lcdline(n, string_buffer);
 		
@@ -60,52 +64,52 @@ void display_menu() {
 
 void screen_tracking(MenuItem* p_menu_item) {
 	
-	current_activity = "TRACK";
+	current_activity = 1;
 }
 
 void screen_sethome(MenuItem* p_menu_item) {
-	current_activity = "SET_HOME";
+	current_activity = 2;
 }
 
 void configure_pan_minpwm(MenuItem* p_menu_item) {
-	current_activity = "PAN_MINPWM";
+	current_activity = 3;
 }
 
 void configure_pan_minangle(MenuItem* p_menu_item) {
-	current_activity = "PAN_MINANGLE";
+	current_activity = 4;
 }
 
 void configure_pan_maxpwm(MenuItem* p_menu_item) {
-	current_activity = "PAN_MAXPWM";
+	current_activity = 5;
 }
 
 void configure_pan_maxangle(MenuItem* p_menu_item) {
-	current_activity = "PAN_MAXANGLE";
+	current_activity = 6;
 }
 
 void configure_tilt_minpwm(MenuItem* p_menu_item) {
-	current_activity = "TILT_MINPWM";
+	current_activity = 7;
 }
 
 void configure_tilt_minangle(MenuItem* p_menu_item) {
-	current_activity = "TILT_MINANGLE";
+	current_activity = 8;
 }
 
 void configure_tilt_maxpwm(MenuItem* p_menu_item) {
-	current_activity = "TILT_MAXPWM";
+	current_activity = 9;
 }
 
 void configure_tilt_maxangle(MenuItem* p_menu_item) {
-	current_activity = "TILT_MAXANGLE";
+	current_activity = 10;
 }
 
 void configure_test_servo(MenuItem* p_menu_item) {
   
-       current_activity = "TEST_SERVO";
+       current_activity = 11;
 }
 
 void configure_baudrate(MenuItem* p_menu_item) {
-	current_activity = "SET_RATE";
+	current_activity = 12;
 }
 
 

@@ -1,30 +1,8 @@
-int set_home(){
-//Record home position
-		if (gps_fix) {
-  		  home_lon = uav_lon;
-  		  home_lat = uav_lat;
-  		  return 1;
-		} else return false;
-}
-		
-int set_homebearing() {
-//Record home bearing relative to north
-		if ((gps_fix)&&(!home_lon==0)) {
-		// user go 20m away facing relative 0°.
-		home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // storing bearing relative to north
-		
-		//to do: write home gps & bearing values in EEprom
-		
-		return 1;
-		} else return false;
-}
-
-
 boolean antenna_tracking() {
 // Tracking general function
 
 	
-	float rel_alt = uav_alt - home_alt; // relative altitude to ground in meters
+	int rel_alt = uav_alt - home_alt; // relative altitude to ground in meters
 	
 	calc_tracking( home_lon, home_lat, uav_lon, uav_lat, rel_alt); //calculate tracking bearing/azimuth
 	
@@ -49,7 +27,7 @@ boolean antenna_tracking() {
 
 
 
-long calc_tracking(float lon1, float lat1, float lon2, float lat2, float alt) {
+long calc_tracking(float lon1, float lat1, float lon2, float lat2, int alt) {
 // (homelon, homelat, uavlon, uavlat, uavalt ) 
 // Return Bearing & Azimuth angles in degree
   float a, tc1, R, c, d, dLat, dLon;
@@ -81,14 +59,14 @@ long calc_bearing(float lon1, float lat1, float lon2, float lat2) {
 	return a;
 }
 
-long calc_azimuth(float lon1, float lat1, float lon2, float lat2, float alt) {
+long calc_azimuth(float lon1, float lat1, float lon2, float lat2, int alt) {
 //Azimuth cacl, feeded in radian, output in degrees
   float a, az, c, d, R, dLat, dLon;
   //calculating distance between uav & home
   R=6371000.0;    //earth radius 6371km
   dLat = (lat2-lat1);
   dLon = (lon2-lon1);
-  a = sin(dLat/2) * sin(dLat/2) + sin(dLon/2) * sin(dLon/2) * cos(lat1) * cos(lat2); 
+  a = sin(dLat/2) * sin(dLat/2) + sin(dLon/2) * sin(dLon/2) * cos(lat1) * cos(lat2);
   c = 2* asin(sqrt(a));  
   d = R * c;
   az=atan(alt/d);// in radian

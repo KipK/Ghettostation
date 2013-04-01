@@ -1,0 +1,30 @@
+#######################################
+# Syntax Coloring Map for Flash
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Flash	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+FLASH_STRING	KEYWORD2
+FLASH_ARRAY	KEYWORD2
+FLASH_TABLE	KEYWORD2
+FLASH_STRING_ARRAY	KEYWORD2
+length	KEYWORD2
+copy	KEYWORD2
+access	KEYWORD2
+print	KEYWORD2
+count	KEYWORD2
+rows	KEYWORD2
+cols	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+

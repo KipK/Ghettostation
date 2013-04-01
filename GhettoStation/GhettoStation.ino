@@ -12,21 +12,26 @@
  * @see        The GNU Public License (GPL) Version 3
  *
  *****************************************************************************/
-#include "Config.h"
-#define CONFIG_VERSION 1338 //version check for configuration in eeprom. You don't have to edit it.
 
+#define CONFIG_VERSION 1338 //version check for configuration in eeprom. You don't have to edit it.
+#include "Config.h"
+#include <avr/pgmspace.h>
 #include <LCD03_I2C.h>
+//#include <MemoryFree.h>
 #include <Metro.h>
 #include <MenuSystem.h>
 #include <Button.h>
 #include <Servo.h>
-#include <ServoEaser.h>
 #include <EEPROM.h>
-#include "Eepromlazy.h"
-#include "UAVTalk.h"
+#include <Flash.h>
+#include "Eeprom.h"
 #include "GhettoStation.h"
 
+#include "UAVTalk.h"
+
+
 //################################### SETTING OBJECTS ###############################################
+
 
 //##### LCD
 //Configuring LCD ( adress, width, lines)
@@ -56,8 +61,8 @@ Button right_button = Button(RIGHT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 Button left_button = Button(LEFT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 Button enter_button = Button(ENTER_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 
-//##### MENU
-//Menu const* displaymenu_current = displaymenu.get_current_menu();
+
+
 
 //#################################### SETUP LOOP ####################################################
 void setup() {
@@ -70,7 +75,7 @@ void setup() {
 
 
 	
-      
+       
 	//init setup
 	init_menu();
 	
@@ -91,14 +96,6 @@ void setup() {
         
 	//start serial com	
 	init_serial();
-        delay(100);
-        Serial.print("version: ");
-        Serial.println(configuration.config_crc);
-        Serial.println("tilt_minangle: ");
-        Serial.println(configuration.tilt_minangle);
-        
-        Serial.println("tilt_maxangle: ");
-        Serial.println(configuration.tilt_maxangle);
 	
 	// attach servos 
 	attach_servo(pan_servo, PAN_SERVOPIN, configuration.pan_minpwm, configuration.pan_maxpwm);
@@ -116,7 +113,6 @@ void setup() {
        enter_button.releaseHandler(enterButtonReleaseEvents);
        left_button.releaseHandler(leftButtonReleaseEvents);
        right_button.releaseHandler(rightButtonReleaseEvents);
-       
 
 }
 
@@ -129,18 +125,13 @@ void loop() {
         left_button.isPressed();
         right_button.isPressed();
         }
-	//update servos at SERVO_REFRESH_INTERVAL defined rate.
-        //if ( current_activity != "PAN_MINPWM" && current_activity != "PAN_MAXPWM" && current_activity != "TILT_MINPWM" && current_activity != "TILT_MAXPWM" ) {
-          // ignoring configuring min/max endpoints
-	//pan_servoEaser.update();
-        //tilt_servoEaser.update();
-        //}
         
 	//lcd refresh loop ( default 10hz )
 	refresh_lcd();
 
 	//get telemetry data ( default at at 10hz)
-	//get_telemetry();
+	
+        get_telemetry();
 	
 	//checking activity
         check_activity();     

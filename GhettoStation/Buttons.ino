@@ -6,16 +6,13 @@
 // enter button
 void enterButtonReleaseEvents(Button &btn)
  {
-     Serial.print("enter click");
      //Serial.println(current_activity);  
      if ( enter_button.holdTime() < 1000 ) { // norman press
        
-        if ( current_activity == "MENU" ) { //button action depends activity state
-            Serial.println("MENU SELECT");
+        if ( current_activity == 0 ) { //button action depends activity state
             displaymenu.select();
            }
-         }
-         else if ( current_activity == "SET_HOME" ) {
+         else if ( current_activity == 2 ) {
             if ((gps_fix) && (!home_pos)) {
               //saving home position
               home_lat = uav_lat;
@@ -30,11 +27,12 @@ void enterButtonReleaseEvents(Button &btn)
             }
             else if ((gps_fix) && (home_pos) && (home_bear)) {
               // START TRACKING 
-              current_activity = "TRACK";
+              current_activity = 1;
 
             }
         }
-
+     }
+     
  }
 
 
@@ -43,27 +41,24 @@ void leftButtonReleaseEvents(Button &btn)
 {
   if ( left_button.holdTime() < 1000 ) {
 
-  //Serial.println("left click");
-  //button action depends activity state
-    if (current_activity=="MENU") {
-        Serial.println("MENU LEFT");
+    if (current_activity==0) {
         displaymenu.prev();
     }
     
-    else if ( current_activity != "MENU" && current_activity != "TRACKING" && current_activity != "SET_HOME" ) {
+    else if ( current_activity != 0 && current_activity != 1 && current_activity != 2 ) {
               //We're in a setting area: Left button decrase current value.
-          if (current_activity == "PAN_MINPWM") servoconf_tmp[0]--;		 
-          if (current_activity == "PAN_MINANGLE") configuration.pan_minangle--;
-          if (current_activity == "PAN_MAXPWM") servoconf_tmp[1]--;
-          if (current_activity == "PAN_MAXANGLE") configuration.pan_maxangle--;
-          if (current_activity == "TILT_MINPWM") servoconf_tmp[2]--;
-          if (current_activity == "TILT_MINANGLE") configuration.tilt_minangle--;        
-          if (current_activity == "TILT_MAXPWM") servoconf_tmp[3]--;
-          if (current_activity == "TILT_MAXANGLE") configuration.tilt_maxangle--;
+          if (current_activity == 3) servoconf_tmp[0]--;		 
+          if (current_activity == 4) configuration.pan_minangle--;
+          if (current_activity == 5) servoconf_tmp[1]--;
+          if (current_activity == 6) configuration.pan_maxangle--;
+          if (current_activity == 7) servoconf_tmp[2]--;
+          if (current_activity == 8) configuration.tilt_minangle--;        
+          if (current_activity == 9) servoconf_tmp[3]--;
+          if (current_activity == 10) configuration.tilt_maxangle--;
     }
-    else if (current_activity=="SET_HOME") {
+    else if (current_activity==2) {
                if (gps_fix && home_pos && (home_bear)) {
-                  current_activity = "MENU";
+                  current_activity = 0;
                 }
           }
     }
@@ -75,22 +70,21 @@ void rightButtonReleaseEvents(Button &btn)
 {
   if ( right_button.holdTime() < 1000 ) {
      
-    if (current_activity=="MENU") {
-        Serial.println("MENU RIGHT");
+    if (current_activity==0) {
         displaymenu.next();
     }
-    else if ( current_activity != "MENU" && current_activity != "TRACKING" && current_activity != "SET_HOME" ) {
+    else if ( current_activity != 0 && current_activity != 1 && current_activity != 2 ) {
               //We're in a setting area: Right button decrase current value.
-          if (current_activity == "PAN_MINPWM") servoconf_tmp[0]++;		 
-          if (current_activity == "PAN_MINANGLE") configuration.pan_minangle++;
-          if (current_activity == "PAN_MAXPWM") servoconf_tmp[1]++;
-          if (current_activity == "PAN_MAXANGLE") configuration.pan_maxangle++;
-          if (current_activity == "TILT_MINPWM") servoconf_tmp[2]++;
-          if (current_activity == "TILT_MINANGLE") configuration.tilt_minangle++;        
-          if (current_activity == "TILT_MAXPWM") servoconf_tmp[3]++;
-          if (current_activity == "TILT_MAXANGLE") configuration.tilt_maxangle++;
+          if (current_activity == 3) servoconf_tmp[0]++;		 
+          if (current_activity == 4) configuration.pan_minangle++;
+          if (current_activity == 5) servoconf_tmp[1]++;
+          if (current_activity == 6) configuration.pan_maxangle++;
+          if (current_activity == 7) servoconf_tmp[2]++;
+          if (current_activity == 8) configuration.tilt_minangle++;        
+          if (current_activity == 9) servoconf_tmp[3]++;
+          if (current_activity == 10) configuration.tilt_maxangle++;
     }
-        if (current_activity=="SET_HOME") {
+        if (current_activity==0) {
            if (gps_fix && home_pos && (home_bear)) {
               // reset home pos
               home_pos = false;

@@ -1,31 +1,31 @@
 //LCD 
 
-
-
 void init_lcdscreen() {
+  char extract[20];
 // init LCD
 	LCD.Clear();
 	LCD.Backlight_On();
-	LCD.PrintChar(1, 1, "  [GHETTOSTATION]   ");
-	LCD.PrintChar(1, 2, " __________________ ");
-	LCD.PrintChar(1, 4, "      Welcome       ");
+	LCD.PrintChar(1, 1, string_load1.copy(extract));
+        LCD.PrintChar(1, 2, string_load2.copy(extract));
+	LCD.PrintChar(1, 3, string_load3.copy(extract));
+	LCD.PrintChar(1, 4, string_load4.copy(extract));
 	delay(1500); //delay to init lcd in time.
 }
 
-void store_lcdline( int i, char string_buffer[21] ) {
+void store_lcdline( int i, char sbuffer[20] ) {
 	
 	switch (i) {
 		case 1: 
-				strcpy(lcd_line1,string_buffer);
+				strcpy(lcd_line1,sbuffer);
 				break;
 		case 2: 
-				strcpy(lcd_line2,string_buffer);
+				strcpy(lcd_line2,sbuffer);
 				break;
 		case 3: 
-				strcpy(lcd_line3,string_buffer);
+				strcpy(lcd_line3,sbuffer);
 				break;
 		case 4: 
-				strcpy(lcd_line4,string_buffer);
+				strcpy(lcd_line4,sbuffer);
 				break;
                 default: 
                                 break;
@@ -48,57 +48,60 @@ void refresh_lcd() {
 
 // SET_HOME SCREEN
 void lcddisp_sethome() {
-  Serial.println("SET HOME");
    for ( int i = 1 ; i<5; i++ ) {
-     char string_buffer[21];
-     String currentline="";
-     if (i==1) {
-        //line1
-        if (!telemetry_ok) String c="NO";
-        else String c=protocol;
-        currentline = "L:" + protocol;
-        currentline += "SATS:";
-        currentline += String(uav_satellites_visible);
-        currentline += " FIX:";
-        currentline += String(uav_fix_type);
-        }
-     else if (i==2) {
-       //line 2
-       if (!telemetry_ok) currentline =  "  Waiting for Data  ";
-       else {
-         if (!gps_fix) currentline = "   No GPS 3D FIX    ";
-         else currentline = "     3D FIX OK      ";
-       }
-      }
-      else if (i==3) {
-        if (!gps_fix) currentline = "    Please Wait.    ";
-        else {
-             char bufferl[10];
-             char bufferL[10];
-             currentline = String(dtostrf(uav_lat, 5, 5, bufferl));
-             currentline += " ";
-             currentline += String(dtostrf(uav_lon, 5, 5, bufferL));
-        }
-      }
-      else {
-         if (!gps_fix) currentline = "(long press to quit)";
-         else currentline = "   Save Home pos now?   ";
-      }
-    
+     char extract[21];
+     char string_buffer[20];
+     String currentline;
+     switch (i) {
+           case 1:
+                //line1
+                if (!telemetry_ok) String c="NO";
+                else String c=protocol;
+                currentline = "L:" + protocol;
+                currentline += " SATS:";
+                currentline += String(uav_satellites_visible);
+                currentline += " FIX:";
+                currentline += String(uav_fix_type);
+                break;
+            case 2:
+                 //line 2
+                 if (!telemetry_ok) currentline = String(string_shome1.copy(extract));
+                 else {
+                   if (!gps_fix) currentline = String(string_shome2.copy(extract));
+                   else currentline = String(string_shome3.copy(extract));
+                 }
+                 break;
+      
+             case 3:
+                    if (!gps_fix) currentline = String(string_shome4.copy(extract));
+                    else {
+                         char bufferl[10];
+                         char bufferL[10];
+                         currentline = String(dtostrf(uav_lat, 5, 5, bufferl));
+                         currentline += " ";
+                         currentline += String(dtostrf(uav_lon, 5, 5, bufferL));
+                    }
+                    break;
+      
+             case 4:
+                   if (!gps_fix) currentline = String(string_shome5.copy(extract));
+                   else currentline = String(string_shome6.copy(extract));
+                   break;
+              }
+     
     for ( int l = currentline.length() ; l<21 ; l++ ) {
 	 currentline += " ";
 	 }
-    Serial.println(currentline);
-    currentline.toCharArray(string_buffer,21);
+    currentline.toCharArray(string_buffer,20);
     store_lcdline(i,string_buffer);
    } 
 }
 
 
 void lcddisp_setbearing() {
-  Serial.println("SET BEAR");
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[21];
+       char string_buffer[20];
+       char extract[20];
        String currentline="";
        switch (i) {
            case 1: 
@@ -111,25 +114,25 @@ void lcddisp_setbearing() {
                         currentline += String(uav_fix_type);
                         break;
            case 2:
-                        currentline = "                    "; break;
+                        currentline = String(string_load2.copy(extract));  break;
            case 3:
-                        currentline = " Move UAV 20m ahead "; break;
+                        currentline = String(string_shome8.copy(extract)); break;
            case 4:      
-                        currentline = " & press enter      ";break;
+                        currentline = String(string_shome9.copy(extract)); break;
 
        }
-       for ( int l = currentline.length()-1 ; l<20 ; l++ ) {
+       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
 	 currentline = currentline + " ";
 	 }
-       currentline.toCharArray(string_buffer,21);
+       currentline.toCharArray(string_buffer,20);
        store_lcdline(i,string_buffer);
     }
 }
 
 void lcddisp_homeok() {
-  Serial.println("HOME OK");
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[21];
+       char string_buffer[20];
+       char extract[20];
        String currentline="";
        switch (i) {
            case 1: 
@@ -142,25 +145,24 @@ void lcddisp_homeok() {
                         currentline += String(uav_fix_type);
                         break;
            case 2:
-                        currentline = "      HOME IS SET      "; break;
+                        currentline = String(string_shome10.copy(extract)); break;
            case 3:
-                        currentline = "Enter: Start Tracking"; break;
+                        currentline = String(string_shome11.copy(extract)); break;
 
-           case 4:      currentline = " << Menu     Reset >>"; break;
+           case 4:      currentline = String(string_shome12.copy(extract)); break;
        
            }
-       for ( int l = currentline.length()-1 ; l<20 ; l++ ) {
+       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
          currentline = currentline + " ";
          }
-       currentline.toCharArray(string_buffer,21);
+       currentline.toCharArray(string_buffer,20);
        store_lcdline(i,string_buffer);
        }
 }
 
 void lcddisp_tracking(){
-  Serial.println("TRACK");
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[21];
+       char string_buffer[20];
        String currentline="";
        switch (i) {
            case 1: 
@@ -196,12 +198,11 @@ void lcddisp_tracking(){
                         break;
 
        }
-       for ( int l = currentline.length()-1 ; l<20 ; l++ ) {
+       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
 	 currentline = currentline + " ";
 	 }
-       currentline.toCharArray(string_buffer,21);
+       currentline.toCharArray(string_buffer,20);
        store_lcdline(i,string_buffer);
     }
 }
-
 

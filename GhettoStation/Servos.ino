@@ -12,9 +12,7 @@ void attach_servo(Servo &s, int p, int min, int max) {
         //#if defined(PAN_SERVOREVERSED) || defined(TILT_SERVOREVERSED)
         //e.setFlipped(true);
         //#endif
-        // make ServoEaser use microseconds
-	
-        Serial.println("servo attached");
+        // make ServoEaser use microsecond
         
 }
 
@@ -49,7 +47,7 @@ void move_servo(Servo &s, int stype, float a, int mina, int maxa) {
 	s.write( new_angle);
 }
 
-void servoPathfinder(float angle_b, float angle_a){
+void servoPathfinder(int angle_b, int angle_a){
 //find the best way to move pan servo considering 0° reference face toward
 	if (angle_b<=180) {
 			if ( configuration.pan_maxangle >= angle_b ) {
