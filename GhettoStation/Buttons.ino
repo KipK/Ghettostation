@@ -23,6 +23,7 @@ void enterButtonReleaseEvents(Button &btn)
             else if ((gps_fix) && (home_pos) && (!home_bear)) {
              // saving home bearing 
              home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // storing bearing relative to north
+             
               
             }
             else if ((gps_fix) && (home_pos) && (home_bear)) {
