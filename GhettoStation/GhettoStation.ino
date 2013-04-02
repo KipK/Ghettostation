@@ -17,7 +17,6 @@
 #include "Config.h"
 #include <avr/pgmspace.h>
 #include <LCD03_I2C.h>
-//#include <MemoryFree.h>
 #include <Metro.h>
 #include <MenuSystem.h>
 #include <Button.h>
@@ -46,7 +45,7 @@ Servo tilt_servo;
 
 //#####	RATE LOOPS 
 //setting telemetry refresh rate.
-Metro telemetryMetro = Metro(20);
+Metro telemetryMetro = Metro(100);
 //setting lcd refresh rate at 5hz.
 Metro lcdMetro = Metro(200);
 //setting tracking loop at 5hz ( same as gps rate on uav, servo loops are running at 50hz)

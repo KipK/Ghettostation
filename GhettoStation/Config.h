@@ -4,12 +4,14 @@
 #define UAVTALK_MODE_PASSIVE  // define if you already have GCS or OSD running.
 
 #define TELEMETRY_BAUD  57600		//Telemetry baudrate used
-#define MIN_SPEED
-#define SERVO_REFRESH_INTERVAL 20	//Defines the refresh rate and thus the speed of the servos. 20ms means 50hz.
+
+
 #define PAN_SERVOPIN 6		//Pin used on arduino for pan servo
 #define TILT_SERVOPIN 9		//Pin used on arduino for tilt servo
 //#define PAN_SERVOREVERSED      // Depending of your hardware configuration, servo pwm need to be reversed. Change if it track at the opposite :)
 //#define TILT_SERVOREVERSED   // same for tilt
+
+
 #define LEFT_BUTTON_PIN 4
 #define RIGHT_BUTTON_PIN 3
 #define ENTER_BUTTON_PIN 5
@@ -30,7 +32,7 @@
 							//With those pan_maxangle & pan_minangle we can know the pan type ( 360° or 180° pan ) & we have the overlap range.
 
 #define TILT_MAXPWM 2100	//max tilt pwm value 
-#define TILT_MAXANGLE 160	//max tilt angle considering 0° is facing toward.
+#define TILT_MAXANGLE 90	//max tilt angle considering 0° is facing toward.
 							//ie for 180° pan config, 160 means we have a 20° deadband behind on Tilt axis
 							//a 200 value for example would indicate we can even tilt down backward 20°.
 							//120 for 360° pan config, means tilt can go 30° more further your head before switching pan side.
@@ -39,7 +41,7 @@
 							
 #define TILT_MINPWM 700		//min tilt pwm value
 #define TILT_MINANGLE 5		//Means minimum tilt position is parallel to ground. Considering 0 is facing toward, a -10 value would means we can tilt 10° down.
-#define OVERLAP_FACTOR 1.1	// Unused yet
+//#define OVERLAP_FACTOR 1.1	// Unused yet
 							 //the factor that determines how much the heading/tilt must go over the servo limits before the opposite axis  switch to the other side. I.e.
 							 // 1.1 as default setting gives you an 18 degree "gray on 180
 							 // area" where the pan/tilt doesn't switch sides even

@@ -36,14 +36,20 @@ void move_servo(Servo &s, int stype, float a, int mina, int maxa) {
                      
 		}
                 // map configured pan settings to default arduino lib 0-180° servo range
-                new_angle = map (a, 0, mina+maxa, 0, 180); 
+                new_angle = map (a, 0, mina+maxa, 0, 180);
+				#ifdef PAN_SERVOREVERSED
+				new_angle = 180 - new_angle
+				#endif
                 
 	 }
   else if (stype == 2){
                 
 		new_angle = map(a, configuration.tilt_minangle, configuration.tilt_maxangle, 0, 180); //map configured tilt settings to default arduino lib 0-180° servo range
-
+		#ifdef PAN_SERVOREVERSED
+		new_angle = 180 - new_angle
+		#endif
 	}
+	
 	s.write( new_angle);
 }
 
