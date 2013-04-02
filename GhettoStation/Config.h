@@ -3,11 +3,12 @@
 //Choose one of the protocol below and comment others:
 
 //UAVTALK OPENPILOT
-#define PROTOCOL_UAVTALK      
+//#define PROTOCOL_UAVTALK      
 #define UAVTALK_MODE_PASSIVE  // define if you already have GCS or OSD running.
 
 //MSP MULTIWII
-//#define PROTOCOL_MSP        // MSP from Multiwii
+#define PROTOCOL_MSP        // MSP from Multiwii
+
 
 
 

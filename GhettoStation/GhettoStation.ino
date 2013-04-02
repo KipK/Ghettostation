@@ -26,7 +26,14 @@
 #include "Eeprom.h"
 #include "GhettoStation.h"
 
-#include "UAVTalk.h"
+
+#if defined(PROTOCOL_UAVTALK)
+#include "UAVTalk.cpp"
+#endif
+
+#if defined(PROTOCOL_MSP)
+#include "MSP.cpp"
+#endif
 
 
 
@@ -65,6 +72,7 @@ Button enter_button = Button(ENTER_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 
 
 //#################################### SETUP LOOP ####################################################
+
 void setup() {
 
 

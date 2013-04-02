@@ -26,15 +26,12 @@
  */
 
 
-#ifndef UAVTALK_H_
-#define UAVTALK_H_
+
 
 
 
 //#define VERSION_RELEASE_12_10_1	// OpenPilot-RELEASE 12.10.1	Release from 2012.10.26
-#define VERSION_RELEASE_12_10_2		// OpenPilot-RELEASE 12.10.2	Release from 2012.12.21	'Mayan Apocalypse'
-
-
+//#define VERSION_RELEASE_12_10_2		// OpenPilot-RELEASE 12.10.2	Release from 2012.12.21	'Mayan Apocalypse'
 
 
 // TODO enhancement:
@@ -49,7 +46,7 @@
 // generate release and copy exe to <top>\ground\uavobjgenerator
 // uavobjgenerator -flight ..\..\shared\uavobjectdefinition ..\..\
 
-#if defined VERSION_RELEASE_12_10_1 || defined VERSION_RELEASE_12_10_2
+//#if defined VERSION_RELEASE_12_10_1 || defined VERSION_RELEASE_12_10_2
 
 #define	FLIGHTTELEMETRYSTATS_OBJID			0x2F7E2902
 #define	GCSTELEMETRYSTATS_OBJID				0xABC72744
@@ -137,7 +134,7 @@ typedef enum {
   FLIGHTSTATUS_FLIGHTMODE_POSITIONHOLD=7 
 } FlightStatusFlightModeOptions;
 
-#endif // defined VERSION_RELEASE_12_10_1 || defined VERSION_RELEASE_12_10_2
+//#endif // defined VERSION_RELEASE_12_10_1 || defined VERSION_RELEASE_12_10_2
 
 
 
@@ -197,4 +194,3 @@ int uavtalk_read(void);
 int uavtalk_state(void);
 
 
-#endif /* UAVTALK_H_ */

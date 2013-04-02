@@ -9,10 +9,10 @@ uint8_t      uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
 int        uav_alt = 0;                    // altitude
 int        uav_groundspeed = 0;            // ground speed
 
+String protocol = "";
 //Specific protocol variables
 //UAVTalk
 uint8_t op_uavtalk_mode = 1;            // OP UAVTalk Active/Passive mode ( 1 = Passive )
-String protocol = "UAVTk";
 
 //servo variables
 //int pan_middlepoint;
