@@ -11,7 +11,7 @@ int        uav_groundspeed = 0;            // ground speed
 
 //Specific protocol variables
 //UAVTalk
-uint8_t 		op_uavtalk_mode = 1;            // OP UAVTalk Active/Passive mode ( 1 = Passive )
+uint8_t op_uavtalk_mode = 1;            // OP UAVTalk Active/Passive mode ( 1 = Passive )
 String protocol = "UAVTk";
 
 //servo variables

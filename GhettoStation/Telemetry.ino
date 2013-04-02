@@ -12,6 +12,9 @@ void get_telemetry() {
 #if defined(PROTOCOL_UAVTALK)
          uavtalk_read(); // uavtalk serial reading
 #endif
+#if defined(PROTOCOL_MSP)
+         msp_read(); // uavtalk serial reading
+#endif
 
       }
 }

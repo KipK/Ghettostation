@@ -59,11 +59,11 @@ void leftButtonReleaseEvents(Button &btn)
           if (current_activity == 10) configuration.tilt_maxangle--;
     }
     else if (current_activity==2) {
-               if (gps_fix && home_pos && (home_bear)) {
+               if (gps_fix && home_pos && home_bear) {
                   current_activity = 0;
                 }
-          }
     }
+  }
 }
 
 
@@ -86,7 +86,7 @@ void rightButtonReleaseEvents(Button &btn)
           if (current_activity == 9) servoconf_tmp[3]++;
           if (current_activity == 10) configuration.tilt_maxangle++;
     }
-        if (current_activity==0) {
+    else if (current_activity==2) {
            if (gps_fix && home_pos && (home_bear)) {
               // reset home pos
               home_pos = false;

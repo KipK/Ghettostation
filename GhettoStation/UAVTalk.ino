@@ -354,6 +354,7 @@ int uavtalk_read(void) {
 	
 	// check connect timeout
 	if (last_flighttelemetry_connect + FLIGHTTELEMETRYSTATS_CONNECT_TIMEOUT < millis()) {
+	    telemetry_ok = false;
 		gcstelemetrystatus = TELEMETRYSTATS_STATE_DISCONNECTED;
                 //telemetry_ok = false;
                       //reset uav data

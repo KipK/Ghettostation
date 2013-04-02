@@ -32,7 +32,6 @@ struct config_t
   int tilt_minangle;
   int tilt_maxpwm;
   int tilt_maxangle;
-  float overlap_factor;
   int baudrate;
 } configuration;
 
@@ -88,7 +87,7 @@ FLASH_STRING(string_shome12, "<< Menu     Reset >>");
 
 void clear_eeprom() {
 	// clearing eeprom
-	for (int i = 0; i < 1024; i++)
+	for (int i = 0; i < 1025; i++)
 		EEPROM.write(i, 0);
 		// eeprom is clear  we can write default config
 	configuration.config_crc = CONFIG_VERSION;  // config version check
@@ -100,7 +99,6 @@ void clear_eeprom() {
 	configuration.tilt_minangle = TILT_MINANGLE;
 	configuration.tilt_maxpwm = TILT_MAXPWM;
         configuration.tilt_maxangle = TILT_MAXANGLE;
-	configuration.overlap_factor = OVERLAP_FACTOR;
 	configuration.baudrate = TELEMETRY_BAUD;
 	EEPROM_write(0, configuration);
 

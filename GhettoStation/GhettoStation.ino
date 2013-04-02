@@ -13,7 +13,7 @@
  *
  *****************************************************************************/
 
-#define CONFIG_VERSION 1338 //version check for configuration in eeprom. You don't have to edit it.
+#define CONFIG_VERSION 2001 //version check for configuration in eeprom. You don't have to edit it.
 #include "Config.h"
 #include <avr/pgmspace.h>
 #include <LCD03_I2C.h>
@@ -27,6 +27,7 @@
 #include "GhettoStation.h"
 
 #include "UAVTalk.h"
+
 
 
 //################################### SETTING OBJECTS ###############################################
@@ -112,6 +113,8 @@ void setup() {
        enter_button.releaseHandler(enterButtonReleaseEvents);
        left_button.releaseHandler(leftButtonReleaseEvents);
        right_button.releaseHandler(rightButtonReleaseEvents);
+       //left_button.setHoldThreshold(1000);
+       //right_button.setHoldThreshold(1000);
 
 }
 
@@ -124,7 +127,9 @@ void loop() {
         left_button.isPressed();
         right_button.isPressed();
         }
-
+//        enter_button.isPressed();
+//        left_button.isPressed();
+//        right_button.isPressed();
 	//get telemetry data ( default at 10hz)
 	
         get_telemetry();

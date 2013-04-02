@@ -3,7 +3,6 @@
 void check_activity() {
     
     if (activityMetro.check() == 1) 
-
       if (uav_fix_type == 3) { gps_fix = true; }
     
       {
