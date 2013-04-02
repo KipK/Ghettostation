@@ -1,5 +1,6 @@
 //CONFIGURATION                        
 
+
 //Choose one of the protocol below and comment others:
 
 //UAVTALK OPENPILOT
@@ -33,19 +34,24 @@
 
 		
 #define PAN_MAXPWM 2420	//max pan servo pwm value
-#define PAN_MAXANGLE 90	//max angle clockwise,  Considering 0° is  heading toward level to the ground and is servo middle position, for 180° pan conf, a 110 value means we can go 20° further before reversing pan & tilt
-							
-							//a 190° value means for 360° pan conf we can go 10° further before inversing pan.
+#define PAN_MAXANGLE 90	//max angle clockwise (on the right) defined by PAN_MAXPWM.
+						//Considering 0° is  heading toward level to the ground,
+						//for 180° pan conf, a 110 value means we can go 20° further before reversing pan & tilt.						
+						//A 190° value means for a 360° pan setup we can go 10° further before inversing pan.
+						
 #define PAN_MINPWM 632		//min pan servo pwm value
-#define PAN_MINANGLE 90		//max angle counter clockwise.
-							//With those pan_maxangle & pan_minangle we can know the pan type ( 360° or 180° pan ) & we have the overlap range.
+#define PAN_MINANGLE 90		//max angle counter-clockwise (on the left).
+							//With those pan_maxangle & pan_minangle we can know the pan type ( 360° or 180° pan )
+							// & we have the overlap range.
 
 #define TILT_MAXPWM 2227	//max tilt pwm value 
 #define TILT_MAXANGLE 155	//max tilt angle considering 0° is facing toward.
 							//ie for 180° pan config, 160 means we have a 20° deadband behind on Tilt axis
 							//a 200 value for example would indicate we can even tilt down backward 20°.
-							//120 for 360° pan config, means tilt can go 30° more further your head before switching pan side.
-							// IF YOU HAVE A 90° Tilt setup , DON'T FORGET TO CHANGE THIS VALUE TO 90 HERE TO PROTECT YOUR SERVO
+							//120 for 360° pan config, means tilt can go 30° more further your head 
+							//before switching pan side.
+							// IF YOU HAVE A 90° Tilt setup , DON'T FORGET TO CHANGE THIS VALUE TO 90 
+							//HERE TO PROTECT YOUR SERVO
 							
 							
 #define TILT_MINPWM 774		//min tilt pwm value

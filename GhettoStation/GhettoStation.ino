@@ -13,7 +13,8 @@
  *
  *****************************************************************************/
 
-#define CONFIG_VERSION 2001 //version check for configuration in eeprom. You don't have to edit it.
+#define CONFIG_VERSION 2001 // Edit only if you want to reset eeprom
+
 #include "Config.h"
 #include <avr/pgmspace.h>
 #include <LCD03_I2C.h>

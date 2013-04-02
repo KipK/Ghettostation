@@ -1,3 +1,4 @@
+- add credits
 - configure Baudrate from menu
 - (done) add servos test 
 - add Multiwii protocol queries ( Active mode )
