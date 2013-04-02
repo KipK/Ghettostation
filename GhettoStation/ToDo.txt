@@ -1,0 +1,11 @@
+- configure Baudrate from menu
+- (done) add servos test 
+- add Multiwii protocol queries ( Active mode )
+- smooth/ease servos
+- remove all Strings stuff & replace them with char[] ( will free some memory )
+- add a deadband margin before inverting pan/tilt servo on 180/180 config.
+- stop tracking when UAV/home distance is <10m
+- for Mega boards only: Define all telemetry protocols at compile time 
+  and autodetect it when running ( not enough memory on atmega 328 )
+- depending of memory, add some other telemetric values while flying ( flight time, voltage, flight mode, etc )
+- add a voltage divider on the arduino and display current ground battery voltage, with alert when getting low.

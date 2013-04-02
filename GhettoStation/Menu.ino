@@ -108,7 +108,7 @@ void configure_test_servo(MenuItem* p_menu_item) {
 }
 
 void configure_baudrate(MenuItem* p_menu_item) {
-	current_activity = 12;
+	//current_activity = 12;
 }
 
 

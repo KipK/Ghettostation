@@ -2,7 +2,7 @@ void init_serial() {
 	//disable previous serial in case of baudrate change
 	Serial.end();
 	//enable it
-	Serial.begin(57600);
+	Serial.begin(configuration.baudrate);
 }
 
 //Preparing adding other protocol

@@ -168,3 +168,31 @@ return value;
            
 }
 
+
+void test_servos() {
+  servoPathfinder(0, 0);
+  
+  // testing tilt
+  for (int i=0; i <= 90; i++ ) {
+    servoPathfinder(0, i); 
+    delay(100);
+  }
+  for (int i=90; i >= 0 ; i--) {
+    servoPathfinder(180, i); 
+    delay(100);
+  }
+  //get back to 0,45
+    servoPathfinder(0,45);
+    delay(1000); 
+    
+  //doing a full 360 pan with 45° tilt
+  for (int i=0; i < 360; i++) {
+    servoPathfinder(i, 45); 
+    delay(100);
+  }
+  //finished going back to neutral
+    servoPathfinder(0,0);
+  
+  
+}
+

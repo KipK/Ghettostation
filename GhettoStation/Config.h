@@ -3,11 +3,11 @@
 //Choose one of the protocol below and comment others:
 
 //UAVTALK OPENPILOT
-//#define PROTOCOL_UAVTALK      
-#define UAVTALK_MODE_PASSIVE  // define if you already have GCS or OSD running.
+#define PROTOCOL_UAVTALK      
+#define UAVTALK_MODE_PASSIVE  // define if you already have GCS or OSD running. Arduino won't send anything on the Tx line. If undefined, it will send UAVTalk queries.
 
 //MSP MULTIWII
-#define PROTOCOL_MSP        // MSP from Multiwii
+//#define PROTOCOL_MSP        // MSP from Multiwii , only passive for now ( ie doesn't send request to Multiwii so you need a multiwii OSD or ground station client running at the same time )
 
 
 

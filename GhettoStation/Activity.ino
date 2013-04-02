@@ -139,7 +139,8 @@ void check_activity() {
                 }
           }
           if (current_activity == 11) { //TEST_SERVO
-             //TO DO 
+             test_servos();
+             current_activity = 0; 
           }
           if (current_activity == 12) { //SET_RATE
              //TO DO 
