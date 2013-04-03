@@ -107,7 +107,7 @@ void lcddisp_setbearing() {
            case 1: 
                         if (!telemetry_ok) { currentline = "L:NO"; }
                 else if (telemetry_ok) { currentline = "L:" + protocol;}
-                        currentline += "SATS:";
+                        currentline += " SATS:";
                         currentline += String(uav_satellites_visible);
                         currentline += " FIX:";
                         currentline += String(uav_fix_type);
@@ -166,7 +166,7 @@ void lcddisp_tracking(){
            case 1: 
                         if (!telemetry_ok) { currentline = "L:NO"; }
                         else if (telemetry_ok) { currentline = "L:" + protocol;}
-                        currentline += "SATS:";
+                        currentline += " SATS:";
                         currentline += String(uav_satellites_visible);
                         currentline += " FIX:";
                         currentline += String(uav_fix_type);

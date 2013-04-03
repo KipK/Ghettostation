@@ -54,7 +54,7 @@ Servo tilt_servo;
 
 //#####	RATE LOOPS 
 //setting telemetry refresh rate.
-Metro telemetryMetro = Metro(100);
+Metro telemetryMetro = Metro(20);
 //setting lcd refresh rate at 5hz.
 Metro lcdMetro = Metro(200);
 //setting tracking loop at 5hz ( same as gps rate on uav, servo loops are running at 50hz)

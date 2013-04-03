@@ -303,7 +303,7 @@
   					switch (msg.Data[FLIGHTTELEMETRYSTATS_OBJ_STATUS]) {
   						case TELEMETRYSTATS_STATE_DISCONNECTED:
   							gcstelemetrystatus = TELEMETRYSTATS_STATE_HANDSHAKEREQ;
-                                                          //telemetry_ok = false;
+                                                          telemetry_ok = false;
   							uavtalk_send_gcstelemetrystats();
   						break;
   						case TELEMETRYSTATS_STATE_HANDSHAKEACK:
@@ -354,17 +354,7 @@
   	
   	// check connect timeout
   	if (last_flighttelemetry_connect + FLIGHTTELEMETRYSTATS_CONNECT_TIMEOUT < millis()) {
-  	    telemetry_ok = false;
   		gcstelemetrystatus = TELEMETRYSTATS_STATE_DISCONNECTED;
-                  //telemetry_ok = false;
-                        //reset uav data
-  //      uav_lat = 0;                    // latitude
-  //      uav_lon = 0;                    // longitude
-  //      uav_satellites_visible = 0;     // number of satelites
-  //      uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
-  //      uav_heading = 0;                // ground course heading from GPS
-  //      uav_alt = 0;                    // altitude
-  //      uav_groundspeed = 0;
                   //telemetry_ok = false;
   		show_prio_info = 1;
   	}

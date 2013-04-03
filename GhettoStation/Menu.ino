@@ -19,7 +19,6 @@ void init_menu() {
                                 m1m3m1m2Menu.add_item(&m1m3m1m2l3Item, &configure_tilt_minangle); // tilt min angle
 				m1m3m1m2Menu.add_item(&m1m3m1m2l4Item, &configure_tilt_maxangle); // tilt max angle
                         m1m3m1Menu.add_item(&m1m3m1i3Item, &configure_test_servo);
-		m1m3Menu.add_item(&m1m3l2Item, &configure_baudrate); //config baudrate
 	displaymenu.set_root_menu(&rootMenu);
 }
 
@@ -107,8 +106,5 @@ void configure_test_servo(MenuItem* p_menu_item) {
        current_activity = 11;
 }
 
-void configure_baudrate(MenuItem* p_menu_item) {
-	//current_activity = 12;
-}
 
 
