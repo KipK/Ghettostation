@@ -5,6 +5,7 @@
 - smooth/ease servos
 - handle compass on the tracker to remove calibration.
 - handle a GPS on the tracker to manage a mobile tracker.
+- add Eosbandi GPS filtering to smooth out gps positions.
 - remove all Strings stuff & replace them with char[] ( will free some memory )
 - add a deadband margin before inverting pan/tilt servo on 180/180 config.
 - stop tracking when UAV/home distance is <10m
