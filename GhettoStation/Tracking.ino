@@ -16,13 +16,9 @@ void antenna_tracking() {
           Bearing=(360-home_bearing+Bearing);
         }
 	// serv command
-	servoPathfinder(Bearing,Azimuth);
-//        Serial.print("Bearing:");
-//        Serial.println(Bearing);
-//        Serial.print("Azim:");
-//        Serial.println(Azimuth);
-//	
-//	
+        if(home_dist>10) { //don't track when <10m 
+	    servoPathfinder(Bearing,Azimuth);
+        }
 
 }
 

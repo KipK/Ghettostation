@@ -90,7 +90,7 @@ void rightButtonReleaseEvents(Button &btn)
            if (gps_fix && home_pos && (home_bear)) {
               // reset home pos
               home_pos = false;
-              home_bearing == false; 
+              home_bearing = false; 
            }
     }
   }

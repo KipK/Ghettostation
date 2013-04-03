@@ -355,7 +355,7 @@
   	// check connect timeout
   	if (last_flighttelemetry_connect + FLIGHTTELEMETRYSTATS_CONNECT_TIMEOUT < millis()) {
   		gcstelemetrystatus = TELEMETRYSTATS_STATE_DISCONNECTED;
-                  //telemetry_ok = false;
+                  telemetry_ok = false;
   		show_prio_info = 1;
   	}
   	
