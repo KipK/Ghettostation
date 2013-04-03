@@ -96,7 +96,7 @@
   	
   	c = (uint8_t) (msg->Sync);
   	Serial.write(c);
-  	//msg->Crc = crc_table[0 ^ c];
+  	msg->Crc = crc_table[0 ^ c];
   	c = (uint8_t) (msg->MsgType);
   	Serial.write(c);
   	msg->Crc = crc_table[msg->Crc ^ c];
