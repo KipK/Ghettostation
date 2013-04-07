@@ -53,7 +53,7 @@ void move_servo(Servo &s, int stype, int a, int mina, int maxa) {
 	s.write( new_angle);
 }
 
-void servoPathfinder(int angle_b, int angle_a){
+void servoPathfinder(int angle_b, int angle_a){   // ( bearing, azimuth )
 //find the best way to move pan servo considering 0° reference face toward
 	if (angle_b<=180) {
 			if ( configuration.pan_maxangle >= angle_b ) {

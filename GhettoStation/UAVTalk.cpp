@@ -328,8 +328,8 @@
   					uav_satellites_visible	= uavtalk_get_int8(&msg, GPSPOSITION_OBJ_SATELLITES);
   					uav_fix_type		= uavtalk_get_int8(&msg, GPSPOSITION_OBJ_STATUS);
   					//uav_heading		= uavtalk_get_float(&msg, GPSPOSITION_OBJ_HEADING);
-  					uav_alt			= (int)uavtalk_get_float(&msg, GPSPOSITION_OBJ_ALTITUDE);
-  					uav_groundspeed		= (int)uavtalk_get_float(&msg, GPSPOSITION_OBJ_GROUNDSPEED);
+  					uav_alt			= (int)round(uavtalk_get_float(&msg, GPSPOSITION_OBJ_ALTITUDE));
+  					uav_groundspeed		= (int)round(uavtalk_get_float(&msg, GPSPOSITION_OBJ_GROUNDSPEED));
   				break;
   				
   				default:

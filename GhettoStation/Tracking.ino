@@ -8,15 +8,15 @@ void antenna_tracking() {
 	
 	//set current GPS bearing relative to home_bearing
 	
-	if(Bearing > home_bearing){
-          Bearing=(Bearing-home_bearing);
+	if(Bearing >= home_bearing){
+          Bearing-=home_bearing;
         }
         else
         {
-          Bearing=(360-home_bearing+Bearing);
+          Bearing+=360-home_bearing;
         }
 	// serv command
-        if(home_dist>10) { //don't track when <10m 
+        if(home_dist>DONTTRACKUNDER) { //don't track when <10m 
 	    servoPathfinder(Bearing,Azimuth);
         }
 

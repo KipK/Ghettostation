@@ -1,5 +1,5 @@
 //CONFIGURATION                        
-
+//#define DEBUG
 
 //Choose one of the protocol below and comment others:
 
@@ -10,11 +10,10 @@
 //MSP MULTIWII
 //#define PROTOCOL_MSP        // MSP from Multiwii , only passive for now ( ie doesn't send request to Multiwii so you need a multiwii OSD or ground station client running at the same time )
 
-
-
-
 #define TELEMETRY_BAUD  57600		//Telemetry baudrate used
 
+//Minimum distance in meters where it will stop moving servos. 
+#define DONTTRACKUNDER  6
 
 #define PAN_SERVOPIN 6		//Pin used on arduino for pan servo
 #define TILT_SERVOPIN 9		//Pin used on arduino for tilt servo

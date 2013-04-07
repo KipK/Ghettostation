@@ -54,7 +54,7 @@ Servo tilt_servo;
 
 //#####	RATE LOOPS 
 //setting telemetry refresh rate.
-Metro telemetryMetro = Metro(20);
+Metro telemetryMetro = Metro(60);
 //setting lcd refresh rate at 5hz.
 Metro lcdMetro = Metro(200);
 //setting tracking loop at 5hz ( same as gps rate on uav, servo loops are running at 50hz)
@@ -63,6 +63,9 @@ Metro lcdMetro = Metro(200);
 Metro buttonMetro = Metro(100);
 //setting activity loop time
 Metro activityMetro = Metro(100);
+
+//Debug output
+Metro debugMetro = Metro(1000); // output serial debug data each second.
 
 //##### BUTTONS 
 Button right_button = Button(RIGHT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
@@ -147,7 +150,10 @@ void loop() {
         check_activity();     
         //lcd refresh loop ( default 10hz )
 	refresh_lcd();
-      
+#if defined(DEBUG)
+        //debug output
+        debug();
+#endif
         
 }
 
