@@ -17,7 +17,7 @@ void attach_servo(Servo &s, int p, int min, int max) {
 }
 
 
-void move_servo(Servo &s, int stype, float a, int mina, int maxa) {
+void move_servo(Servo &s, int stype, int a, int mina, int maxa) {
 
  
  float new_angle;
@@ -45,7 +45,7 @@ void move_servo(Servo &s, int stype, float a, int mina, int maxa) {
   else if (stype == 2){
                 
 		new_angle = map(a, configuration.tilt_minangle, configuration.tilt_maxangle, 0, 180); //map configured tilt settings to default arduino lib 0-180° servo range
-		#ifdef PAN_SERVOREVERSED
+		#ifdef TILT_SERVOREVERSED
 		new_angle = 180 - new_angle
 		#endif
 	}
@@ -53,7 +53,7 @@ void move_servo(Servo &s, int stype, float a, int mina, int maxa) {
 	s.write( new_angle);
 }
 
-void servoPathfinder(float angle_b, float angle_a){
+void servoPathfinder(int angle_b, int angle_a){
 //find the best way to move pan servo considering 0° reference face toward
 	if (angle_b<=180) {
 			if ( configuration.pan_maxangle >= angle_b ) {

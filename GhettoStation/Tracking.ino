@@ -46,17 +46,18 @@ void calc_tracking(float lon1, float lat1, float lon2, float lat2, int alt) {
 }
 
 
-float calc_bearing(float lon1, float lat1, float lon2, float lat2) {
+int calc_bearing(float lon1, float lat1, float lon2, float lat2) {
 // bearing calc, feeded in radian, output degrees
 	float a;
 	//calculating bearing in degree
 	a=atan2(sin(lon2-lon1)*cos(lat2), cos(lat1)*sin(lat2)-sin(lat1)*cos(lat2)*cos(lon2-lon1));
 	a=toDeg(a);
 	if (a<0) a=360+a;
-	return a;
+        int b = (int)round(a);
+	return b;
 }
 
-float calc_azimuth(float lon1, float lat1, float lon2, float lat2, int alt) {
+int calc_azimuth(float lon1, float lat1, float lon2, float lat2, int alt) {
 //Azimuth cacl, feeded in radian, output in degrees
   float a, az, c, d, R, dLat, dLon;
   //calculating distance between uav & home
@@ -67,20 +68,21 @@ float calc_azimuth(float lon1, float lat1, float lon2, float lat2, int alt) {
   c = 2* asin(sqrt(a));  
   d = R * c;
   home_dist = d;
-  az=atan(alt/d);// in radian
+  az=atan(((float)alt)/d);// in radian
   az=toDeg(az); // in degree
-  return (int) az;
+  int b = (int)round(az);
+  return b;
 }
 
 float toRad(float angle) {
 // convert degrees to radians
-	angle = angle/180*PI;
+	angle = (angle/180)*PI;
 	return angle;
 }
 
 float toDeg(float angle) {
 // convert radians to degrees.
-	angle = angle*180/PI;
+	angle = (angle*180)/PI;
         return angle;
 }
 	

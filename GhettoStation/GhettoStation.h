@@ -29,8 +29,8 @@ int home_dist;
 
 
 //tracking variables
-float Bearing;
-float Azimuth;
+int Bearing;
+int Azimuth;
 
 //lcd
 char lcd_line1[21];

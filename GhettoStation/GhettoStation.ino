@@ -4,10 +4,10 @@
  * @file       GhettoStation.ino
  * @author     Guillaume Sartre 
  * @brief      Arduino based antenna tracker & telemetry display for UAV projects.
+ * @project	   https://code.google.com/p/ghettostation/
  * 
- *
- *             UAVTalk arduino api stripped down from minoposd: 
- *             http://code.google.com/p/minoposd/wiki/OpenPilot
+ *             
+ *             
  *
  * @see        The GNU Public License (GPL) Version 3
  *
