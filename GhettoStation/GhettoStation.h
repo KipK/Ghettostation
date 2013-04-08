@@ -30,7 +30,7 @@ int home_dist;
 
 //tracking variables
 int Bearing;
-int Azimuth;
+int Elevation;
 
 //lcd
 char lcd_line1[21];

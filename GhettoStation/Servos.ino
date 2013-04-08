@@ -53,12 +53,12 @@ void move_servo(Servo &s, int stype, int a, int mina, int maxa) {
 	s.write( new_angle);
 }
 
-void servoPathfinder(int angle_b, int angle_a){   // ( bearing, azimuth )
+void servoPathfinder(int angle_b, int angle_a){   // ( bearing, elevation )
 //find the best way to move pan servo considering 0° reference face toward
 	if (angle_b<=180) {
 			if ( configuration.pan_maxangle >= angle_b ) {
 			//works for all config
-                                        //defining limits
+                                        //define limits
 					if (angle_a < configuration.tilt_minangle) {
 					 // checking if we reach the min tilt limit
 						angle_a = configuration.tilt_minangle;

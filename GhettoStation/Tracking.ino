@@ -17,7 +17,7 @@ void antenna_tracking() {
         }
 	// serv command
         if(home_dist>DONTTRACKUNDER) { //don't track when <10m 
-	    servoPathfinder(Bearing,Azimuth);
+	    servoPathfinder(Bearing,Elevation);
         }
 
 }
@@ -26,7 +26,7 @@ void antenna_tracking() {
 
 void calc_tracking(float lon1, float lat1, float lon2, float lat2, int alt) {
 // (homelon, homelat, uavlon, uavlat, uavalt ) 
-// Return Bearing & Azimuth angles in degree
+// Return Bearing & Elevation angles in degree
   float a, tc1, R, c, d, dLat, dLon;
  
  // converting to radian
@@ -41,7 +41,7 @@ void calc_tracking(float lon1, float lat1, float lon2, float lat2, int alt) {
 
  
 //calculating distance between uav & home
-  Azimuth = calc_azimuth(lon1,lat1,lon2,lat2,alt);
+  Elevation = calc_elevation(lon1,lat1,lon2,lat2,alt);
  
 }
 
@@ -49,7 +49,7 @@ void calc_tracking(float lon1, float lat1, float lon2, float lat2, int alt) {
 int calc_bearing(float lon1, float lat1, float lon2, float lat2) {
 // bearing calc, feeded in radian, output degrees
 	float a;
-	//calculating bearing in degree
+	//calculating bearing 
 	a=atan2(sin(lon2-lon1)*cos(lat2), cos(lat1)*sin(lat2)-sin(lat1)*cos(lat2)*cos(lon2-lon1));
 	a=toDeg(a);
 	if (a<0) a=360+a;
@@ -57,9 +57,9 @@ int calc_bearing(float lon1, float lat1, float lon2, float lat2) {
 	return b;
 }
 
-int calc_azimuth(float lon1, float lat1, float lon2, float lat2, int alt) {
+int calc_elevation(float lon1, float lat1, float lon2, float lat2, int alt) {
 //Azimuth cacl, feeded in radian, output in degrees
-  float a, az, c, d, R, dLat, dLon;
+  float a, el, c, d, R, dLat, dLon;
   //calculating distance between uav & home
   R=6371000.0;    //earth radius 6371km
   dLat = (lat2-lat1);
@@ -68,9 +68,9 @@ int calc_azimuth(float lon1, float lat1, float lon2, float lat2, int alt) {
   c = 2* asin(sqrt(a));  
   d = R * c;
   home_dist = d;
-  az=atan(((float)alt)/d);// in radian
-  az=toDeg(az); // in degree
-  int b = (int)round(az);
+  el=atan(((float)alt)/d);// in radian
+  el=toDeg(az); // in degree
+  int b = (int)round(el);
   return b;
 }
 
