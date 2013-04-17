@@ -22,7 +22,7 @@ uint8_t op_uavtalk_mode = 1;            // OP UAVTalk Active/Passive mode ( 1 = 
 float home_lon;
 float home_lat;
 int home_alt;
-int home_bearing;
+int home_bearing = 0;
 int home_dist;
 
 

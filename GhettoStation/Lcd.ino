@@ -98,7 +98,7 @@ void lcddisp_sethome() {
 }
 
 
-void lcddisp_setbearing() {
+void lcddisp_setbearing_1() {
     for ( int i = 1 ; i<5; i++ ) {
        char string_buffer[21];
        char extract[21];
@@ -126,6 +126,46 @@ void lcddisp_setbearing() {
        currentline.toCharArray(string_buffer,21);
        store_lcdline(i,string_buffer);
     }
+}
+
+void lcddisp_setbearing_2() {
+    for ( int i = 1 ; i<5; i++ ) {
+       char string_buffer[21];
+       char extract[21];
+       String currentline="";
+       switch (i) {
+           case 1: 
+                        if (!telemetry_ok) { currentline = "L:NO"; }
+                else if (telemetry_ok) { currentline = "L:" + protocol;}
+                        currentline += " SATS:";
+                        currentline += String(uav_satellites_visible);
+                        currentline += " FIX:";
+                        currentline += String(uav_fix_type);
+                        break;
+           case 2:
+                        currentline = String(string_shome7.copy(extract));  break;
+           case 3:
+                        currentline = String("< " && home_bearing && " >"); break;
+           case 4:      
+                        currentline = String(string_load2.copy(extract)); break;
+
+       }
+       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
+	 currentline = currentline + " ";
+	 }
+       currentline.toCharArray(string_buffer,21);
+       store_lcdline(i,string_buffer);
+       
+       //checking long press left right
+       if (right_button.holdTime() >= 1000 && right_button.isPressed() ) {
+        home_bearing++;
+        delay(200);
+        }
+        else if ( left_button.holdTime() >= 1000 && left_button.isPressed() ) {
+        home_bearing--;
+        delay(200);
+        }
+}
 }
 
 void lcddisp_homeok() {

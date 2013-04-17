@@ -17,7 +17,7 @@
 
 #define PAN_SERVOPIN 6		//Pin used on arduino for pan servo
 #define TILT_SERVOPIN 9		//Pin used on arduino for tilt servo
-//#define PAN_SERVOREVERSED      // Depending of your hardware configuration, servo pwm need to be reversed. Change if it track at the opposite :)
+//#define PAN_SERVOREVERSED      // Depending of your hardware configuration, servo pwm need to be reversed. 
 //#define TILT_SERVOREVERSED   // same for tilt
 
 
@@ -56,12 +56,16 @@
 #define TILT_MINPWM 774		//min tilt pwm value
 #define TILT_MINANGLE 3		//Means minimum tilt position is parallel to ground. Considering 0 is facing toward, a -10 value would means we can tilt 10° down.
 //#define OVERLAP_FACTOR 1.1	// Unused yet
-							 //the factor that determines how much the heading/tilt must go over the servo limits before the opposite axis  switch to the other side. I.e.
-							 // 1.1 as default setting gives you an 18 degree "gray on 180
-							 // area" where the pan/tilt doesn't switch sides even
-							 //if the servo goes to its limit.
-							 // If we have 360/90++ config, this means if you go over your head behind you, but less than (tilt_topcourseangle + tilt_overlap_factor) , it won't switch the pan axis to other side.
-							 //If we have 180/180 config, this is used the opposite way, if your heading goes more than 90° on your side, but less than 108°, it won't switch the Tilt axis ( & inverse pan ) to track behind.
+				//the factor that determines how much the heading/tilt must go over the servo limits before the opposite axis  switch to the other side. I.e.
+				// 1.1 as default setting gives you an 18 degree "gray on 180
+				// area" where the pan/tilt doesn't switch sides even
+				//if the servo goes to its limit.
+				// If we have 360/90++ config, this means if you go over your head behind you, but less than (tilt_topcourseangle + tilt_overlap_factor) , it won't switch the pan axis to other side.
+				//If we have 180/180 config, this is used the opposite way, if your heading goes more than 90° on your side, but less than 108°, it won't switch the Tilt axis ( & inverse pan ) to track behind.
 
-								
+
+
+#define BEARING_METHOD  2      //bearing reference to north method
+                               // 1=calculation from home pos & uav pos heading 20m away straight to neutral pan servo pos.	
+                               // 2=manually enter the heading reference from a compass							
 //END OF CONFIG

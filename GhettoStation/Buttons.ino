@@ -7,7 +7,7 @@
 void enterButtonReleaseEvents(Button &btn)
  {
      //Serial.println(current_activity);  
-     if ( enter_button.holdTime() < 1000 ) { // norman press
+     if ( enter_button.holdTime() < 1000 ) { // normal press
        
         if ( current_activity == 0 ) { //button action depends activity state
             displaymenu.select();
@@ -22,11 +22,18 @@ void enterButtonReleaseEvents(Button &btn)
             }
             
             else if ((gps_fix) && (home_pos) && (!home_bear)) {
-             // saving home bearing 
-             home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // storing bearing relative to north
+             // saving home bearing
              
-             home_bear = true;
-              
+             if (BEARING_METHOD==1) {
+                 //set_bearing(); 
+                 home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // store bearing relative to north
+                 
+                 home_bear = true;
+                 } 
+             else if (BEARING_METHOD==2) {
+                //bearing reference is set manually from a compass
+                 home_bear = true;
+             }
             }
             else if ((gps_fix) && (home_pos) && (home_bear)) {
               // START TRACKING 
@@ -60,7 +67,12 @@ void leftButtonReleaseEvents(Button &btn)
           if (current_activity == 10) configuration.tilt_maxangle--;
     }
     else if (current_activity==2) {
-               if (gps_fix && home_pos && home_bear) {
+      
+               if (current_activity == 2 && home_pos && !home_bear && BEARING_METHOD==2) {
+                  home_bearing--;
+               }
+      
+               else if (gps_fix && home_pos && home_bear) {
                   current_activity = 0;
                 }
     }
@@ -88,7 +100,12 @@ void rightButtonReleaseEvents(Button &btn)
           if (current_activity == 10) configuration.tilt_maxangle++;
     }
     else if (current_activity==2) {
-           if (gps_fix && home_pos && (home_bear)) {
+      
+           if (current_activity == 2 && home_pos && !home_bear && BEARING_METHOD==2) {
+                  home_bearing--;
+               }
+               
+           else if (gps_fix && home_pos && home_bear) {
               // reset home pos
               home_pos = false;
               home_bearing = false; 
