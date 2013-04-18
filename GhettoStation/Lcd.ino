@@ -145,7 +145,7 @@ void lcddisp_setbearing_2() {
            case 2:
                         currentline = String(string_shome7.copy(extract));  break;
            case 3:
-                        currentline = String("< " && home_bearing && " >"); break;
+                        currentline = String(home_bearing); break;
            case 4:      
                         currentline = String(string_load2.copy(extract)); break;
 
@@ -159,11 +159,13 @@ void lcddisp_setbearing_2() {
        //checking long press left right
        if (right_button.holdTime() >= 1000 && right_button.isPressed() ) {
         home_bearing++;
-        delay(200);
+        if (home_bearing>360) home_bearing = 360;
+        else if (home_bearing<0) home_bearing = 0;
+        delay(100);
         }
         else if ( left_button.holdTime() >= 1000 && left_button.isPressed() ) {
         home_bearing--;
-        delay(200);
+        delay(100);
         }
 }
 }

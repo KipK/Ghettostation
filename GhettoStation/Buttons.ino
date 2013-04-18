@@ -68,8 +68,9 @@ void leftButtonReleaseEvents(Button &btn)
     }
     else if (current_activity==2) {
       
-               if (current_activity == 2 && home_pos && !home_bear && BEARING_METHOD==2) {
+               if (home_pos && !home_bear && BEARING_METHOD==2) {
                   home_bearing--;
+                  if (home_bearing<0) home_bearing = 0;
                }
       
                else if (gps_fix && home_pos && home_bear) {
@@ -101,8 +102,9 @@ void rightButtonReleaseEvents(Button &btn)
     }
     else if (current_activity==2) {
       
-           if (current_activity == 2 && home_pos && !home_bear && BEARING_METHOD==2) {
-                  home_bearing--;
+           if (home_pos && !home_bear && BEARING_METHOD==2) {
+                  home_bearing++;
+                          if (home_bearing>360) home_bearing = 360;
                }
                
            else if (gps_fix && home_pos && home_bear) {
