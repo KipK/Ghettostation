@@ -10,6 +10,7 @@
 //MSP MULTIWII
 //#define PROTOCOL_MSP        // MSP from Multiwii , only passive for now ( ie doesn't send request to Multiwii so you need a multiwii OSD or ground station client running at the same time )
 
+
 #define TELEMETRY_BAUD  57600		//Telemetry baudrate used
 
 //Minimum distance in meters where it will stop moving servos. 

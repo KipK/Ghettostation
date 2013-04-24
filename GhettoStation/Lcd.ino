@@ -68,7 +68,11 @@ void lcddisp_sethome() {
                  if (!telemetry_ok) currentline = String(string_shome1.copy(extract)); // waiting for data
                  else {
                    if (!gps_fix) currentline = String(string_shome2.copy(extract));  // waiting for gps fix
-                   else currentline = String(string_shome3.copy(extract)); // fix ok save home
+                   else {
+                         currentline = String(string_shome3.copy(extract)); // fix ok save home
+                         currentline += String(uav_alt);
+                         currentline += "m";      
+                   }
                  }
                  break;
       

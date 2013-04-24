@@ -47,7 +47,7 @@ FLASH_STRING(string_load4, "      Welcome       ");
 //LCD SET HOME
 FLASH_STRING(string_shome1, "  Waiting for Data  ");
 FLASH_STRING(string_shome2, "   No GPS 3D FIX    ");
-FLASH_STRING(string_shome3, "     3D FIX OK      ");
+FLASH_STRING(string_shome3, "3D FIX! Alt:");
 FLASH_STRING(string_shome4, "    Please Wait.    ");
 FLASH_STRING(string_shome5, "(long press to quit)");
 FLASH_STRING(string_shome6, " Save Home pos now? ");
