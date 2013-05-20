@@ -18,7 +18,7 @@ void antenna_tracking() {
         }
 	// serv command
         if(home_dist>DONTTRACKUNDER) { //don't track when <10m 
-	    servoPathfinder(Bearing,Elevation);
+	    servoPathfinder(Bearing + pan_offset,Elevation);
         }
    } 
 }

@@ -77,6 +77,9 @@ void leftButtonReleaseEvents(Button &btn)
                   current_activity = 0;
                 }
     }
+   else if (current_activity==1 && home_pos && home_bear) {
+          pan_offset -= 1;
+   }
   }
 }
 
@@ -113,6 +116,9 @@ void rightButtonReleaseEvents(Button &btn)
               home_bearing = false; 
            }
     }
+     else if (current_activity==1 && home_pos && home_bear) {
+          pan_offset += 1;
+   }
   }
 }
 

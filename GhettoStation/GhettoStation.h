@@ -10,10 +10,11 @@ int        uav_alt = 0;                    // altitude
 int        uav_groundspeed = 0;            // ground speed
 
 String protocol = "";
+uint8_t pan_offset = 0; // pan offset correction
+
 //Specific protocol variables
 //UAVTalk
 uint8_t op_uavtalk_mode = 1;            // OP UAVTalk Active/Passive mode ( 1 = Passive )
-
 //servo variables
 //int pan_middlepoint;
 //int tilt_middlepoint;
