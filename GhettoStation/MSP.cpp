@@ -36,7 +36,8 @@
   }
   
   void serialMSPCheck() {
-  
+    telemetry_ok = true;
+
   
     if (cmdMSP==MSP_IDENT) {
       MwVersion= read8();                             // MultiWii Firmware version

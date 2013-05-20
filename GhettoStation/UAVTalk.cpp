@@ -27,7 +27,8 @@
   
 
   //#define DEBUG
-  
+
+
 #if defined(PROTOCOL_UAVTALK)
   #include "UAVTalk.h"
   
@@ -260,6 +261,7 @@
   		break;
   		case UAVTALK_PARSE_STATE_GOT_DATA:
   			msg->Crc = c;
+                        
   			status = UAVTALK_PARSE_STATE_GOT_CRC;
   		break;
   	}
@@ -283,8 +285,15 @@
   	uint8_t show_prio_info = 0;
   	
   	// grabbing data
+  #if defined(SOFT_MODEM)
+    	while (!show_prio_info && modem.available() > 0) {
+  		uint8_t c = modem.read();
+   
+  #else
   	while (!show_prio_info && Serial.available() > 0) {
   		uint8_t c = Serial.read();
+  #endif
+
   		
   		// needed for MinimOSD upload, while no UAVTalk is established
   		if (gcstelemetrystatus == TELEMETRYSTATS_STATE_DISCONNECTED && millis() < 20000 && millis() > 5000) {
@@ -298,12 +307,12 @@
   		// parse data to msg
   		if (uavtalk_parse_char(c, &msg)) {
   			// consume msg
+                        telemetry_ok = true;
   			switch (msg.ObjID) {
   				case FLIGHTTELEMETRYSTATS_OBJID:
   					switch (msg.Data[FLIGHTTELEMETRYSTATS_OBJ_STATUS]) {
   						case TELEMETRYSTATS_STATE_DISCONNECTED:
   							gcstelemetrystatus = TELEMETRYSTATS_STATE_HANDSHAKEREQ;
-                                                          telemetry_ok = false;
   							uavtalk_send_gcstelemetrystats();
   						break;
   						case TELEMETRYSTATS_STATE_HANDSHAKEACK:
@@ -313,7 +322,6 @@
   						break;
   						case TELEMETRYSTATS_STATE_CONNECTED:
   							gcstelemetrystatus = TELEMETRYSTATS_STATE_CONNECTED; 
-                                                          telemetry_ok = true;
   							last_flighttelemetry_connect = millis();
                                                           
   						break;
@@ -321,7 +329,6 @@
   				break;
   
   				case GPSPOSITION_OBJID:
-                                         telemetry_ok = true;
                                           
   					uav_lat			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LAT) / 10000000.0;
   					uav_lon			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LON) / 10000000.0;
@@ -355,7 +362,6 @@
   	// check connect timeout
   	if (last_flighttelemetry_connect + FLIGHTTELEMETRYSTATS_CONNECT_TIMEOUT < millis()) {
   		gcstelemetrystatus = TELEMETRYSTATS_STATE_DISCONNECTED;
-                  telemetry_ok = false;
   		show_prio_info = 1;
   	}
   	

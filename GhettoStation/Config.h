@@ -1,8 +1,13 @@
 //CONFIGURATION                        
 //#define DEBUG
 
-//Choose one of the protocol below and comment others:
+//########### SOFT MODEM TELEMETRY########################################################################################
+//Use Softmodem ( audio telemetry )
+//#define SOFT_MODEM
 
+
+//########### TELEMETRY PROTOCOL ####################################################################################
+//Choose one of the protocol below and comment others:
 //UAVTALK OPENPILOT
 #define PROTOCOL_UAVTALK      
 #define UAVTALK_MODE_PASSIVE  // define if you already have GCS or OSD running. Arduino won't send anything on the Tx line. If undefined, it will send UAVTalk queries.
@@ -10,8 +15,8 @@
 //MSP MULTIWII
 //#define PROTOCOL_MSP        // MSP from Multiwii , only passive for now ( ie doesn't send request to Multiwii so you need a multiwii OSD or ground station client running at the same time )
 
-
-#define TELEMETRY_BAUD  57600		//Telemetry baudrate used
+//###################################################################################################################
+#define TELEMETRY_BAUD  9600		//Telemetry baudrate used
 
 //Minimum distance in meters where it will stop moving servos. 
 #define DONTTRACKUNDER  6

@@ -24,6 +24,12 @@
 #include <Servo.h>
 #include <EEPROM.h>
 #include <Flash.h>
+
+#if defined(SOFT_MODEM)
+ #include <SoftModem.h>
+#endif
+
+
 #include "Eeprom.h"
 #include "GhettoStation.h"
 
@@ -53,7 +59,7 @@ Servo tilt_servo;
 
 //#####	RATE LOOPS 
 //setting telemetry refresh rate.
-Metro telemetryMetro = Metro(60);
+//Metro telemetryMetro = Metro(60);
 //setting lcd refresh rate at 5hz.
 Metro lcdMetro = Metro(200);
 //setting button status check loop
@@ -61,8 +67,11 @@ Metro buttonMetro = Metro(100);
 //setting activity loop time
 Metro activityMetro = Metro(100);
 
+#if defined(DEBUG)
 //Debug output
 Metro debugMetro = Metro(1000); // output serial debug data each second.
+#endif
+
 
 //##### BUTTONS 
 Button right_button = Button(RIGHT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
@@ -101,10 +110,15 @@ void setup() {
 		clear_eeprom();
                 delay(20);
 		}
-        
-        
+
+#if defined(SOFT_MODEM)
+        //start softmodem
+         pinMode(led, OUTPUT);  
+         modem.begin ();
+#else
 	//start serial com	
 	init_serial();
+#endif
 	
 	// attach servos 
 	attach_servo(pan_servo, PAN_SERVOPIN, configuration.pan_minpwm, configuration.pan_maxpwm);

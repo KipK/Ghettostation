@@ -26,7 +26,9 @@
  */
 
 
-
+#if defined (SOFT_MODEM)
+  SoftModem modem;
+#endif
 
 
 
