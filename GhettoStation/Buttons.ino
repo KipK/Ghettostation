@@ -78,7 +78,7 @@ void leftButtonReleaseEvents(Button &btn)
                 }
     }
    else if (current_activity==1 && home_pos && home_bear) {
-          pan_offset -= 1;
+          home_bearing--;
    }
   }
 }
@@ -113,11 +113,11 @@ void rightButtonReleaseEvents(Button &btn)
            else if (gps_fix && home_pos && home_bear) {
               // reset home pos
               home_pos = false;
-              home_bearing = false; 
+              home_bear = false; 
            }
     }
      else if (current_activity==1 && home_pos && home_bear) {
-          pan_offset += 1;
+          home_bearing++;
    }
   }
 }
