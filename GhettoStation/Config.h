@@ -11,15 +11,15 @@
 //UAVTALK OPENPILOT
 #define PROTOCOL_UAVTALK      
 #define UAVTALK_MODE_PASSIVE  // define if you already have GCS or OSD running. Arduino won't send anything on the Tx line. If undefined, it will send UAVTalk queries.
-
+#define BARO_ALT // define if altitude is based on Baro or GPS
 //MSP MULTIWII
 //#define PROTOCOL_MSP        // MSP from Multiwii , only passive for now ( ie doesn't send request to Multiwii so you need a multiwii OSD or ground station client running at the same time )
 
 //###################################################################################################################
-#define TELEMETRY_BAUD  9600		//Telemetry baudrate used
+#define TELEMETRY_BAUD  19200		//Telemetry baudrate used
 
 //Minimum distance in meters where it will stop moving servos. 
-#define DONTTRACKUNDER  6
+#define DONTTRACKUNDER  4
 
 #define PAN_SERVOPIN 6		//Pin used on arduino for pan servo
 #define TILT_SERVOPIN 9		//Pin used on arduino for tilt servo
