@@ -5,8 +5,13 @@
 
 #define INTERNAL_I2C_PULLUPS
 
+#ifdef TEENSYPLUS2
+#define I2C_PULLUPS_ENABLE         PORTD |= 1<<0; PORTD |= 1<<1;   // PIN A4&A5 (SDA&SCL)
+#define I2C_PULLUPS_DISABLE        PORTD &= ~(1<<0); PORTD &= ~(1<<1);
+#else
 #define I2C_PULLUPS_ENABLE         PORTC |= 1<<4; PORTC |= 1<<5;   // PIN A4&A5 (SDA&SCL)
 #define I2C_PULLUPS_DISABLE        PORTC &= ~(1<<4); PORTC &= ~(1<<5);
+#endif
 
 #define I2C_SPEED 100000L
 

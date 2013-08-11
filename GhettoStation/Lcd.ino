@@ -101,8 +101,8 @@ void lcddisp_sethome() {
    } 
 }
 
-
-void lcddisp_setbearing_1() {
+#ifdef BEARING_METHOD_1
+void lcddisp_setbearing() {
     for ( int i = 1 ; i<5; i++ ) {
        char string_buffer[21];
        char extract[21];
@@ -132,7 +132,8 @@ void lcddisp_setbearing_1() {
     }
 }
 
-void lcddisp_setbearing_2() {
+#else
+void lcddisp_setbearing() {
     for ( int i = 1 ; i<5; i++ ) {
        char string_buffer[21];
        char extract[21];
@@ -171,8 +172,9 @@ void lcddisp_setbearing_2() {
         home_bearing--;
         delay(100);
         }
+ }
 }
-}
+#endif
 
 void lcddisp_homeok() {
     for ( int i = 1 ; i<5; i++ ) {

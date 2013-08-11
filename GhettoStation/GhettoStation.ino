@@ -60,12 +60,12 @@ Servo tilt_servo;
 //#####	RATE LOOPS 
 //setting telemetry refresh rate.
 //Metro telemetryMetro = Metro(60);
-//setting lcd refresh rate at 5hz.
+//setting lcd refresh rate 
 Metro lcdMetro = Metro(200);
 //setting button status check loop
 Metro buttonMetro = Metro(100);
 //setting activity loop time
-Metro activityMetro = Metro(100);
+Metro activityMetro = Metro(200);
 
 #if defined(DEBUG)
 //Debug output
@@ -86,7 +86,7 @@ Button enter_button = Button(ENTER_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 void setup() {
 
 
-    pinMode(LED_PIN, OUTPUT);
+    //pinMode(LED_PIN, OUTPUT);
 	//init LCD
 	init_lcdscreen();
 
@@ -111,9 +111,9 @@ void setup() {
                 delay(20);
 		}
 
-#if defined(SOFT_MODEM)
+#ifdef SOFT_MODEM 
         //start softmodem
-         pinMode(led, OUTPUT);  
+        // pinMode(led, OUTPUT);  
          modem.begin ();
 #else
 	//start serial com	
@@ -126,18 +126,12 @@ void setup() {
 
         
 	// move servo to neutral pan & 45° tilt at startup to prevent forcing on endpoints if misconfigured
-//	move_servo(pan_servo, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
-//	move_servo(tilt_servo, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);
         servoPathfinder(0, 0);
-//       pan_servoEaser.easeTo( 0, 2000);
-//       tilt_servoEaser.easeTo( 0, 2000);
        
        // setup button callback events
        enter_button.releaseHandler(enterButtonReleaseEvents);
        left_button.releaseHandler(leftButtonReleaseEvents);
        right_button.releaseHandler(rightButtonReleaseEvents);
-       //left_button.setHoldThreshold(1000);
-       //right_button.setHoldThreshold(1000);
 
 }
 
@@ -150,16 +144,12 @@ void loop() {
         left_button.isPressed();
         right_button.isPressed();
         }
-//        enter_button.isPressed();
-//        left_button.isPressed();
-//        right_button.isPressed();
-	//get telemetry data ( default at 10hz)
-	
+	//get telemetry data 
         get_telemetry();
 	
 	//checking activity
         check_activity();     
-        //lcd refresh loop ( default 10hz )
+        //lcd refresh loop
 	refresh_lcd();
 #if defined(DEBUG)
         //debug output

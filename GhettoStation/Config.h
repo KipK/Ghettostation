@@ -1,6 +1,8 @@
 //CONFIGURATION                        
 //#define DEBUG
 
+#define TEENSYPLUS2 // Teensy++2 support. Default is 328P.
+
 //########### SOFT MODEM TELEMETRY########################################################################################
 //Use Softmodem ( audio telemetry )
 //#define SOFT_MODEM
@@ -21,16 +23,16 @@
 //Minimum distance in meters where it will stop moving servos. 
 #define DONTTRACKUNDER  4
 
-#define PAN_SERVOPIN 6		//Pin used on arduino for pan servo
-#define TILT_SERVOPIN 9		//Pin used on arduino for tilt servo
+#define PAN_SERVOPIN 26		//PWM Pin for pan servo
+#define TILT_SERVOPIN 25		//PWM Pin for tilt servo
 //#define PAN_SERVOREVERSED      // Depending of your hardware configuration, servo pwm need to be reversed. 
 //#define TILT_SERVOREVERSED   // same for tilt
 
 
-#define LEFT_BUTTON_PIN 4
-#define RIGHT_BUTTON_PIN 3
-#define ENTER_BUTTON_PIN 5
-#define LED_PIN 13    // using pin13 already have a resistor for led on arduino mini & others
+#define LEFT_BUTTON_PIN 7     // select a free digital pin for those 3 buttons
+#define RIGHT_BUTTON_PIN 9
+#define ENTER_BUTTON_PIN 8
+//#define LED_PIN 13    // using pin13 already have a resistor for led on arduino mini & others
 				
 
 //Default servos configuration for first startup 
@@ -69,9 +71,10 @@
 				// If we have 360/90++ config, this means if you go over your head behind you, but less than (tilt_topcourseangle + tilt_overlap_factor) , it won't switch the pan axis to other side.
 				//If we have 180/180 config, this is used the opposite way, if your heading goes more than 90° on your side, but less than 108°, it won't switch the Tilt axis ( & inverse pan ) to track behind.
 
-
-
-#define BEARING_METHOD  2      //bearing reference to north method
-                               // 1=calculation from home pos & uav pos heading 20m away straight to neutral pan servo pos.	
-                               // 2=manually enter the heading reference from a compass							
+// BEARING REFERENCE TO NORTH METHOD
+//#define BEARING_METHOD_1  // 1=calculation from home pos & uav pos heading 20m away straight to neutral pan servo pos.	
+#define BEARING_METHOD_2   // 2=manually enter the heading reference from a compass			
+                               
+          
+#define INTERNAL_I2C_PULLUPS  // do not touch unless you know what you're doing.            				
 //END OF CONFIG

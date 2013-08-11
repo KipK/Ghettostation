@@ -1,7 +1,6 @@
 void init_serial() {
 	//disable previous serial in case of baudrate change
 	Serial.end();
-	//enable it
 	Serial.begin(TELEMETRY_BAUD);
 }
 

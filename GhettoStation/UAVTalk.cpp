@@ -28,7 +28,6 @@
 
   //#define DEBUG
 
-
 #if defined(PROTOCOL_UAVTALK)
   #include "UAVTalk.h"
   
@@ -285,7 +284,7 @@
   	uint8_t show_prio_info = 0;
   	
   	// grabbing data
-  #if defined(SOFT_MODEM)
+  #ifdef SOFT_MODEM
     	while (!show_prio_info && modem.available() > 0) {
   		uint8_t c = modem.read();
    

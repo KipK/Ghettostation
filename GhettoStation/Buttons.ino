@@ -23,17 +23,14 @@ void enterButtonReleaseEvents(Button &btn)
             
             else if ((gps_fix) && (home_pos) && (!home_bear)) {
              // saving home bearing
-             
-             if (BEARING_METHOD==1) {
+#ifdef BEARING_METHOD_1             
                  //set_bearing(); 
-                 home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // store bearing relative to north
-                 
+                 home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // store bearing relative to north       
                  home_bear = true;
-                 } 
-             else if (BEARING_METHOD==2) {
+#else
                 //bearing reference is set manually from a compass
                  home_bear = true;
-             }
+#endif
             }
             else if ((gps_fix) && (home_pos) && (home_bear)) {
               // START TRACKING 
@@ -67,12 +64,13 @@ void leftButtonReleaseEvents(Button &btn)
           if (current_activity == 10) configuration.tilt_maxangle--;
     }
     else if (current_activity==2) {
-      
-               if (home_pos && !home_bear && BEARING_METHOD==2) {
+#ifdef BEARING_METHOD_2      
+               if (home_pos && !home_bear) {
+
                   home_bearing--;
                   if (home_bearing<0) home_bearing = 0;
                }
-      
+#endif     
                else if (gps_fix && home_pos && home_bear) {
                   current_activity = 0;
                 }
@@ -104,12 +102,13 @@ void rightButtonReleaseEvents(Button &btn)
           if (current_activity == 10) configuration.tilt_maxangle++;
     }
     else if (current_activity==2) {
-      
-           if (home_pos && !home_bear && BEARING_METHOD==2) {
+
+#ifdef BEARING_METHOD_2  
+           if (home_pos && !home_bear) {
                   home_bearing++;
                           if (home_bearing>360) home_bearing = 360;
                }
-               
+#endif    
            else if (gps_fix && home_pos && home_bear) {
               // reset home pos
               home_pos = false;
