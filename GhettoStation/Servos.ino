@@ -1,24 +1,24 @@
 //SERVO FUNCTIONS
 
+#ifdef PWMSERVO
+void attach_servo(PWMServo &s, int p, int min, int max) {
+#else
 void attach_servo(Servo &s, int p, int min, int max) {
+#endif
 // called at setup() or after a servo configuration change in the menu
 	if (s.attached()) {
 	s.detach();
 	}
 	s.attach(p,min,max);
-        //e.begin( s, SERVO_REFRESH_INTERVAL );
-        //e.useMicroseconds(true);
-        //e.setMinMaxMicroseconds( min, max );
-        //#if defined(PAN_SERVOREVERSED) || defined(TILT_SERVOREVERSED)
-        //e.setFlipped(true);
-        //#endif
-        // make ServoEaser use microsecond
         
 }
 
 
+#ifdef PWMSERVO
+void move_servo(PWMServo &s, int stype, int a, int mina, int maxa) {
+#else
 void move_servo(Servo &s, int stype, int a, int mina, int maxa) {
-
+#endif
  
  float new_angle;
  int t;

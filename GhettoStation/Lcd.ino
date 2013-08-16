@@ -3,12 +3,27 @@
 void init_lcdscreen() {
   char extract[20];
 // init LCD
-	LCD.Clear();
-	LCD.Backlight_On();
-	LCD.PrintChar(1, 1, string_load1.copy(extract));
-        LCD.PrintChar(1, 2, string_load2.copy(extract));
-	LCD.PrintChar(1, 3, string_load3.copy(extract));
-	LCD.PrintChar(1, 4, string_load4.copy(extract));
+	LCD.begin(20,4);
+        delay(20);
+        
+//        // ------- Quick 3 blinks of backlight todebug some HK or other chinese clones-------------
+//        for(int i = 0; i< 3; i++)
+//         {
+//          LCD.backlight();
+//          delay(250);
+//          LCD.noBacklight();
+//          delay(250);
+//        }
+        LCD.backlight(); // finish with backlight on  
+        delay(250);
+        LCD.setCursor(0,0);
+	LCD.print(string_load1.copy(extract));
+        LCD.setCursor(0,1);
+        LCD.print(string_load2.copy(extract));
+        LCD.setCursor(0,2);
+	LCD.print(string_load3.copy(extract));
+        LCD.setCursor(0,3);
+	LCD.print(string_load4.copy(extract));
 	delay(1500); //delay to init lcd in time.
 }
 
@@ -38,12 +53,16 @@ void refresh_lcd() {
    // refreshing lcd at defined update.
     if (lcdMetro.check() == 1) {
         // update lines
-	LCD.PrintChar(1, 1, lcd_line1);
-        LCD.PrintChar(1, 2, lcd_line2);
-        LCD.PrintChar(1, 3, lcd_line3);
-        LCD.PrintChar(1, 4, lcd_line4);
+        //LCD.clear();
+        LCD.setCursor(0,0);
+	LCD.print(lcd_line1);
+        LCD.setCursor(0,1);
+	LCD.print(lcd_line2);
+        LCD.setCursor(0,2);
+	LCD.print(lcd_line3);
+        LCD.setCursor(0,3);
+    	LCD.print(lcd_line4);
     }
-   
 }
 
 // SET_HOME SCREEN

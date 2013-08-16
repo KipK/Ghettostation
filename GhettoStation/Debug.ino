@@ -10,8 +10,8 @@ void debug() {
        Serial.println("");
        Serial.print("dst=");
        Serial.println(home_dist);
-       Serial.print("Az:");
-       Serial.println(Azimuth);
+       Serial.print("El:");
+       Serial.println(Elevation);
        Serial.print("Be");
        Serial.println(Bearing);
     }

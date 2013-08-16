@@ -28,9 +28,14 @@
 
   //#define DEBUG
 
+
 #if defined(PROTOCOL_UAVTALK)
+#ifdef TEENSYPLUS2
+// This line defines a "Uart" object to access the serial port
+HardwareSerial Uart = HardwareSerial();
+#endif
   #include "UAVTalk.h"
-  
+ 
   static unsigned long last_gcstelemetrystats_send = 0;
   static unsigned long last_flighttelemetry_connect = 0;
   static uint8_t gcstelemetrystatus = TELEMETRYSTATS_STATE_DISCONNECTED;
@@ -95,38 +100,78 @@
   		return;
   	
   	c = (uint8_t) (msg->Sync);
+#ifndef TEENSYPLUS2
   	Serial.write(c);
+#else
+        Uart.write(c);
+#endif
   	msg->Crc = crc_table[0 ^ c];
   	c = (uint8_t) (msg->MsgType);
+#ifndef TEENSYPLUS2
   	Serial.write(c);
+#else
+        Uart.write(c);
+#endif
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) (msg->Length & 0xff);
+#ifndef TEENSYPLUS2
   	Serial.write(c);
+#else
+        Uart.write(c);
+#endif
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) ((msg->Length >> 8) & 0xff);
+#ifndef TEENSYPLUS2
   	Serial.write(c);
+#else
+        Uart.write(c);
+#endif
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) (msg->ObjID & 0xff);
+#ifndef TEENSYPLUS2
   	Serial.write(c);
+#else
+        Uart.write(c);
+#endif
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) ((msg->ObjID >> 8) & 0xff);
+#ifndef TEENSYPLUS2
   	Serial.write(c);
+#else
+        Uart.write(c);
+#endif
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) ((msg->ObjID >> 16) & 0xff);
+#ifndef TEENSYPLUS2
   	Serial.write(c);
+#else
+        Uart.write(c);
+#endif
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) ((msg->ObjID >> 24) & 0xff);
+#ifndef TEENSYPLUS2
   	Serial.write(c);
+#else
+        Uart.write(c);
+#endif
   	msg->Crc = crc_table[msg->Crc ^ c];
   	if (msg->Length > 8) {
   	  d = msg->Data;
   	  for (i=0; i<msg->Length-8; i++) {
   		c = *d++;
-  		Serial.write(c);
+#ifndef TEENSYPLUS2
+  	        Serial.write(c);
+#else
+                Uart.write(c);
+#endif
   		msg->Crc = crc_table[msg->Crc ^ c];
             }
   	}
+#ifndef TEENSYPLUS2
   	Serial.write(msg->Crc);
+#else
+        Uart.write(msg->Crc);
+#endif
   }
   
   
@@ -289,8 +334,15 @@
   		uint8_t c = modem.read();
    
   #else
-  	while (!show_prio_info && Serial.available() > 0) {
+  
+    #ifndef TEENSYPLUS2
+  	        while (!show_prio_info && Serial.available() > 0) {
   		uint8_t c = Serial.read();
+    #else
+                while (!show_prio_info && Uart.available() > 0) {
+  		uint8_t c = Uart.read();
+    #endif
+
   #endif
 
   		

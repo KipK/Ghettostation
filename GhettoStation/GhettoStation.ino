@@ -17,7 +17,10 @@
 
 #include "Config.h"
 #include <avr/pgmspace.h>
-#include <LCD03_I2C.h>
+//#include <LCD03_I2C.h>
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+
 #include <Metro.h>
 #include <MenuSystem.h>
 #include <Button.h>
@@ -41,27 +44,34 @@
 #if defined(PROTOCOL_MSP)
 #include "MSP.cpp"
 #endif
-
+#include <PWMServo.h> 
 
 //################################### SETTING OBJECTS ###############################################
 
 
 //##### LCD
-//Configuring LCD ( adress, width, lines)
-LCD03_I2C LCD(0x63,20,4);
+// set the LCD address to 0x27 for a 20 chars 4 line display
+// Set the pins on the I2C chip used for LCD connections:
+//                    addr, en,rw,rs,d4,d5,d6,d7,bl,blpol
+LiquidCrystal_I2C LCD(I2CADDRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1" 
+//iquidCrystal_I2C lcd(I2CADDRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  // Arduino-IIC-LCD GY-LCD-V1
+
+
 
 //##### SERVOS 
+#ifdef PWMSERVO
+ PWMServo pan_servo; 
+ PWMServo tilt_servo; 
+#else
 //Declaring pan/tilt servos using ServoEaser library
-Servo pan_servo;
-//ServoEaser pan_servoEaser;
-Servo tilt_servo;
-//ServoEaser tilt_servoEaser;
-
+ Servo pan_servo;;
+ Servo tilt_servo;
+#endif
 //#####	RATE LOOPS 
 //setting telemetry refresh rate.
 //Metro telemetryMetro = Metro(60);
 //setting lcd refresh rate 
-Metro lcdMetro = Metro(200);
+Metro lcdMetro = Metro(100);
 //setting button status check loop
 Metro buttonMetro = Metro(100);
 //setting activity loop time
@@ -80,16 +90,27 @@ Button enter_button = Button(ENTER_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 
 
 
-
 //#################################### SETUP LOOP ####################################################
 
 void setup() {
+   pinMode(PIN_D0, INPUT_PULLUP);
+pinMode(PIN_D1, INPUT_PULLUP);
+digitalWrite(PIN_D0, HIGH);  // LED on
+digitalWrite(PIN_D1, HIGH);  // LED on
+#ifdef DEBUG
+ #ifdef TEENSYPLUS2
+	Serial.begin(57600);
+ #endif
+    Serial.println("Setup() start"); 
+#endif
 
 
-    //pinMode(LED_PIN, OUTPUT);
-	//init LCD
-	init_lcdscreen();
+//init LCD
+    init_lcdscreen();
 
+#ifdef DEBUG
+    Serial.println("lcd initialised"); 
+#endif
 
 
 	
@@ -146,7 +167,7 @@ void loop() {
         }
 	//get telemetry data 
         get_telemetry();
-	
+//	test_servos();
 	//checking activity
         check_activity();     
         //lcd refresh loop

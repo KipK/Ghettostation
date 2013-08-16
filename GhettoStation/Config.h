@@ -2,6 +2,12 @@
 //#define DEBUG
 
 #define TEENSYPLUS2 // Teensy++2 support. Default is 328P.
+#define PWMSERVO //use pwmservo library. Undefined use normal arduino servo lib.
+
+//LCD ( only i2c 4 lines LCD for now )
+//#define I2CADDRESS 0xc6 // LCD03 i2C from Robot Electronics 
+#define I2CADDRESS 0x27 // IIC/I2C/TWI Serial 2004 20x4 lcd.
+//#define I2CADRESS 020 // Arduino-IIC-LCD GY-LCD-V1
 
 //########### SOFT MODEM TELEMETRY########################################################################################
 //Use Softmodem ( audio telemetry )
@@ -76,5 +82,4 @@
 #define BEARING_METHOD_2   // 2=manually enter the heading reference from a compass			
                                
           
-#define INTERNAL_I2C_PULLUPS  // do not touch unless you know what you're doing.            				
 //END OF CONFIG

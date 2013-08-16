@@ -1,7 +1,20 @@
 void init_serial() {
 	//disable previous serial in case of baudrate change
+
+#ifndef TEENSYPLUS2
 	Serial.end();
+        delay(10);
 	Serial.begin(TELEMETRY_BAUD);
+
+#else 
+      Uart.end();
+      delay(10);
+      Uart.begin(TELEMETRY_BAUD);
+#endif
+#ifdef DEBUG
+    Serial.println("Serial initialised"); 
+#endif
+
 }
 
 //Preparing adding other protocol
