@@ -64,14 +64,14 @@ void leftButtonReleaseEvents(Button &btn)
           if (current_activity == 10) configuration.tilt_maxangle--;
     }
     else if (current_activity==2) {
-#ifdef BEARING_METHOD_2      
+#if defined(BEARING_METHOD_2) || defined(BEARING_METHOD_4)       
                if (home_pos && !home_bear) {
 
                   home_bearing--;
                   if (home_bearing<0) home_bearing = 0;
                }
 #endif     
-               else if (gps_fix && home_pos && home_bear) {
+               if (gps_fix && home_pos && home_bear) {
                   current_activity = 0;
                 }
     }
@@ -103,13 +103,13 @@ void rightButtonReleaseEvents(Button &btn)
     }
     else if (current_activity==2) {
 
-#ifdef BEARING_METHOD_2  
+#if defined(BEARING_METHOD_2)  || defined(BEARING_METHOD_4) 
            if (home_pos && !home_bear) {
                   home_bearing++;
                           if (home_bearing>360) home_bearing = 360;
                }
 #endif    
-           else if (gps_fix && home_pos && home_bear) {
+           if (gps_fix && home_pos && home_bear) {
               // reset home pos
               home_pos = false;
               home_bear = false; 

@@ -1,20 +1,16 @@
 //LCD 
 
 void init_lcdscreen() {
+#ifdef DEBUG
+    Serial.println("starting lcd"); 
+#endif
+
   char extract[20];
 // init LCD
 	LCD.begin(20,4);
         delay(20);
-        
-//        // ------- Quick 3 blinks of backlight todebug some HK or other chinese clones-------------
-//        for(int i = 0; i< 3; i++)
-//         {
-//          LCD.backlight();
-//          delay(250);
-//          LCD.noBacklight();
-//          delay(250);
-//        }
-        LCD.backlight(); // finish with backlight on  
+
+        LCD.backlight(); 
         delay(250);
         LCD.setCursor(0,0);
 	LCD.print(string_load1.copy(extract));
@@ -150,9 +146,54 @@ void lcddisp_setbearing() {
        store_lcdline(i,string_buffer);
     }
 }
-
-#else
+#endif
+#ifdef BEARING_METHOD_2
 void lcddisp_setbearing() {
+    for ( int i = 1 ; i<5; i++ ) {
+       char string_buffer[21];
+       char extract[21];
+       String currentline="";
+       switch (i) {
+           case 1: 
+                        if (!telemetry_ok) { currentline = "L:NO"; }
+                else if (telemetry_ok) { currentline = "L:" + protocol;}
+                        currentline += " SATS:";
+                        currentline += String(uav_satellites_visible);
+                        currentline += " FIX:";
+                        currentline += String(uav_fix_type);
+                        break;
+           case 2:
+                        currentline = String(string_shome7.copy(extract));  break;
+           case 3:
+                        currentline = String(home_bearing); break;
+           case 4:      
+                        currentline = String(string_load2.copy(extract)); break;
+
+       }
+       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
+	 currentline = currentline + " ";
+	 }
+       currentline.toCharArray(string_buffer,21);
+       store_lcdline(i,string_buffer);
+       
+       //checking long press left right
+       if (right_button.holdTime() >= 1000 && right_button.isPressed() ) {
+        home_bearing++;
+        if (home_bearing>360) home_bearing = 360;
+        else if (home_bearing<0) home_bearing = 0;
+        delay(100);
+        }
+        else if ( left_button.holdTime() >= 1000 && left_button.isPressed() ) {
+        home_bearing--;
+        delay(100);
+        }
+ }
+}
+#endif
+
+#ifdef BEARING_METHOD_4
+void lcddisp_setbearing() {
+    retrieve_mag();
     for ( int i = 1 ; i<5; i++ ) {
        char string_buffer[21];
        char extract[21];

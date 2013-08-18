@@ -31,7 +31,14 @@ void check_activity() {
           if (current_activity == 2) { //SET HOME
             if (!home_pos) { lcddisp_sethome(); }
             else if (home_pos) {
-              if (!home_bear) { lcddisp_setbearing(); }
+
+              if (!home_bear) { 
+              #ifndef BEARING_METHOD_3
+              lcddisp_setbearing();   
+              #else
+              home_bearing = 0;
+              #endif
+            }
               else { lcddisp_homeok(); }
             }
             if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press 

@@ -41,6 +41,7 @@ HardwareSerial Uart = HardwareSerial();
   
   void serialMSPCheck() {
     telemetry_ok = true;
+    protocol = "MSP";
 
   
     if (cmdMSP==MSP_IDENT) {
@@ -83,7 +84,7 @@ HardwareSerial Uart = HardwareSerial();
     }
     c_state = IDLE;
   
-    if(Serial.available())
+    while (Serial.available() > 0)
     {
       c = Serial.read();
   

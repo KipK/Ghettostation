@@ -17,8 +17,14 @@
 
 #include "Config.h"
 #include <avr/pgmspace.h>
-//#include <LCD03_I2C.h>
+
 #include <Wire.h> 
+
+#ifdef BEARING_METHOD_4
+ //Internal Compass
+#include <HMC5883L.h>
+#endif
+
 #include <LiquidCrystal_I2C.h>
 
 #include <Metro.h>
@@ -27,6 +33,8 @@
 #include <Servo.h>
 #include <EEPROM.h>
 #include <Flash.h>
+
+
 
 #if defined(SOFT_MODEM)
  #include <SoftModem.h>
@@ -44,13 +52,17 @@
 #if defined(PROTOCOL_MSP)
 #include "MSP.cpp"
 #endif
-#include <PWMServo.h> 
+
+
+
+
 
 //################################### SETTING OBJECTS ###############################################
 
+//#if defined(BEARING_METHOD_4)
+// HMC5883L compass;
+//#endif
 
-//##### LCD
-// set the LCD address to 0x27 for a 20 chars 4 line display
 // Set the pins on the I2C chip used for LCD connections:
 //                    addr, en,rw,rs,d4,d5,d6,d7,bl,blpol
 LiquidCrystal_I2C LCD(I2CADDRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1" 
@@ -59,14 +71,11 @@ LiquidCrystal_I2C LCD(I2CADDRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LCM1602
 
 
 //##### SERVOS 
-#ifdef PWMSERVO
- PWMServo pan_servo; 
- PWMServo tilt_servo; 
-#else
+
 //Declaring pan/tilt servos using ServoEaser library
- Servo pan_servo;;
+ Servo pan_servo;
  Servo tilt_servo;
-#endif
+
 //#####	RATE LOOPS 
 //setting telemetry refresh rate.
 //Metro telemetryMetro = Metro(60);
@@ -90,31 +99,33 @@ Button enter_button = Button(ENTER_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 
 
 
+//##### SOFTMODEM AUDIO TELEMETRY
+#ifdef SOFT_MODEM
+SoftModem modem;
+int modemTimer=0;
+#endif
+
+
 //#################################### SETUP LOOP ####################################################
 
 void setup() {
-   pinMode(PIN_D0, INPUT_PULLUP);
-pinMode(PIN_D1, INPUT_PULLUP);
-digitalWrite(PIN_D0, HIGH);  // LED on
-digitalWrite(PIN_D1, HIGH);  // LED on
 #ifdef DEBUG
  #ifdef TEENSYPLUS2
 	Serial.begin(57600);
+ #else
+   #ifdef SOFT_MODEM
+   Serial.begin(57600);
+   #endif
  #endif
-    Serial.println("Setup() start"); 
 #endif
+
 
 
 //init LCD
-    init_lcdscreen();
-
-#ifdef DEBUG
-    Serial.println("lcd initialised"); 
-#endif
+//init_lcdscreen();
 
 
-	
-       
+
 	//init setup
 	init_menu();
 	
@@ -132,13 +143,15 @@ digitalWrite(PIN_D1, HIGH);  // LED on
                 delay(20);
 		}
 
-#ifdef SOFT_MODEM 
-        //start softmodem
-        // pinMode(led, OUTPUT);  
-         modem.begin ();
-#else
-	//start serial com	
+#ifndef SOFT_MODEM 
+
+         //start serial com	
 	init_serial();
+         
+         
+#else
+         //start softmodem
+        modem.begin ();
 #endif
 	
 	// attach servos 
@@ -158,7 +171,7 @@ digitalWrite(PIN_D1, HIGH);  // LED on
 
 //######################################## MAIN LOOP #####################################################################
 void loop() {
-  
+
         //update buttons internal states
         if (buttonMetro.check() == 1) {
         enter_button.isPressed();
@@ -175,6 +188,7 @@ void loop() {
 #if defined(DEBUG)
         //debug output
         debug();
+        retrieve_mag();
 #endif
         
 }

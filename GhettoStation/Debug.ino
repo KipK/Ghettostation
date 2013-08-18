@@ -12,8 +12,10 @@ void debug() {
        Serial.println(home_dist);
        Serial.print("El:");
        Serial.println(Elevation);
-       Serial.print("Be");
+       Serial.print("Be:");
        Serial.println(Bearing);
+              Serial.print("Be:");
+       Serial.println(home_bearing);
     }
   
 }

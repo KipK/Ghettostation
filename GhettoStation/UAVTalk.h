@@ -26,9 +26,6 @@
  */
 
 
-#ifdef SOFT_MODEM
-  SoftModem modem;
-#endif
 
 
 

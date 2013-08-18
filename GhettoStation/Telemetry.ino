@@ -1,16 +1,18 @@
 void init_serial() {
 	//disable previous serial in case of baudrate change
-
-#ifndef TEENSYPLUS2
+#if !defined(TEENSYPLUS2) && !defined(SOFT_MODEM)
 	Serial.end();
         delay(10);
 	Serial.begin(TELEMETRY_BAUD);
 
-#else 
+#endif
+#if defined(TEENSYPLUS2)  && !defined(SOFT_MODEM)
       Uart.end();
       delay(10);
       Uart.begin(TELEMETRY_BAUD);
+ 
 #endif
+
 #ifdef DEBUG
     Serial.println("Serial initialised"); 
 #endif
@@ -28,10 +30,11 @@ void get_telemetry() {
       }
 #endif
 #if defined(PROTOCOL_MSP)
-      if (msp_read()) {
-         protocol = "MSP";
-         //msp_read(); // uavtalk serial reading
-      }
+      msp_read(); //msp_read(); // uavtalk serial reading
+#endif
+
+#if defined(SOFT_MODEM)
+      modem_read();
 #endif
 
      // }

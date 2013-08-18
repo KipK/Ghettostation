@@ -1,33 +1,43 @@
 //CONFIGURATION                        
-//#define DEBUG
+#define DEBUG
 
 #define TEENSYPLUS2 // Teensy++2 support. Default is 328P.
-#define PWMSERVO //use pwmservo library. Undefined use normal arduino servo lib.
 
-//LCD ( only i2c 4 lines LCD for now )
+
+#define EXTERNALPULLUP // disable arduino internal pullup for I2C communication
+
+
+
+
+//########### LCD ########################################################################################
+
+
 //#define I2CADDRESS 0xc6 // LCD03 i2C from Robot Electronics 
 #define I2CADDRESS 0x27 // IIC/I2C/TWI Serial 2004 20x4 lcd.
-//#define I2CADRESS 020 // Arduino-IIC-LCD GY-LCD-V1
+//#define I2CADDRESS 020 // Arduino-IIC-LCD GY-LCD-V1
 
-//########### SOFT MODEM TELEMETRY########################################################################################
-//Use Softmodem ( audio telemetry )
-//#define SOFT_MODEM
+
 
 
 //########### TELEMETRY PROTOCOL ####################################################################################
 //Choose one of the protocol below and comment others:
-//UAVTALK OPENPILOT
-#define PROTOCOL_UAVTALK      
-#define UAVTALK_MODE_PASSIVE  // define if you already have GCS or OSD running. Arduino won't send anything on the Tx line. If undefined, it will send UAVTalk queries.
-#define BARO_ALT // define if altitude is based on Baro or GPS
-//MSP MULTIWII
-//#define PROTOCOL_MSP        // MSP from Multiwii , only passive for now ( ie doesn't send request to Multiwii so you need a multiwii OSD or ground station client running at the same time )
+
+//### UAVTALK OPENPILOT
+//#define PROTOCOL_UAVTALK      
+#define UAVTALK_MODE_PASSIVE  // If you already have GCS or OSD running. Arduino won't send anything on the Tx line. If undefined, it will send UAVTalk queries.
+#define BARO_ALT // Use Baro for Altitude instead of GPS.
+
+//### MSP MULTIWII
+#define PROTOCOL_MSP        // MSP from Multiwii , only passive for now ( ie doesn't send request to Multiwii so you need a multiwii OSD or ground station client running at the same time )
+
+//### Audio MODEM AFK Telemetry (SoftModem)
+//#define SOFT_MODEM
 
 //###################################################################################################################
 #define TELEMETRY_BAUD  19200		//Telemetry baudrate used
 
 //Minimum distance in meters where it will stop moving servos. 
-#define DONTTRACKUNDER  4
+#define DONTTRACKUNDER  3
 
 #define PAN_SERVOPIN 26		//PWM Pin for pan servo
 #define TILT_SERVOPIN 25		//PWM Pin for tilt servo
@@ -79,7 +89,8 @@
 
 // BEARING REFERENCE TO NORTH METHOD
 //#define BEARING_METHOD_1  // 1=calculation from home pos & uav pos heading 20m away straight to neutral pan servo pos.	
-#define BEARING_METHOD_2   // 2=manually enter the heading reference from a compass			
-                               
+//#define BEARING_METHOD_2   // 2=manually enter the heading reference from a compass	
+//#define BEARING_METHOD_3   // 3=don't bother, just point your tracker to the north.		
+#define BEARING_METHOD_4  // 4=Use HMC5883 compass reading                          
           
 //END OF CONFIG
