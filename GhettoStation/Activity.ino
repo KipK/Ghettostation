@@ -153,9 +153,17 @@ void check_activity() {
                current_activity=0;
                 }
           }
-          if (current_activity == 11) { //TEST_SERVO
+
+           if (current_activity == 11) { //TEST_SERVO
              test_servos();
              current_activity = 0; 
           }
+          
+ #ifdef TEENSYPLUS2
+          if (current_activity == 12) { //Configure Telemetry
+             lcddisp_telemetry();
+             current_activity = 0; 
+          }
+#endif
       }
 }

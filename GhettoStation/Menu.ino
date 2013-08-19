@@ -19,6 +19,9 @@ void init_menu() {
                                 m1m3m1m2Menu.add_item(&m1m3m1m2l3Item, &configure_tilt_minangle); // tilt min angle
 				m1m3m1m2Menu.add_item(&m1m3m1m2l4Item, &configure_tilt_maxangle); // tilt max angle
                         m1m3m1Menu.add_item(&m1m3m1i3Item, &configure_test_servo);
+#ifdef TEENSYPLUS2
+                m1m3Menu.add_item(&m1m3i2Item, &configure_telemetry); // select telemetry protocol ( Teensy++2 only ) 
+#endif
 	displaymenu.set_root_menu(&rootMenu);
 }
 
@@ -106,5 +109,10 @@ void configure_test_servo(MenuItem* p_menu_item) {
        current_activity = 11;
 }
 
+#ifdef TEENSYPLUS2
+void configure_telemetry(MenuItem* p_menu_item) {
+       current_activity = 12;
+}
+#endif
 
 

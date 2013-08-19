@@ -74,7 +74,10 @@ Menu m1m3Menu("CONFIG");
 				MenuItem m1m3m1m2l3Item("MINANGLE");
 				MenuItem m1m3m1m2l4Item("MAXANGLE");			
 		MenuItem m1m3m1i3Item("TEST");
-
+#ifdef TEENSYPLUS2
+        MenuItem m1m3i2Item("TELEMETRY");
+        
+#endif
 
 
 

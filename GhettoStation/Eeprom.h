@@ -33,6 +33,7 @@ struct config_t
   int tilt_maxpwm;
   int tilt_maxangle;
   int baudrate;
+  int telemetry;
 } configuration;
 
 
@@ -57,9 +58,12 @@ FLASH_STRING(string_shome9, " & press enter      ");
 FLASH_STRING(string_shome10, "    HOME IS SET     ");
 FLASH_STRING(string_shome11, "Enter:Start Tracking");
 FLASH_STRING(string_shome12, "<< Menu     Reset >>");
-
-
-
+#ifdef TEENSYPLUS2
+FLASH_STRING(string_telemetry1, "  SELECT PROTOCOL:  ");
+FLASH_STRING(string_telemetry2, "      UAVTALK     >>");
+FLASH_STRING(string_telemetry3, "<<   MULTIWII     >>");
+FLASH_STRING(string_telemetry4, "<<   AUDIOMODEM     ");
+#endif
 
 
 
@@ -100,6 +104,7 @@ void clear_eeprom() {
 	configuration.tilt_maxpwm = TILT_MAXPWM;
         configuration.tilt_maxangle = TILT_MAXANGLE;
 	configuration.baudrate = TELEMETRY_BAUD;
+        configuration.telemetry = 0;
 	EEPROM_write(0, configuration);
 
         

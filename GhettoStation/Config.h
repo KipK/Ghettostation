@@ -20,10 +20,10 @@
 
 
 //########### TELEMETRY PROTOCOL ####################################################################################
-//Choose one of the protocol below and comment others:
+//for 328p choose one of the protocol below and comment others.. For Teensy++2 you can enable all, config is done at runtime.
 
 //### UAVTALK OPENPILOT
-//#define PROTOCOL_UAVTALK      
+#define PROTOCOL_UAVTALK      
 #define UAVTALK_MODE_PASSIVE  // If you already have GCS or OSD running. Arduino won't send anything on the Tx line. If undefined, it will send UAVTalk queries.
 #define BARO_ALT // Use Baro for Altitude instead of GPS.
 
@@ -31,7 +31,7 @@
 #define PROTOCOL_MSP        // MSP from Multiwii , only passive for now ( ie doesn't send request to Multiwii so you need a multiwii OSD or ground station client running at the same time )
 
 //### Audio MODEM AFK Telemetry (SoftModem)
-//#define SOFT_MODEM
+#define SOFT_MODEM
 
 //###################################################################################################################
 #define TELEMETRY_BAUD  19200		//Telemetry baudrate used

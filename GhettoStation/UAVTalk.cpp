@@ -31,10 +31,7 @@
 
 
 #if defined(PROTOCOL_UAVTALK)
-#ifdef TEENSYPLUS2
-// This line defines a "Uart" object to access the serial port
-HardwareSerial Uart = HardwareSerial();
-#endif
+
   #include "UAVTalk.h"
  
   static unsigned long last_gcstelemetrystats_send = 0;

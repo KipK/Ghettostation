@@ -1,9 +1,6 @@
 
 #if defined(PROTOCOL_MSP)
-#ifdef TEENSYPLUS2
-// This line defines a "Uart" object to access the serial port
-HardwareSerial Uart = HardwareSerial();
-#endif
+
 
   #define SERIALBUFFERSIZE 128
   static uint8_t serialBuffer[SERIALBUFFERSIZE]; // this hold the imcoming string from serial O string

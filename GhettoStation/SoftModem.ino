@@ -18,7 +18,8 @@ int modem_read(void) {
   	uint8_t c = modem.read();
         string_index++;          
          if(data == 0b00100100){   
-           string_index_max=string_index-2;//  
+           string_index_max=string_index-2;// 
+           protocol = "AFSK"; 
            recover_gps();  
            string_index = 0;          
            string_buf[0] = 0b00100100;     

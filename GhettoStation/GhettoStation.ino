@@ -13,7 +13,7 @@
  *
  *****************************************************************************/
 
-#define CONFIG_VERSION 2001 // Edit only if you want to reset eeprom
+#define CONFIG_VERSION 2002 // Edit only if you want to reset eeprom
 
 #include "Config.h"
 #include <avr/pgmspace.h>
@@ -63,6 +63,12 @@
 // HMC5883L compass;
 //#endif
 
+
+#ifdef TEENSYPLUS2
+// This line defines a "Uart" object to access the serial port
+HardwareSerial Uart = HardwareSerial();
+#endif
+
 // Set the pins on the I2C chip used for LCD connections:
 //                    addr, en,rw,rs,d4,d5,d6,d7,bl,blpol
 LiquidCrystal_I2C LCD(I2CADDRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1" 
@@ -109,17 +115,6 @@ int modemTimer=0;
 //#################################### SETUP LOOP ####################################################
 
 void setup() {
-#ifdef DEBUG
- #ifdef TEENSYPLUS2
-	Serial.begin(57600);
- #else
-   #ifdef SOFT_MODEM
-   Serial.begin(57600);
-   #endif
- #endif
-#endif
-
-
 
 //init LCD
 //init_lcdscreen();
@@ -143,13 +138,12 @@ void setup() {
                 delay(20);
 		}
 
-#ifndef SOFT_MODEM 
 
          //start serial com	
 	init_serial();
          
          
-#else
+#ifdef SOFT_MODEM
          //start softmodem
         modem.begin ();
 #endif
