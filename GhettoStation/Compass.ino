@@ -1,9 +1,7 @@
 #if defined(BEARING_METHOD_4)
 
 void retrieve_mag() {
-#ifdef DEBUG
-    Serial.println("retrieve_mag"); 
-#endif
+
   HMC5883L compass;
   compass = HMC5883L(); // Construct a new HMC5883 compass.
   delay(100);
@@ -13,9 +11,7 @@ void retrieve_mag() {
   MagnetometerRaw raw = compass.ReadRawAxis();
   // Retrived the scaled values from the compass (scaled to the configured scale).
   MagnetometerScaled scaled = compass.ReadScaledAxis();
-#ifdef DEBUG
-    Serial.println("mag scaled"); 
-#endif
+
  // Calculate heading when the magnetometer is level, then correct for signs of axis.
 float heading = atan2(scaled.YAxis, scaled.XAxis);
 

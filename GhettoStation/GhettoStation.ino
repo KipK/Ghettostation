@@ -20,8 +20,10 @@
 
 #include <Wire.h> 
 
+
+
 #ifdef BEARING_METHOD_4
- //Internal Compass
+//HMC5883L i2c mag b
 #include <HMC5883L.h>
 #endif
 
@@ -43,7 +45,10 @@
 
 #include "Eeprom.h"
 #include "GhettoStation.h"
-
+#ifdef TEENSYPLUS2
+// This line defines a "Uart" object to access the serial port
+HardwareSerial Uart = HardwareSerial();
+#endif
 
 #if defined(PROTOCOL_UAVTALK)
 #include "UAVTalk.cpp"
@@ -53,21 +58,18 @@
 #include "MSP.cpp"
 #endif
 
-
+//#if defined(PROTOCOL_MAVLINK)
+//#include <GCS_MAVLink.h>
+//#endif
 
 
 
 //################################### SETTING OBJECTS ###############################################
 
-//#if defined(BEARING_METHOD_4)
-// HMC5883L compass;
-//#endif
 
 
-#ifdef TEENSYPLUS2
-// This line defines a "Uart" object to access the serial port
-HardwareSerial Uart = HardwareSerial();
-#endif
+
+
 
 // Set the pins on the I2C chip used for LCD connections:
 //                    addr, en,rw,rs,d4,d5,d6,d7,bl,blpol
@@ -182,7 +184,7 @@ void loop() {
 #if defined(DEBUG)
         //debug output
         debug();
-        retrieve_mag();
+
 #endif
         
 }

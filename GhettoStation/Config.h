@@ -1,5 +1,5 @@
 //CONFIGURATION                        
-#define DEBUG
+//#define DEBUG
 
 #define TEENSYPLUS2 // Teensy++2 support. Default is 328P.
 
@@ -29,6 +29,9 @@
 
 //### MSP MULTIWII
 #define PROTOCOL_MSP        // MSP from Multiwii , only passive for now ( ie doesn't send request to Multiwii so you need a multiwii OSD or ground station client running at the same time )
+
+//### MAVLINK
+//#define PROTOCOL_MAVLINK  // not ready
 
 //### Audio MODEM AFK Telemetry (SoftModem)
 #define SOFT_MODEM
