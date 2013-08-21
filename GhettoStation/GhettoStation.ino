@@ -45,22 +45,24 @@
 
 #include "Eeprom.h"
 #include "GhettoStation.h"
+
 #ifdef TEENSYPLUS2
 // This line defines a "Uart" object to access the serial port
 HardwareSerial Uart = HardwareSerial();
 #endif
 
-#if defined(PROTOCOL_UAVTALK)
+#ifdef PROTOCOL_UAVTALK
 #include "UAVTalk.cpp"
 #endif
 
-#if defined(PROTOCOL_MSP)
+#ifdef PROTOCOL_MSP
 #include "MSP.cpp"
 #endif
 
-//#if defined(PROTOCOL_MAVLINK)
-//#include <GCS_MAVLink.h>
-//#endif
+#ifdef PROTOCOL_MAVLINK
+#include <mavlink.h>
+#include "Mavlink.cpp"
+#endif
 
 
 
@@ -162,6 +164,7 @@ void setup() {
        enter_button.releaseHandler(enterButtonReleaseEvents);
        left_button.releaseHandler(leftButtonReleaseEvents);
        right_button.releaseHandler(rightButtonReleaseEvents);
+       
 
 }
 

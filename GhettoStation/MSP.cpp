@@ -1,7 +1,6 @@
 
 #if defined(PROTOCOL_MSP)
 
-
   #define SERIALBUFFERSIZE 128
   static uint8_t serialBuffer[SERIALBUFFERSIZE]; // this hold the imcoming string from serial O string
   uint8_t serialMSPStringOK=0;

@@ -387,7 +387,7 @@
   
   				case BAROALTITUDE_OBJID:
   #ifdef BARO_ALT
-					uav_alt		= (int16_t) uavtalk_get_float(&msg, BAROALTITUDE_OBJ_ALTITUDE);
+					uav_alt		= (int16_t)round(uavtalk_get_float(&msg, BAROALTITUDE_OBJ_ALTITUDE));
   #endif
 				break;
   				

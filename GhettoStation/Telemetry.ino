@@ -53,8 +53,18 @@ void get_telemetry() {
       
  #ifdef TEENSYPLUS2
    }
+   
  #endif
 #endif
 
+#if defined(PROTOCOL_MAVLINK)
+ #ifdef TEENSYPLUS2
+    if (configuration.telemetry==3) {
+ #endif
+      mavlink_read(); //msp_read(); // uavtalk serial reading
+ #ifdef TEENSYPLUS2
+    }
+ #endif
+#endif
      // }
 }

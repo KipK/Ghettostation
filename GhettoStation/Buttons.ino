@@ -142,7 +142,7 @@ void rightButtonReleaseEvents(Button &btn)
 #ifdef TEENSYPLUS2      
     if ( current_activity == 12 ) {
      //change telemetry protocol
-     if (configuration.telemetry<2) {
+     if (configuration.telemetry<3) {
      configuration.telemetry++;
      }
      current_activity = 0;
