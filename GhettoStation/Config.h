@@ -1,5 +1,5 @@
 //CONFIGURATION                        
-//#define DEBUG
+#define DEBUG
 
 #define TEENSYPLUS2 // Teensy++2 support. Default is 328P.
 
@@ -8,6 +8,7 @@
 
 #define BARO_ALT // Use Baro for Altitude instead of GPS.
 
+#define MAGDEC -1.454  // your local Magnetic Declination in radian. Get it from here: http://magnetic-declination.com/  then convert it in milliradian: http://www.wolframalpha.com/input/?i=%280%C2%B0+5%27%29+in+radians 
 
 //########### LCD ########################################################################################
 
@@ -31,11 +32,11 @@
 #define PROTOCOL_MSP        // MSP from Multiwii , only passive for now ( ie doesn't send request to Multiwii so you need a multiwii OSD or ground station client running at the same time )
 
 //### Audio MODEM AFK Telemetry (SoftModem)
-#define SOFT_MODEM
+#define SOFT_MODEM // 1200 bauds audio telemetry
 
 //### MAVLINK
-#define PROTOCOL_MAVLINK  // not ready
-#define MAVLINK_MODE_PASSIVE // doesn't send anything to initiate communication
+#define PROTOCOL_MAVLINK  // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs ( in mavlink mode ) 
+
 
 //###################################################################################################################
 #define TELEMETRY_BAUD  19200		//Telemetry baudrate used

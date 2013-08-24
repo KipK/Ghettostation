@@ -17,7 +17,7 @@ float heading = atan2(scaled.YAxis, scaled.XAxis);
 
 // Once you have your heading, you must then add your ‘Declination Angle’, which is the ‘Error’ of the magnetic field in your location.
 // Find yours here: http://www.magnetic-declination.com/
-float declinationAngle = -0.0833; // Paris
+float declinationAngle = MAGDEC / 1000; // Paris
 heading += declinationAngle;
 
 // Correct for when signs are reversed.

@@ -9,7 +9,10 @@ void init_lcdscreen() {
 // init LCD
 	LCD.begin(20,4);
         delay(20);
-
+        LCD.backlight(); 		
+ 	delay(250); 		
+ 	LCD.noBacklight(); 		
+ 	delay(250);
         LCD.backlight(); 
         delay(250);
         LCD.setCursor(0,0);

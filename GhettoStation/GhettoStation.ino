@@ -121,7 +121,7 @@ int modemTimer=0;
 void setup() {
 
 //init LCD
-//init_lcdscreen();
+init_lcdscreen();
 
 
 
