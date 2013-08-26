@@ -13,7 +13,7 @@
  *
  *****************************************************************************/
 
-#define CONFIG_VERSION 2002 // Edit only if you want to reset eeprom
+#define CONFIG_VERSION 2004 // Edit only if you want to reset eeprom
 
 #include "Config.h"
 #include <avr/pgmspace.h>
@@ -119,6 +119,7 @@ int modemTimer=0;
 //#################################### SETUP LOOP ####################################################
 
 void setup() {
+
 
 //init LCD
 init_lcdscreen();
