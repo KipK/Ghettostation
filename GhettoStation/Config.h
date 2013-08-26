@@ -77,7 +77,7 @@
 //#define TILT_MAXPWM 800	//max tilt pwm value 
 #define TILT_MAXPWM 1200     
 #define TILT_MAXANGLE 90	//max tilt angle considering 0° is facing toward.
-							/											
+																	
 //#define TILT_MINPWM 500		//min tilt pwm value
 #define TILT_MINPWM 1950
 #define TILT_MINANGLE 1 	//Means minimum tilt position is parallel to ground. Considering 0 is facing toward, a -10 value would means we can tilt 10° down.

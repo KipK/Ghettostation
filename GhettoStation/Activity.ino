@@ -10,6 +10,7 @@ void check_activity() {
         
    	  if (current_activity == 0) { //MENU
 		display_menu();
+                servoPathfinder(0, 0); // refresh servo to prevent idle jitter
                 if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press 
                    displaymenu.back();
                 }
@@ -18,6 +19,7 @@ void check_activity() {
 	  }
           if (current_activity == 1 ) { //TRACK
            if ((!home_pos) || (!home_bear)) {  // check if home is set before start tracking
+             servoPathfinder(0, 0); // refresh servo to prevent idle jitter
              current_activity = 2;
            } else if (home_bear) {
              antenna_tracking();
@@ -148,15 +150,18 @@ void check_activity() {
                 }
           }
 
-           if (current_activity == 11) { //TEST_SERVO
+          if (current_activity == 11) { //TEST_SERVO
              test_servos();
              current_activity = 0; 
           }
           
- #ifdef TEENSYPLUS2
+#ifdef TEENSYPLUS2
           if (current_activity == 12) { //Configure Telemetry
              lcddisp_telemetry();
-             current_activity = 0; 
+            if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
+               EEPROM_write(0, configuration);
+               current_activity=0;
+                }
           }
 #endif
       }
