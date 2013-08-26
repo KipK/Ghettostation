@@ -1,14 +1,12 @@
 void init_serial() {
 	//disable previous serial in case of baudrate change
-#if !defined(TEENSYPLUS2) 
-	Serial.end();
-        delay(10);
-	Serial.begin(TELEMETRY_BAUD);
+//#if !defined(TEENSYPLUS2) 
+        
+      Serial.begin(TELEMETRY_BAUD);
 
-#endif
+//#endif
 #if defined(TEENSYPLUS2) 
-      Uart.end();
-      delay(10);
+
       Uart.begin(TELEMETRY_BAUD);
  
 #endif

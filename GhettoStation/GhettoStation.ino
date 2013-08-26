@@ -180,7 +180,6 @@ void loop() {
         }
 	//get telemetry data 
         get_telemetry();
-//	test_servos();
 	//checking activity
         check_activity();     
         //lcd refresh loop

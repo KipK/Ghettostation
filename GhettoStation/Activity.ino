@@ -3,10 +3,8 @@
 void check_activity() {
     
     if (activityMetro.check() == 1) 
-      if (uav_fix_type == 3) { gps_fix = true; }
-    
       {
- 
+          if (uav_fix_type == 3) { gps_fix = true; }
         
    	  if (current_activity == 0) { //MENU
 		display_menu();
@@ -158,7 +156,7 @@ void check_activity() {
 #ifdef TEENSYPLUS2
           if (current_activity == 12) { //Configure Telemetry
              lcddisp_telemetry();
-            if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
+            if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press
                EEPROM_write(0, configuration);
                current_activity=0;
                 }

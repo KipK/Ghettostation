@@ -111,7 +111,7 @@ void configure_test_servo(MenuItem* p_menu_item) {
 
 #ifdef TEENSYPLUS2
 void configure_telemetry(MenuItem* p_menu_item) {
-       current_activity = 12;
+      current_activity = 12;
 }
 #endif
 

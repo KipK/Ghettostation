@@ -61,8 +61,9 @@ FLASH_STRING(string_shome12, "<< Menu     Reset >>");
 #ifdef TEENSYPLUS2
 FLASH_STRING(string_telemetry1, "  SELECT PROTOCOL:  ");
 FLASH_STRING(string_telemetry2, "      UAVTALK     >>");
-FLASH_STRING(string_telemetry3, "<<   MULTIWII     >>");
-FLASH_STRING(string_telemetry4, "<<   AUDIOMODEM     ");
+FLASH_STRING(string_telemetry3, "<<    MULTIWII    >>");
+FLASH_STRING(string_telemetry4, "<<   AUDIOMODEM   >>");
+FLASH_STRING(string_telemetry5, "<<     MAVLINK      ");
 #endif
 
 

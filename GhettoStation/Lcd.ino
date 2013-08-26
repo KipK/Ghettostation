@@ -329,15 +329,22 @@ void lcddisp_telemetry() {
                      switch (configuration.telemetry) {
                        
                         case 0:
+                                 // currentline = "UAVTalk"; break;
                                 currentline = String(string_telemetry2.copy(extract)); break;
                         case 1:
+                                 //currentline = "MSP"; break;
                                 currentline = String(string_telemetry3.copy(extract)); break;
                         case 2:
+                                //currentline = "AudioModem"; break;
                                 currentline = String(string_telemetry4.copy(extract)); break;
+                        case 3:
+                                //currentline = "MavLink"; break;
+                                currentline = String(string_telemetry5.copy(extract)); break;
                         
                      }
+                     break;
            case 4:      
-                        currentline = String(string_load2.copy(extract)); break;
+                        currentline = String(string_shome5.copy(extract)); break;
 
        }
        for ( int l = currentline.length()-1 ; l<21 ; l++ ) {

@@ -38,14 +38,7 @@ void enterButtonReleaseEvents(Button &btn)
 
             }
         }
-#ifdef TEENSYPLUS2      
-        if ( current_activity == 12 ) {
-         //save telemetry protocol 
-         EEPROM_write(0, configuration);
-         current_activity = 0;
-          
-        }
- #endif
+        
      }
      
  }
@@ -70,7 +63,12 @@ void leftButtonReleaseEvents(Button &btn)
           if (current_activity == 8) configuration.tilt_minangle--;        
           if (current_activity == 9) servoconf_tmp[3]--;
           if (current_activity == 10) configuration.tilt_maxangle--;
-    }
+          if (current_activity == 12) {
+             if (configuration.telemetry > 0) {
+               configuration.telemetry -= 1;
+               }       
+            }
+      }
     else if (current_activity==2) {
 #if defined(BEARING_METHOD_2) || defined(BEARING_METHOD_4)       
                if (home_pos && !home_bear) {
@@ -85,18 +83,7 @@ void leftButtonReleaseEvents(Button &btn)
     }
    else if (current_activity==1 && home_pos && home_bear) {
           home_bearing--;
-   }
-#ifdef TEENSYPLUS2      
-    if ( current_activity == 12 ) {
-     //change telemetry protocol
-     if (configuration.telemetry>0) {
-     configuration.telemetry--;
-     }
-     current_activity = 0;
-      
-    }
- #endif
-   
+   }   
    
   }
 }
@@ -120,7 +107,12 @@ void rightButtonReleaseEvents(Button &btn)
           if (current_activity == 8) configuration.tilt_minangle++;        
           if (current_activity == 9) servoconf_tmp[3]++;
           if (current_activity == 10) configuration.tilt_maxangle++;
-    }
+          if (current_activity == 12) {
+            if (configuration.telemetry < 3) {
+               configuration.telemetry += 1;
+               }
+             }
+          }
     else if (current_activity==2) {
 
 #if defined(BEARING_METHOD_2)  || defined(BEARING_METHOD_4) 
@@ -139,16 +131,6 @@ void rightButtonReleaseEvents(Button &btn)
           home_bearing++;
    }
    
-#ifdef TEENSYPLUS2      
-    if ( current_activity == 12 ) {
-     //change telemetry protocol
-     if (configuration.telemetry<3) {
-     configuration.telemetry++;
-     }
-     current_activity = 0;
-      
-    }
- #endif
   }
 }
 
