@@ -30,8 +30,13 @@
 */
 Button::Button(uint8_t buttonPin, uint8_t buttonMode){
 	pin=buttonPin;
+#ifndef TEENSYPLUS2
   pinMode(pin,INPUT);
-  
+#else
+ pinMode(pin,INPUT_PULLUP);
+ delay(10);
+#endif
+
 	buttonMode==BUTTON_PULLDOWN ? pulldown() : pullup(buttonMode);
   state = 0;
   bitWrite(state,CURRENT,!mode);

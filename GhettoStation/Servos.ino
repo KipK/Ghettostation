@@ -7,17 +7,13 @@ void attach_servo(Servo &s, int p, int min, int max) {
 	s.detach();
 	}
 	s.attach(p,min,max);
-        
+
 }
 
 
 
 void move_servo(Servo &s, int stype, int a, int mina, int maxa) {
 
- 
- float new_angle;
- int t;
- //map servo range according to configured min max angle values
  if (stype == 1) {
 		//convert angle for pan to pan servo reference point: 0° is pan_minangle
 		if (a<=180) {
@@ -30,22 +26,24 @@ void move_servo(Servo &s, int stype, int a, int mina, int maxa) {
                           a = mina - (360-a);
                      
 		}
-                // map configured pan settings to default arduino lib 0-180° servo range
-                new_angle = map (a, 0, mina+maxa, 0, 180);
-				#ifdef PAN_SERVOREVERSED
-				new_angle = 180 - new_angle
-				#endif
+                // map angle to microseconds
+                int microsec = map(a, 0, mina+maxa, configuration.pan_minpwm, configuration.pan_maxpwm);
+
                 
+                s.writeMicroseconds( microsec );
 	 }
   else if (stype == 2){
                 
-		new_angle = map(a, configuration.tilt_minangle, configuration.tilt_maxangle, 0, 180); //map configured tilt settings to default arduino lib 0-180° servo range
-		#ifdef TILT_SERVOREVERSED
-		new_angle = 180 - new_angle
-		#endif
+                //map angle to microseconds
+                int microsec = map(a, mina, maxa, configuration.tilt_minpwm, configuration.tilt_maxpwm);
+
+	        s.writeMicroseconds( microsec );
+
 	}
 	
-	s.write( new_angle);
+
+
+
 }
 
 void servoPathfinder(int angle_b, int angle_a){   // ( bearing, elevation )
@@ -54,7 +52,7 @@ void servoPathfinder(int angle_b, int angle_a){   // ( bearing, elevation )
 			if ( configuration.pan_maxangle >= angle_b ) {
 			//works for all config
                                         //define limits
-					if (angle_a < configuration.tilt_minangle) {
+					if (angle_a <= configuration.tilt_minangle) {
 					 // checking if we reach the min tilt limit
 						angle_a = configuration.tilt_minangle;
 					}
@@ -177,12 +175,12 @@ void test_servos() {
     delay(100);
   }
   //get back to 0,45
-    servoPathfinder(0,45);
+    servoPathfinder(0,30);
     delay(1000); 
     
   //doing a full 360 pan with 45° tilt
   for (int i=0; i < 360; i++) {
-    servoPathfinder(i, 45); 
+    servoPathfinder(i, 30); 
     delay(100);
   }
   //finished going back to neutral

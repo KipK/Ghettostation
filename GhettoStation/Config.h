@@ -1,10 +1,10 @@
 //CONFIGURATION                        
-#define DEBUG
+//#define DEBUG
 
 #define TEENSYPLUS2 // Teensy++2 support. Default is 328P.
 
 
-#define EXTERNALPULLUP // disable arduino internal pullup for I2C communication
+//#define EXTERNALPULLUP // disable arduino internal pullup for I2C communication
 
 #define BARO_ALT // Use Baro for Altitude instead of GPS.
 
@@ -50,7 +50,7 @@
 //#define TILT_SERVOREVERSED   // same for tilt
 
 
-#define LEFT_BUTTON_PIN 7     // select a free digital pin for those 3 buttons
+#define LEFT_BUTTON_PIN 10     // select a free digital pin for those 3 buttons
 #define RIGHT_BUTTON_PIN 9
 #define ENTER_BUTTON_PIN 8
 //#define LED_PIN 13    // using pin13 already have a resistor for led on arduino mini & others
@@ -61,30 +61,28 @@
 //Put conservatives values to not overload your servo forcing endpoints when configuring them
 
 		
-#define PAN_MAXPWM 2420	//max pan servo pwm value
-#define PAN_MAXANGLE 90	//max angle clockwise (on the right) defined by PAN_MAXPWM.
-						//Considering 0° is  heading toward level to the ground,
-						//for 180° pan conf, a 110 value means we can go 20° further before reversing pan & tilt.						
-						//A 190° value means for a 360° pan setup we can go 10° further before inversing pan.
-						
-#define PAN_MINPWM 632		//min pan servo pwm value
-#define PAN_MINANGLE 90		//max angle counter-clockwise (on the left).
-							//With those pan_maxangle & pan_minangle we can know the pan type ( 360° or 180° pan )
-							// & we have the overlap range.
+//#define PAN_MAXPWM 1500	//max pan servo pwm value
+#define PAN_MAXPWM 1271  //max pan servo pwm for ServoCity heavy duty pan
 
-#define TILT_MAXPWM 2227	//max tilt pwm value 
-#define TILT_MAXANGLE 155	//max tilt angle considering 0° is facing toward.
-							//ie for 180° pan config, 160 means we have a 20° deadband behind on Tilt axis
-							//a 200 value for example would indicate we can even tilt down backward 20°.
-							//120 for 360° pan config, means tilt can go 30° more further your head 
-							//before switching pan side.
-							// IF YOU HAVE A 90° Tilt setup , DON'T FORGET TO CHANGE THIS VALUE TO 90 
-							//HERE TO PROTECT YOUR SERVO
-							
-							
-#define TILT_MINPWM 774		//min tilt pwm value
-#define TILT_MINANGLE 3		//Means minimum tilt position is parallel to ground. Considering 0 is facing toward, a -10 value would means we can tilt 10° down.
-//#define OVERLAP_FACTOR 1.1	// Unused yet
+//Max angle clockwise (on the right) defined by PAN_MAXPWM.
+//#define PAN_MAXANGLE 90	/180° pan can go 90° left & right. 
+#define PAN_MAXANGLE 180  // 360° pan can go 180° left & right.
+	
+//Max angle counter clockwise (on the left) defined by PAN_MINPWM.					
+//#define PAN_MINPWM 1200		//min pan servo pwm value
+#define PAN_MINPWM 1980
+//#define PAN_MINANGLE 90		//180° pan can go 90° left & right
+#define PAN_MINANGLE 180 //360° pan can go 180° left & right.
+
+//#define TILT_MAXPWM 800	//max tilt pwm value 
+#define TILT_MAXPWM 1200     
+#define TILT_MAXANGLE 90	//max tilt angle considering 0° is facing toward.
+							/											
+//#define TILT_MINPWM 500		//min tilt pwm value
+#define TILT_MINPWM 1950
+#define TILT_MINANGLE 1 	//Means minimum tilt position is parallel to ground. Considering 0 is facing toward, a -10 value would means we can tilt 10° down.
+
+//#define OVERLAP_FACTOR 1.1	// TODO, Unused yet
 				//the factor that determines how much the heading/tilt must go over the servo limits before the opposite axis  switch to the other side. I.e.
 				// 1.1 as default setting gives you an 18 degree "gray on 180
 				// area" where the pan/tilt doesn't switch sides even
@@ -94,8 +92,8 @@
 
 // BEARING REFERENCE TO NORTH METHOD
 //#define BEARING_METHOD_1  // 1=calculation from home pos & uav pos heading 20m away straight to neutral pan servo pos.	
-//#define BEARING_METHOD_2   // 2=manually enter the heading reference from a compass	
+#define BEARING_METHOD_2   // 2=manually enter the heading reference from a compass	
 //#define BEARING_METHOD_3   // 3=don't bother, just point your tracker to the north.		
-#define BEARING_METHOD_4  // 4=Use HMC5883 compass reading                          
+//#define BEARING_METHOD_4  // 4=Use HMC5883 compass reading                          
           
 //END OF CONFIG
