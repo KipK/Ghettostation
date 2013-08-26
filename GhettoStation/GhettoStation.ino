@@ -95,7 +95,10 @@ Metro lcdMetro = Metro(100);
 Metro buttonMetro = Metro(100);
 //setting activity loop time
 Metro activityMetro = Metro(200);
-
+#if defined(SIMUGPS)
+Metro simugpsMetro = Metro(500);
+#endif
+//
 #if defined(DEBUG)
 //Debug output
 Metro debugMetro = Metro(1000); // output serial debug data each second.
@@ -166,7 +169,9 @@ init_lcdscreen();
        left_button.releaseHandler(leftButtonReleaseEvents);
        right_button.releaseHandler(rightButtonReleaseEvents);
        
-
+#ifdef SIMUGPS
+  set_simugps();
+#endif
 }
 
 //######################################## MAIN LOOP #####################################################################
@@ -178,8 +183,12 @@ void loop() {
         left_button.isPressed();
         right_button.isPressed();
         }
+#ifdef SIMUGPS
+        simulate_gps();
+#else
 	//get telemetry data 
         get_telemetry();
+#endif
 	//checking activity
         check_activity();     
         //lcd refresh loop

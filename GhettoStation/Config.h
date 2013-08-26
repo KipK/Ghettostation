@@ -1,5 +1,6 @@
 //CONFIGURATION                        
 //#define DEBUG
+//#define SIMUGPS // Simulate gps feed, it will disable all other telemetry
 
 #define TEENSYPLUS2 // Teensy++2 support. Default is 328P.
 
