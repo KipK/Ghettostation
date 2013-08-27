@@ -132,6 +132,7 @@ void mavlink_read()
 
       if(mavlink_parse_char(MAVLINK_COMM_0, ch, &msg, &status)) {
          mavlink_active = true;
+         protocol = "MAV";
          switch(msg.msgid) {
             case MAVLINK_MSG_ID_HEARTBEAT:
                do_mavlink_heartbeat(&msg);

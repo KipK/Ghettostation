@@ -39,6 +39,9 @@ void recover_gps(){
         int32_t softmodem_lat;
         int32_t softmodem_lon;
         int softmodem_alt;
+        int softmodem_speed;
+        int softmodem_sats;
+        int softmodem_fixtype;
         /* Token will point to the data between comma "'", returns the data in the order received */
 	/*THE $PAK order is: UTC, date, Lat, Lon, alt*/
 	token = strtok_r(string_buf, search, &brkb); //Contains the header $PAK
@@ -47,7 +50,12 @@ void recover_gps(){
 	token = strtok_r(NULL, search, &brkb);  //Contains longitude  
         softmodem_lon= atol(token);
 	token = strtok_r(NULL, search, &brkb); //Contains altitude
-	softmodem_alt = (long)abs(atoi(token));
+	softmodem_alt = atoi(token);
+        token = strtok_r(NULL, search, &brkb); //Contains sats visible
+        softmodem_sats = atoi(token);
+        token = strtok_r(NULL, search, &brkb); //Contains gps fix type
+        softmodem_fixtype = atoi(token);
+
 
         int c;
         int n;
@@ -68,7 +76,9 @@ void recover_gps(){
          uav_lat = softmodem_lat / 10000000;
          uav_lon = softmodem_lon / 10000000;
          uav_alt = softmodem_alt;
-         uav_fix_type=3;
+         uav_fix_type=softmodem_fixtype;
+         uav_satellites_visible = softmodem_sats;
+         uav_groundspeed = softmodem_speed;
         }
        }
 }
