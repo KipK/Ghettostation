@@ -1,5 +1,4 @@
 void init_serial() {
-	//disable previous serial in case of baudrate change
 //#if !defined(TEENSYPLUS2) 
         
       Serial.begin(TELEMETRY_BAUD);
@@ -21,19 +20,19 @@ void init_serial() {
 void get_telemetry() {
       //if (telemetryMetro.check() == 1) {
         
-#if defined(PROTOCOL_UAVTALK)
+#if defined(PROTOCOL_UAVTALK) // OpenPilot / Taulabs
  #ifdef TEENSYPLUS2
    if (configuration.telemetry==0) {
  #endif
       if (uavtalk_read()) {
          protocol = "UAVT";
-         //uavtalk_read(); // uavtalk serial reading
       }
   #ifdef TEENSYPLUS2
    }
   #endif
 #endif
-#if defined(PROTOCOL_MSP)
+
+#if defined(PROTOCOL_MSP) // Multiwii
  #ifdef TEENSYPLUS2
     if (configuration.telemetry==1) {
  #endif
@@ -43,19 +42,20 @@ void get_telemetry() {
  #endif
 #endif
 
-#if defined(SOFT_MODEM)
+#if defined(LIGHTTELEMETRY) // Taulabs 
  #ifdef TEENSYPLUS2
    if (configuration.telemetry==2) {
  #endif
-      modem_read();
+      if (lighttelemetry_read()) {
+        protocol = "LTM"; 
+      }
       
  #ifdef TEENSYPLUS2
    }
-   
  #endif
 #endif
 
-#if defined(PROTOCOL_MAVLINK)
+#if defined(PROTOCOL_MAVLINK) // Ardupilot / PixHawk / Taulabs / Other
  #ifdef TEENSYPLUS2
     if (configuration.telemetry==3) {
  #endif
@@ -66,3 +66,6 @@ void get_telemetry() {
 #endif
      // }
 }
+
+
+

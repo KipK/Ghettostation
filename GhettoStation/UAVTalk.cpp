@@ -380,14 +380,14 @@
   					uav_fix_type		= uavtalk_get_int8(&msg, GPSPOSITION_OBJ_STATUS);
   					//uav_heading		= uavtalk_get_float(&msg, GPSPOSITION_OBJ_HEADING);
   #ifndef BARO_ALT
-  					uav_alt			= (int)round(uavtalk_get_float(&msg, GPSPOSITION_OBJ_ALTITUDE));
+  					uav_alt			= (int)round(uavtalk_get_float(&msg, GPSPOSITION_OBJ_ALTITUDE) * 10); // decimeters
   #endif
   					uav_groundspeed		= (int)round(uavtalk_get_float(&msg, GPSPOSITION_OBJ_GROUNDSPEED));
   				break;
   
   				case BAROALTITUDE_OBJID:
   #ifdef BARO_ALT
-					uav_alt		= (int16_t)round(uavtalk_get_float(&msg, BAROALTITUDE_OBJ_ALTITUDE));
+					uav_alt		= (int16_t)round(uavtalk_get_float(&msg, BAROALTITUDE_OBJ_ALTITUDE) * 10); //decimeters
   #endif
 				break;
   				

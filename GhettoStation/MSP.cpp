@@ -1,141 +1,163 @@
 
 #if defined(PROTOCOL_MSP)
+#include "MSP.h"
 
-  #define SERIALBUFFERSIZE 128
-  static uint8_t serialBuffer[SERIALBUFFERSIZE]; // this hold the imcoming string from serial O string
-  uint8_t serialMSPStringOK=0;
-  uint8_t receiverIndex=0;
-  uint8_t MwVersion=0;
-  static uint8_t cmdMSP;
-  static uint8_t checksum;
-  int p=0;
-   
-  #define MSP_VERSION        	 0
-  
-  #define MSP_IDENT                100   //out message         multitype + multiwii version + protocol version + capability variable
-  #define MSP_STATUS               101   //out message         cycletime & errors_count & sensor present & box activation
-  
-  #define MSP_RAW_GPS              106   //out message         fix, numsat, lat, lon, alt, speed
-  #define MSP_COMP_GPS             107   //out message         distance home, direction home
-  
-  uint8_t read8() {
-    return serialBuffer[p++]&0xff;
-  }
+#define MWCSERIALBUFFERSIZE 256
+static uint8_t serialBuffer[MWCSERIALBUFFERSIZE]; // this hold the imcoming string from serial O string
+static uint8_t receiverIndex;
+static uint8_t dataSize;
+static uint8_t cmdMSP;
+static uint8_t rcvChecksum;
+static uint8_t readIndex;
+static int msp_baroalt;
+static int msp_gpsalt;
 
-  
-  uint16_t read16() {
-    uint16_t t = read8();
-    t+= (uint16_t)read8()<<8;
-    return t;
-  }
-  
-  uint32_t read32() {
-    uint32_t t = read16();
-    t+= (uint32_t)read16()<<16;
-    return t;
-  }
-  
-  void serialMSPCheck() {
-    telemetry_ok = true;
-    protocol = "MSP";
+uint8_t read8()  {
+  return serialBuffer[readIndex++];
+}
 
-  
-    if (cmdMSP==MSP_IDENT) {
-      MwVersion= read8();                             // MultiWii Firmware version
-    }
-  
-  
-    if (cmdMSP==MSP_RAW_GPS) {
-  	telemetry_ok = true;
-      uav_fix_type=read8();
-  		if (uav_fix_type==1) uav_fix_type=3;
-      uav_satellites_visible=read8();
-      uav_lat = ((float)read32()) / 10000000;
-      uav_lon = ((float)read32()) / 10000000;
-  
-      uav_alt = read16();
-      uav_groundspeed = read16();
-    }
-  
-  
-  
-    serialMSPStringOK=0;
-  
+uint16_t read16() {
+  uint16_t t = read8();
+  t |= (uint16_t)read8()<<8;
+  return t;
+}
+
+uint32_t read32() {
+  uint32_t t = read16();
+  t |= (uint32_t)read16()<<16;
+  return t;
+}
+
+void msp_read() {
+  uint8_t c;
+
+  static enum _serial_state {
+    IDLE,
+    HEADER_START,
+    HEADER_M,
+    HEADER_ARROW,
+    HEADER_SIZE,
+    HEADER_CMD,
   }
-  // End of decoded received commands from MultiWii
-  // --------------------------------------------------------------------------------------
+  c_state = IDLE;
   
-  void msp_read() {
-    
-    static uint8_t dataSize;
-    uint8_t c;
+#ifndef TEENSYPLUS2
+
+  while(Serial.available()) {
+    c = Serial.read();
+#else
+
+while (Uart.available()) {
+    c = Uart.read();
   
-    static enum _serial_state {
-      IDLE,
-      HEADER_START,
-      HEADER_M,
-      HEADER_ARROW,
-      HEADER_SIZE,
-      HEADER_CMD,
+#endif
+
+    if (c_state == IDLE) {
+      c_state = (c=='$') ? HEADER_START : IDLE;
     }
-    c_state = IDLE;
-  
-    while (Serial.available() > 0)
-    {
-      c = Serial.read();
-  
-      if (c_state == IDLE)
-      {
-        c_state = (c=='$') ? HEADER_START : IDLE;
+    else if (c_state == HEADER_START) {
+      c_state = (c=='M') ? HEADER_M : IDLE;
+    }
+    else if (c_state == HEADER_M) {
+      c_state = (c=='>') ? HEADER_ARROW : IDLE;
+    }
+    else if (c_state == HEADER_ARROW) {
+      if (c > MWCSERIALBUFFERSIZE)  {  // now we are expecting the payload size
+        c_state = IDLE;
       }
-      else if (c_state == HEADER_START)
-      {
-        c_state = (c=='M') ? HEADER_M : IDLE;
+      else {
+        dataSize = c;
+        c_state = HEADER_SIZE;
+        rcvChecksum = c;
       }
-      else if (c_state == HEADER_M)
-      {
-        c_state = (c=='>') ? HEADER_ARROW : IDLE;
-      }
-      else if (c_state == HEADER_ARROW)
-      {
-        if (c > SERIALBUFFERSIZE)
-        {  // now we are expecting the payload size
-          c_state = IDLE;
+    }
+    else if (c_state == HEADER_SIZE) {
+      c_state = HEADER_CMD;
+      cmdMSP = c;
+      rcvChecksum ^= c;
+      receiverIndex=0;
+    }
+    else if (c_state == HEADER_CMD) {
+      rcvChecksum ^= c;
+      if(receiverIndex == dataSize) { // received checksum byte
+        if(rcvChecksum == 0) {
+            msp_check();
         }
-        else
-        {
-          dataSize = c;
-          c_state = HEADER_SIZE;
-        }
+        c_state = IDLE;
       }
-      else if (c_state == HEADER_SIZE)
-      {
-        c_state = HEADER_CMD;
-        cmdMSP = c;
-      }
-      else if (c_state == HEADER_CMD)
-      {
-        serialBuffer[receiverIndex++]=c;
-        if(receiverIndex>=dataSize)
-        {
-          receiverIndex=0;
-          serialMSPStringOK=1;
-          c_state = IDLE;
-        }
-        if(serialMSPStringOK) serialMSPCheck();
-      }
+      else serialBuffer[receiverIndex++]=c;
     }
   }
-  
-  
-  void blankserialRequest(char requestMSP)
+}
+
+// --------------------------------------------------------------------------------------
+// Here are decoded received commands from MultiWii
+void msp_check() {
+  readIndex = 0;
+                    
+  if (cmdMSP==MSP_IDENT)
   {
-    Serial.write('$');
-    Serial.write('M');
-    Serial.write('<');
-    Serial.write((byte)0x00);
-    Serial.write(requestMSP);
-    Serial.write(requestMSP);
+    // possible use later
+   // MwVersion= read8();                             // MultiWii Firmware version
+   // modeMSPRequests &=~ REQ_MSP_IDENT;
   }
+
+  if (cmdMSP==MSP_STATUS)
+  {
+  //possible use later
+  }
+  if (cmdMSP==MSP_RAW_GPS)
+  {
+    uav_fix_type=read8();
+    uav_satellites_visible=read8();
+    uav_lat = read32() / 10000000.0;
+    uav_lon = read32() / 10000000.0;
+
+    msp_gpsalt = read16();
+
+    uav_groundspeed = read16();
+  }
+
+  if (cmdMSP==MSP_COMP_GPS)
+  {
+//    GPS_distanceToHome=read16();
+//    GPS_directionToHome=read16();
+  }
+
+  if (cmdMSP==MSP_ATTITUDE)
+  {
+//  possible use later
+//    for(uint8_t i=0;i<2;i++)
+//      MwAngle[i] = read16();
+//    MwHeading = read16();
+//    read16();
+  }
+
+  if (cmdMSP==MSP_ALTITUDE)
+  {
+
+    msp_baroalt = read32();
+
+    //uav_vario = read16();
+  }
+
+  if (cmdMSP==MSP_ANALOG)
+  {
+// for later
+//    MwVBat=read8();
+//    pMeterSum=read16();
+//    MwRssi = read16();
+  }
+#ifdef BARO_ALT
+uav_alt = msp_baroalt / 10;
+#else
+uav_alt = msp_gpsalt * 10;
+#endif
+}
+
+
+// End of decoded received commands from MultiWii
+// --------------------------------------------------------------------------------------
+
 
 #endif

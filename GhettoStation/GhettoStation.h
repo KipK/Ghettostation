@@ -6,7 +6,7 @@ float        uav_lon = 0;                    // longitude
 uint8_t      uav_satellites_visible = 0;     // number of satelites
 uint8_t      uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
 //float        uav_heading = 0;                // ground course heading from GPS
-int        uav_alt = 0;                    // altitude
+int        uav_alt = 0;                    // altitude (dm)
 int        uav_groundspeed = 0;            // ground speed
 
 String protocol = "";

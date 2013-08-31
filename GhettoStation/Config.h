@@ -32,8 +32,8 @@
 //### MSP MULTIWII
 #define PROTOCOL_MSP        // MSP from Multiwii , only passive for now ( ie doesn't send request to Multiwii so you need a multiwii OSD or ground station client running at the same time )
 
-//### Audio MODEM AFK Telemetry (SoftModem)
-#define SOFT_MODEM // 1200 bauds audio telemetry
+//### LIGHTTELEMETRY
+#define LIGHTTELEMETRY // use lighttelemetry protocol. EXPERIMENTAL. This can be used with normal RF serial or FSK modem to pass data over audio channel. It use really low baudrate ( < 256 bauds )
 
 //### MAVLINK
 #define PROTOCOL_MAVLINK  // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs ( in mavlink mode ) 

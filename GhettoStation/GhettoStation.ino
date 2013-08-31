@@ -22,7 +22,7 @@
 
 
 
-#ifdef BEARING_METHOD_4
+#ifdef BEARING_METHOD_4 //use additional hmc5883L mag breakout
 //HMC5883L i2c mag b
 #include <HMC5883L.h>
 #endif
@@ -38,9 +38,7 @@
 
 
 
-#if defined(SOFT_MODEM)
- #include <SoftModem.h>
-#endif
+
 
 
 #include "Eeprom.h"
@@ -57,6 +55,10 @@ HardwareSerial Uart = HardwareSerial();
 
 #ifdef PROTOCOL_MSP
 #include "MSP.cpp"
+#endif
+
+#ifdef LIGHTTELEMETRY
+#include "LightTelemetry.cpp"
 #endif
 
 #ifdef PROTOCOL_MAVLINK
@@ -96,7 +98,7 @@ Metro buttonMetro = Metro(100);
 //setting activity loop time
 Metro activityMetro = Metro(200);
 #if defined(SIMUGPS)
-Metro simugpsMetro = Metro(500);
+Metro simugpsMetro = Metro(200);
 #endif
 //
 #if defined(DEBUG)
@@ -111,12 +113,6 @@ Button left_button = Button(LEFT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 Button enter_button = Button(ENTER_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 
 
-
-//##### SOFTMODEM AUDIO TELEMETRY
-#ifdef SOFT_MODEM
-SoftModem modem;
-int modemTimer=0;
-#endif
 
 
 //#################################### SETUP LOOP ####################################################
@@ -150,11 +146,6 @@ init_lcdscreen();
          //start serial com	
 	init_serial();
          
-         
-#ifdef SOFT_MODEM
-         //start softmodem
-        modem.begin ();
-#endif
 	
 	// attach servos 
 	attach_servo(pan_servo, PAN_SERVOPIN, configuration.pan_minpwm, configuration.pan_maxpwm);
