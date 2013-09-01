@@ -47,7 +47,7 @@ void msp_read() {
     c = Serial.read();
 #else
 
-while (Uart.available()) {
+  while (Uart.available()) {
     c = Uart.read();
   
 #endif
@@ -151,7 +151,7 @@ void msp_check() {
 #ifdef BARO_ALT
 uav_alt = msp_baroalt / 10;
 #else
-uav_alt = msp_gpsalt * 10;
+uav_alt = msp_gpsalt * 100;
 #endif
 }
 

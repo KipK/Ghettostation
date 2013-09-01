@@ -168,7 +168,7 @@
 #ifndef TEENSYPLUS2
   	Serial.write(msg->Crc);
 #else
-        Uart.write(msg->Crc);
+     Uart.write(msg->Crc);
 #endif
   }
   

@@ -1,7 +1,5 @@
 /*/*
 
- code borrowed from Andy Little DIY antenna Tracker: https://github.com/kwikius/mavlink_to_frsky/tree/master/arduino
-
 (
   Some parts of this work are based on: 
   http://code.google.com/p/arducam-osd/source/browse/trunk/ArduCAM_OSD/MAVLink.ino
@@ -197,7 +195,7 @@ namespace {
       uav_lat =  (float)mavlink_msg_gps_raw_int_get_lat(pmsg)/10000000 ;
       uav_lon =  (float)mavlink_msg_gps_raw_int_get_lon(pmsg)/10000000;
 #ifndef BARO_ALT
-      uav_alt = (int)round(mavlink_msg_gps_raw_int_get_alt(pmsg)/10000);
+      uav_alt = (int)round(mavlink_msg_gps_raw_int_get_alt(pmsg)/100); // to decimeters
 #endif
       uav_fix_type = mavlink_msg_gps_raw_int_get_fix_type(pmsg);
       uav_satellites_visible = mavlink_msg_gps_raw_int_get_satellites_visible(pmsg);
@@ -211,7 +209,7 @@ namespace {
 
       // baroalt
 #ifdef BARO_ALT
-      uav_alt = (int)round(mavlink_msg_vfr_hud_get_alt(pmsg));
+      uav_alt = (int)round(mavlink_msg_vfr_hud_get_alt(pmsg) * 10);  // to decimeters
 #endif
    }
 

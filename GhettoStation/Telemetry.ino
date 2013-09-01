@@ -29,7 +29,7 @@ void get_telemetry() {
       }
   #ifdef TEENSYPLUS2
    }
-  #endif
+ #endif
 #endif
 
 #if defined(PROTOCOL_MSP) // Multiwii
