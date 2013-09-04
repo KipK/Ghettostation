@@ -373,7 +373,8 @@
   				break;
   
   				case GPSPOSITION_OBJID:
-                                          
+  
+                                        lastpacketreceived = millis();  
   					uav_lat			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LAT) / 10000000.0;
   					uav_lon			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LON) / 10000000.0;
                                         uav_satellites_visible	= uavtalk_get_int8(&msg, GPSPOSITION_OBJ_SATELLITES);

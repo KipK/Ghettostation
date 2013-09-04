@@ -19,6 +19,11 @@ void init_serial() {
 //Preparing adding other protocol
 void get_telemetry() {
  if (telemetryMetro.check() == 1) {
+   if (millis() - lastpacketreceived > 1000) {
+      telemetry_ok = false;
+      
+     
+   }
         
 #if defined(PROTOCOL_UAVTALK) // OpenPilot / Taulabs
  #ifdef TEENSYPLUS2
@@ -42,14 +47,11 @@ void get_telemetry() {
  #endif
 #endif
 
-#if defined(LIGHTTELEMETRY) // Open protocol. 
+#if defined(PROTOCOL_LIGHTTELEMETRY) // Open protocol. 
  #ifdef TEENSYPLUS2
    if (configuration.telemetry==2) {
  #endif
-      if (lighttelemetry_read()) {
-        protocol = "LTM"; 
-      }
-      
+      ltm_read();
  #ifdef TEENSYPLUS2
    }
  #endif

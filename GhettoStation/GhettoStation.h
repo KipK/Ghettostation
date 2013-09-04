@@ -10,13 +10,11 @@ long        uav_alt = 0;                    // altitude (dm)
 int        uav_groundspeed = 0;            // ground speed
 
 String protocol = "";
-
+long lastpacketreceived;
 //Specific protocol variables
 //UAVTalk
 uint8_t op_uavtalk_mode = 1;            // OP UAVTalk Active/Passive mode ( 1 = Passive )
-//servo variables
-//int pan_middlepoint;
-//int tilt_middlepoint;
+
 
 //home variables
 float home_lon;

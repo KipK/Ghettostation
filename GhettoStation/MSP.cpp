@@ -3,17 +3,19 @@
 #include "MSP.h"
 
 #define MWCSERIALBUFFERSIZE 256
-static uint8_t serialBuffer[MWCSERIALBUFFERSIZE]; // this hold the imcoming string from serial O string
-static uint8_t receiverIndex;
-static uint8_t dataSize;
-static uint8_t cmdMSP;
-static uint8_t rcvChecksum;
-static uint8_t readIndex;
-static long msp_baroalt;
-static int msp_gpsalt;
+  static uint8_t MSPserialBuffer[MWCSERIALBUFFERSIZE];
+  static uint8_t MSPreadIndex;
+  static uint8_t MSPreceiverIndex;
+  static uint8_t MSPdataSize;
+  static uint8_t MSPcmd;
+  static uint8_t MSPrcvChecksum;
 
+  static long msp_baroalt;
+  static int msp_gpsalt;
+  
+  
 uint8_t read8()  {
-  return serialBuffer[readIndex++];
+  return MSPserialBuffer[MSPreadIndex++];
 }
 
 uint16_t read16() {
@@ -29,6 +31,8 @@ uint32_t read32() {
 }
 
 void msp_read() {
+
+
   uint8_t c;
 
   static enum _serial_state {
@@ -66,28 +70,29 @@ void msp_read() {
         c_state = IDLE;
       }
       else {
-        dataSize = c;
+        MSPdataSize = c;
         c_state = HEADER_SIZE;
-        rcvChecksum = c;
+        MSPrcvChecksum = c;
       }
     }
     else if (c_state == HEADER_SIZE) {
       c_state = HEADER_CMD;
-      cmdMSP = c;
-      rcvChecksum ^= c;
-      receiverIndex=0;
+      MSPcmd = c;
+      MSPrcvChecksum ^= c;
+      MSPreceiverIndex=0;
     }
     else if (c_state == HEADER_CMD) {
-      rcvChecksum ^= c;
-      if(receiverIndex == dataSize) { // received checksum byte
-        if(rcvChecksum == 0) {
+      MSPrcvChecksum ^= c;
+      if(MSPreceiverIndex == MSPdataSize) { // received checksum byte
+        if(MSPrcvChecksum == 0) {
             telemetry_ok = true;
+            lastpacketreceived = millis();
             protocol = "MSP"; 
             msp_check();
         }
         c_state = IDLE;
       }
-      else serialBuffer[receiverIndex++]=c;
+      else MSPserialBuffer[MSPreceiverIndex++]=c;
     }
   }
 }
@@ -95,20 +100,20 @@ void msp_read() {
 // --------------------------------------------------------------------------------------
 // Here are decoded received commands from MultiWii
 void msp_check() {
-  readIndex = 0;
+  MSPreadIndex = 0;
                     
-  if (cmdMSP==MSP_IDENT)
+  if (MSPcmd==MSP_IDENT)
   {
     // possible use later
    // MwVersion= read8();                             // MultiWii Firmware version
    // modeMSPRequests &=~ REQ_MSP_IDENT;
   }
 
-  if (cmdMSP==MSP_STATUS)
+  if (MSPcmd==MSP_STATUS)
   {
   //possible use later
   }
-  if (cmdMSP==MSP_RAW_GPS)
+  if (MSPcmd==MSP_RAW_GPS)
   {
     uav_fix_type=read8();
     uav_satellites_visible=read8();
@@ -120,13 +125,13 @@ void msp_check() {
     uav_groundspeed = read16();
   }
 
-  if (cmdMSP==MSP_COMP_GPS)
+  if (MSPcmd==MSP_COMP_GPS)
   {
 //    GPS_distanceToHome=read16();
 //    GPS_directionToHome=read16();
   }
 
-  if (cmdMSP==MSP_ATTITUDE)
+  if (MSPcmd==MSP_ATTITUDE)
   {
 //  possible use later
 //    for(uint8_t i=0;i<2;i++)
@@ -135,7 +140,7 @@ void msp_check() {
 //    read16();
   }
 
-  if (cmdMSP==MSP_ALTITUDE)
+  if (MSPcmd==MSP_ALTITUDE)
   {
 
     msp_baroalt = read32();
@@ -143,7 +148,7 @@ void msp_check() {
     //uav_vario = read16();
   }
 
-  if (cmdMSP==MSP_ANALOG)
+  if (MSPcmd==MSP_ANALOG)
   {
 // for later
 //    MwVBat=read8();

@@ -34,7 +34,7 @@ void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 {
 #if defined __AVR_ATmega32U4_
   Serial1.write(ch);
-#elseif defined TEENSYPLUS2_
+#elseif defined TEENSYPLUS2
 	Uart.write(ch);
 #else
   Serial.write(ch);
@@ -130,7 +130,9 @@ void mavlink_read()
 
       if(mavlink_parse_char(MAVLINK_COMM_0, ch, &msg, &status)) {
          mavlink_active = true;
+         telemetry_ok = true;
          protocol = "MAV";
+         lastpacketreceived = millis();
          switch(msg.msgid) {
             case MAVLINK_MSG_ID_HEARTBEAT:
                do_mavlink_heartbeat(&msg);

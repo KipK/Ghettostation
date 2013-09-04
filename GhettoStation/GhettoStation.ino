@@ -37,10 +37,6 @@
 #include <Flash.h>
 
 
-
-
-
-
 #include "Eeprom.h"
 #include "GhettoStation.h"
 
@@ -57,7 +53,7 @@ HardwareSerial Uart = HardwareSerial();
 #include "MSP.cpp"
 #endif
 
-#ifdef LIGHTTELEMETRY
+#ifdef PROTOCOL_LIGHTTELEMETRY
 #include "LightTelemetry.cpp"
 #endif
 
@@ -88,19 +84,14 @@ LiquidCrystal_I2C LCD(I2CADDRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LCM1602
  Servo pan_servo;
  Servo tilt_servo;
 
-//#####	RATE LOOPS 
-//setting telemetry refresh rate.
-Metro telemetryMetro = Metro(200);
-//setting lcd refresh rate 
+//#####	LOOP RATES
+Metro telemetryMetro = Metro(100);
 Metro lcdMetro = Metro(100);
-//setting button status check loop
 Metro buttonMetro = Metro(100);
-//setting activity loop time
 Metro activityMetro = Metro(200);
 #if defined(SIMUGPS)
 Metro simugpsMetro = Metro(200);
 #endif
-//
 #if defined(DEBUG)
 //Debug output
 Metro debugMetro = Metro(1000); // output serial debug data each second.

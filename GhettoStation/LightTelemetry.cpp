@@ -1,123 +1,112 @@
-#ifdef LIGHTTELEMETRY
+
+#if defined(PROTOCOL_LIGHTTELEMETRY)
 #include "LightTelemetry.h"
-  
-static inline int8_t lighttelemetry_get_int8(lighttelemetry_message_t *msg, int pos) {
-  	return msg->Data[pos];
-  }
-  
-  
-static inline int16_t lighttelemetry_get_int16(lighttelemetry_message_t *msg, int pos) {
-  	int16_t i;
-  	memcpy(&i, msg->Data+pos, sizeof(int16_t));
-  	return i;
-  }
-  
-  
-static inline int32_t lighttelemetry_get_int32(lighttelemetry_message_t *msg, int pos) {
-  	int32_t i;
-  	memcpy(&i, msg->Data+pos, sizeof(int32_t));
-  	return i;
-  }
+  static uint8_t LTMserialBuffer[LIGHTTELEMETRY_GFRAMELENGTH-4];
+  static uint8_t LTMreceiverIndex;
+  static uint8_t LTMcmd;
+  static uint8_t LTMrcvChecksum;
+  static uint8_t LTMreadIndex;
 
 
-uint8_t lighttelemetry_parse_char(uint8_t c, lighttelemetry_message_t *msg) {
-      static uint8_t status = LIGHTTELEMETRY_PARSE_STATE_WAIT_START1;
-      static uint8_t crc = 0;
-      static uint8_t cnt = 0;
-      
-      
-      switch (status) {
-  		case LIGHTTELEMETRY_PARSE_STATE_WAIT_START1:
-  			if (c == LIGHTTELEMETRY_START1) {
-  				status = LIGHTTELEMETRY_PARSE_STATE_GOT_START1;
-  				msg->Start1 = c;
-  			}
-  		break;
-                case LIGHTTELEMETRY_PARSE_STATE_GOT_START1:
-  			if (c == LIGHTTELEMETRY_START2) {
-  				status = LIGHTTELEMETRY_PARSE_STATE_GOT_START2;
-  				msg->Start2 = c;
-  			}
-  		break;
-  		case LIGHTTELEMETRY_PARSE_STATE_GOT_START2:
 
-  			if (c == LIGHTTELEMETRY_GFRAME) {
-  				status = LIGHTTELEMETRY_PARSE_STATE_GOT_MSG_TYPE;
-  				msg->MsgType = c;
-  				cnt = 0;
-  			}
-  			else {
-  				status = LIGHTTELEMETRY_PARSE_STATE_WAIT_START1;
-  			}
-  		break;
-  		case LIGHTTELEMETRY_PARSE_STATE_GOT_MSG_TYPE:
-                        cnt++;
-                        msg->Data[cnt - 1] = c; // feeds data buffer.
-                        if (cnt >= ( LIGHTTELEMETRY_GFRAMELENGTH - 4)) {
-  				status = LIGHTTELEMETRY_PARSE_STATE_GOT_DATA; 
-  				cnt = 0;
-  			}
-  		break;
-  
-
-  		case LIGHTTELEMETRY_PARSE_STATE_GOT_DATA:
-  			msg->Crc = c;                   
-  			status = LIGHTTELEMETRY_PARSE_STATE_GOT_CRC;
-  		break;
-  	}
-  	
-  	if (status == LIGHTTELEMETRY_PARSE_STATE_GOT_CRC) {
-  		status = LIGHTTELEMETRY_PARSE_STATE_WAIT_START1;
-                //calculate crc
-                for (int i=3; i < ( LIGHTTELEMETRY_GFRAMELENGTH - 1 ); i++) {
-                  crc ^= msg->Data[i];  
-                }
-                if (crc == msg->Crc) {
-                  //crc ok we can parse data
-                  status = LIGHTTELEMETRY_PARSE_STATE_CRC_OK;
-                  return 1;
-                }
-                else {
-                  Serial.println("Bad CRC packet dropped");
-                  status = LIGHTTELEMETRY_PARSE_STATE_WAIT_START1;
-                  return 0;
-                }
-        }
-  
+uint8_t ltmread8()  {
+  return LTMserialBuffer[LTMreadIndex++];
 }
 
-int lighttelemetry_read() {
-      static lighttelemetry_message_t msg;
+uint16_t ltmread16() {
+  uint16_t t = ltmread8();
+  t |= (uint16_t)ltmread8()<<8;
+  return t;
+}
+
+uint32_t ltmread32() {
+  uint32_t t = ltmread16();
+  t |= (uint32_t)ltmread16()<<16;
+  return t;
+}
+
+void ltm_read() {
+  uint8_t c;
+
+  static enum _serial_state {
+    IDLE,
+    HEADER_START1,
+    HEADER_START2,
+    HEADER_MSGTYPE,
+    HEADER_DATA
+  }
+  c_state = IDLE;
+  
 #ifndef TEENSYPLUS2
-      while ( Serial.available() > 0) {
-      uint8_t c = Serial.read();
+
+  while (Serial.available()) {
+    c = Serial.read();
 #else
-      while ( Uart.available() > 0) {
-      uint8_t c = Uart.read();
+
+  while (Uart.available()) {
+    c = Uart.read();
+  
 #endif
-      // parse data to msg
-      if (lighttelemetry_parse_char(c, &msg)) {
-          telemetry_ok = true;
-          
-          uav_lat			 = lighttelemetry_get_int32(&msg, LIGHTTELEMETRY_LAT) / 10000000.0;
-          uav_lon			 = lighttelemetry_get_int32(&msg, LIGHTTELEMETRY_LON) / 10000000.0;
-          uav_groundspeed		 = (int)round((float)(lighttelemetry_get_int16(&msg, LIGHTTELEMETRY_GROUNDSPEED) * 3.6)); // convert m/s to km/h
-          uav_alt                        = (long)lighttelemetry_get_int32(&msg, LIGHTTELEMETRY_ALTITUDE) / 10; // decimeter     
-          uint8_t lighttelemetry_satsfix = lighttelemetry_get_int8(&msg, LIGHTTELEMETRY_SATSFIX);
-          uav_satellites_visible         = (int)(lighttelemetry_satsfix >> 2) & 0xFF;
-          uav_fix_type                   = (int)lighttelemetry_satsfix & 0b00000011;
-          Serial.println("Packet Decoded : uav lat lon speed : ");
-          Serial.print(uav_alt);Serial.print(" ");Serial.print(uav_fix_type);Serial.print(" ");Serial.println(uav_satellites_visible);
-          Uart.flush();
-          return 1;
-         
+
+    if (c_state == IDLE) {
+      c_state = (c=='$') ? HEADER_START1 : IDLE;
+        //Serial.println("header $" );
+    }
+    else if (c_state == HEADER_START1) {
+      c_state = (c=='T') ? HEADER_START2 : IDLE;
+        //Serial.println("header T" );
+    }
+    else if (c_state == HEADER_START2) {
+      c_state = (c=='G') ? HEADER_MSGTYPE : IDLE;
+        //Serial.println("header G" );
+	  LTMcmd = c;
+	  LTMreceiverIndex=0;
+    }
+    else if (c_state == HEADER_MSGTYPE) {
+	  if(LTMreceiverIndex == 0) {
+	  LTMrcvChecksum = c;
+	  } 
+	  else {
+	  LTMrcvChecksum ^= c;
+	  }
+      if(LTMreceiverIndex == LIGHTTELEMETRY_GFRAMELENGTH-4) { // received checksum byte
+        if(LTMrcvChecksum == 0) {
+	    telemetry_ok = true;
+            lastpacketreceived = millis();
+	    protocol = "LTM"; 
+            ltm_check();
+        }
+        c_state = IDLE;
       }
-      else {
-      //delayMicroseconds(600);  // wait at least 1 byte ( @ 1200 bauds should gives 1 bytes each 833.3us ) , 53@19200bauds
-      return 0;
-      }
-   }
+      else LTMserialBuffer[LTMreceiverIndex++]=c;
+    }
+  }
 }
+
+// --------------------------------------------------------------------------------------
+// Here are decoded received commands from MultiWii
+void ltm_check() {
+  LTMreadIndex = 0;
+                    
+  if (LTMcmd==LIGHTTELEMETRY_GFRAME)
+  {
+    
+    uav_lat = ltmread32() / 10000000.0;
+    uav_lon = ltmread32() / 10000000.0;
+    uav_groundspeed = ltmread16();
+    uav_alt = ltmread32() / 10;
+    uint8_t ltm_satsfix = ltmread8();
+    uav_satellites_visible         = (int)((ltm_satsfix >> 2) & 0xFF);
+    uav_fix_type                   = (int)(ltm_satsfix & 0b00000011);
+    memset(LTMserialBuffer, 0, LIGHTTELEMETRY_GFRAMELENGTH-4);
+    //Serial.println("lat : lon : speed: alt : sats : fix" );
+    //Serial.print(uav_lat,10);Serial.print("  ");Serial.print(uav_lon,10);Serial.print("  ");Serial.print(uav_groundspeed);Serial.print("  ");Serial.print(uav_alt);Serial.print("  ");Serial.print(uav_satellites_visible);Serial.print("  ");Serial.println(uav_fix_type);
+  }
+}
+
+
+// End of decoded received commands from MultiWii
+// --------------------------------------------------------------------------------------
 
 
 #endif
