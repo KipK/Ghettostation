@@ -3,7 +3,7 @@ void antenna_tracking() {
     //only move servo if gps has a 3D fix, or standby to last known position.
     if (uav_fix_type == 3) {
 	
-	int rel_alt = uav_alt - home_alt; // relative altitude to ground in meters
+	int rel_alt = uav_alt - home_alt; // relative altitude to ground in decimeters
 	
 	calc_tracking( home_lon, home_lat, uav_lon, uav_lat, rel_alt); //calculate tracking bearing/azimuth
 	
@@ -67,14 +67,14 @@ int calc_elevation(float lon1, float lat1, float lon2, float lat2, int alt) {
 // feeded in radian, output in degrees
   float a, el, c, d, R, dLat, dLon;
   //calculating distance between uav & home
-  R=6371000.0;    //earth radius 6371km
+  R=63710000.0;    //in decimeters. Earth radius 6371km
   dLat = (lat2-lat1);
   dLon = (lon2-lon1);
   a = sin(dLat/2) * sin(dLat/2) + sin(dLon/2) * sin(dLon/2) * cos(lat1) * cos(lat2);
   c = 2* asin(sqrt(a));  
-  d = R * c;
-  home_dist = d;
-  el=atan(((float)(alt*10))/d);// in radian
+  d =(R * c);
+  home_dist = d/10;
+  el=atan(((float)(alt))/d);// in radian
   el=toDeg(el); // in degree
   int b = (int)round(el);
   return b;

@@ -7,7 +7,7 @@
 
 //#define EXTERNALPULLUP // disable arduino internal pullup for I2C communication
 
-#define BARO_ALT // Use Baro for Altitude instead of GPS.
+//#define BARO_ALT // Use Baro for Altitude instead of GPS.
 
 #define MAGDEC -1.454  // your local Magnetic Declination in radian. Get it from here: http://magnetic-declination.com/  then convert it in milliradian: http://www.wolframalpha.com/input/?i=%280%C2%B0+5%27%29+in+radians 
 

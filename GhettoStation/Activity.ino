@@ -24,6 +24,7 @@ void check_activity() {
              lcddisp_tracking();
                 if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press 
                    current_activity = 0;
+                   telemetry_off();
                 }
            }
           }

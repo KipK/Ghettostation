@@ -90,7 +90,7 @@ LiquidCrystal_I2C LCD(I2CADDRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LCM1602
 
 //#####	RATE LOOPS 
 //setting telemetry refresh rate.
-//Metro telemetryMetro = Metro(60);
+Metro telemetryMetro = Metro(200);
 //setting lcd refresh rate 
 Metro lcdMetro = Metro(100);
 //setting button status check loop
@@ -168,26 +168,24 @@ init_lcdscreen();
 //######################################## MAIN LOOP #####################################################################
 void loop() {
 
-        //update buttons internal states
-        if (buttonMetro.check() == 1) {
+  //update buttons internal states
+  if (buttonMetro.check() == 1) {
         enter_button.isPressed();
         left_button.isPressed();
         right_button.isPressed();
-        }
+  }
+  if (current_activity==1 || current_activity==2) {    
 #ifdef SIMUGPS
-        simulate_gps();
+  simulate_gps();
 #else
 	//get telemetry data 
-        get_telemetry();
+  get_telemetry();
 #endif
-	//checking activity
-        check_activity();     
-        //lcd refresh loop
-	refresh_lcd();
+  }
+  check_activity();     
+  refresh_lcd();
 #if defined(DEBUG)
-        //debug output
-        debug();
-
+  debug();
 #endif
         
 }

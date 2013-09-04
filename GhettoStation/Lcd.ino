@@ -88,7 +88,7 @@ void lcddisp_sethome() {
                    if (!gps_fix) currentline = String(string_shome2.copy(extract));  // waiting for gps fix
                    else {
                          currentline = String(string_shome3.copy(extract)); // fix ok save home
-                         currentline += String(uav_alt);
+                         currentline += String(round((uav_alt)/10));
                          currentline += "m";      
                    }
                  }
@@ -285,7 +285,7 @@ void lcddisp_tracking(){
            case 2:
                         currentline = "Alt:"; 
                         int calt;
-                        calt = uav_alt - home_alt;
+                        calt = round((uav_alt - home_alt)/10);
                         currentline += String(calt);
                         currentline += "m Spd:";
                         currentline += String((int) uav_groundspeed);

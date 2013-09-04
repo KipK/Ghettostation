@@ -18,7 +18,7 @@ void init_serial() {
 
 //Preparing adding other protocol
 void get_telemetry() {
-      //if (telemetryMetro.check() == 1) {
+ if (telemetryMetro.check() == 1) {
         
 #if defined(PROTOCOL_UAVTALK) // OpenPilot / Taulabs
  #ifdef TEENSYPLUS2
@@ -36,13 +36,13 @@ void get_telemetry() {
  #ifdef TEENSYPLUS2
     if (configuration.telemetry==1) {
  #endif
-      msp_read(); //msp_read(); // uavtalk serial reading
+      msp_read(); 
  #ifdef TEENSYPLUS2
     }
  #endif
 #endif
 
-#if defined(LIGHTTELEMETRY) // Taulabs 
+#if defined(LIGHTTELEMETRY) // Open protocol. 
  #ifdef TEENSYPLUS2
    if (configuration.telemetry==2) {
  #endif
@@ -59,13 +59,24 @@ void get_telemetry() {
  #ifdef TEENSYPLUS2
     if (configuration.telemetry==3) {
  #endif
-      mavlink_read(); //msp_read(); // uavtalk serial reading
+      mavlink_read(); 
  #ifdef TEENSYPLUS2
     }
  #endif
 #endif
-     // }
+  }
 }
 
+void telemetry_off() {
+  //reset uav data
+  uav_lat = 0;
+  uav_lon = 0;                    
+  uav_satellites_visible = 0;     
+  uav_fix_type = 0;               
+  uav_alt = 0;                    
+  uav_groundspeed = 0;
+  protocol = "";
+  telemetry_ok = false;
+  }
 
 

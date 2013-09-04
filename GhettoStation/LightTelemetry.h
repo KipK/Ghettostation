@@ -1,7 +1,7 @@
 #define LIGHTTELEMETRY_START1 0x24 //$
 #define LIGHTTELEMETRY_START2 0x54 //T
 #define LIGHTTELEMETRY_GFRAME 0x47 //G for GPS + Baro altitude data
-#define LIGHTTELEMETRY_GFRAMELENGTH 14
+#define LIGHTTELEMETRY_GFRAMELENGTH 19
 
 #define	LIGHTTELEMETRY_LAT				0
 #define	LIGHTTELEMETRY_LON				4
@@ -24,7 +24,7 @@ typedef struct __lighttelemetry_message {
 	uint8_t Start1;
         uint8_t Start2;
 	uint8_t MsgType;
-	uint8_t Data[64];
+	uint8_t Data[32];
 	uint8_t Crc;
 } lighttelemetry_message_t;
 

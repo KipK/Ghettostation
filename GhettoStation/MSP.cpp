@@ -9,7 +9,7 @@ static uint8_t dataSize;
 static uint8_t cmdMSP;
 static uint8_t rcvChecksum;
 static uint8_t readIndex;
-static int msp_baroalt;
+static long msp_baroalt;
 static int msp_gpsalt;
 
 uint8_t read8()  {
@@ -37,7 +37,7 @@ void msp_read() {
     HEADER_M,
     HEADER_ARROW,
     HEADER_SIZE,
-    HEADER_CMD,
+    HEADER_CMD
   }
   c_state = IDLE;
   
@@ -81,6 +81,8 @@ void msp_read() {
       rcvChecksum ^= c;
       if(receiverIndex == dataSize) { // received checksum byte
         if(rcvChecksum == 0) {
+            telemetry_ok = true;
+            protocol = "MSP"; 
             msp_check();
         }
         c_state = IDLE;
@@ -151,7 +153,7 @@ void msp_check() {
 #ifdef BARO_ALT
 uav_alt = msp_baroalt / 10;
 #else
-uav_alt = msp_gpsalt * 100;
+uav_alt = msp_gpsalt * 10;
 #endif
 }
 
