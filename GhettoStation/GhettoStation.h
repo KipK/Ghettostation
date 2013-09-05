@@ -1,4 +1,8 @@
 // VARIABLES DEFINITIONS
+#ifdef TEENSYPLUS2
+// This line defines a "Uart" object to access the serial port
+HardwareSerial Uart = HardwareSerial();
+#endif
 
 //Telemetry protocol used variables
 float        uav_lat = 0;                    // latitude
