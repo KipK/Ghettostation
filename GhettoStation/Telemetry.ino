@@ -19,7 +19,7 @@ void init_serial() {
 //Preparing adding other protocol
 void get_telemetry() {
  if (telemetryMetro.check() == 1) {
-   if (millis() - lastpacketreceived > 1000) {
+   if (millis() - lastpacketreceived > 2000) {
       telemetry_ok = false;
       
      
