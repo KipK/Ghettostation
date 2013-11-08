@@ -74,7 +74,7 @@ int calc_elevation(float lon1, float lat1, float lon2, float lat2, int alt) {
   c = 2* asin(sqrt(a));  
   d =(R * c);
   home_dist = d/10;
-  el=atan(((float)(alt))/d);// in radian
+  el=atan((float)alt/d);// in radian
   el=toDeg(el); // in degree
   int b = (int)round(el);
   return b;
@@ -88,7 +88,7 @@ float toRad(float angle) {
 
 float toDeg(float angle) {
 // convert radians to degrees.
-	angle = angle*57,29577951;   // (angle*180)/pi
+	angle = angle*57.29577951;   // (angle*180)/pi
         return angle;
 }
 	

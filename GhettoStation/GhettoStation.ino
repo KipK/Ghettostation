@@ -87,7 +87,7 @@ Metro lcdMetro = Metro(100);
 Metro buttonMetro = Metro(100);
 Metro activityMetro = Metro(200);
 #if defined(SIMUGPS)
-Metro simugpsMetro = Metro(200);
+Metro simugpsMetro = Metro(1000);
 #endif
 #if defined(DEBUG)
 //Debug output
@@ -100,8 +100,9 @@ Button right_button = Button(RIGHT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 Button left_button = Button(LEFT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 Button enter_button = Button(ENTER_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 
-
-
+#if defined(BEARING_METHOD_4)
+HMC5883L compass;
+#endif
 
 //#################################### SETUP LOOP ####################################################
 
@@ -151,6 +152,15 @@ init_lcdscreen();
 #ifdef SIMUGPS
   set_simugps();
 #endif
+
+//COMPASS
+#if defined(BEARING_METHOD_4)
+  compass = HMC5883L(); // Construct a new HMC5883 compass.
+  delay(100);
+  compass.SetScale(1.3); // Set the scale of the compass.
+  compass.SetMeasurementMode(Measurement_Continuous); // Set the measurement mode to Continuous
+#endif
+
 }
 
 //######################################## MAIN LOOP #####################################################################

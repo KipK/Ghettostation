@@ -33,6 +33,8 @@ int home_dist;
 //tracking variables
 int Bearing;
 int Elevation;
+int servoBearing=0;
+int servoElevation=0;
 
 //lcd
 char lcd_line1[21];

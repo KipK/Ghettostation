@@ -7,9 +7,9 @@
 
 //#define EXTERNALPULLUP // disable arduino internal pullup for I2C communication
 
-//#define BARO_ALT // Use Baro for Altitude instead of GPS.
+#define BARO_ALT // Use Baro for Altitude instead of GPS.
 
-#define MAGDEC -1.454  // your local Magnetic Declination in radian. Get it from here: http://magnetic-declination.com/  then convert it in milliradian: http://www.wolframalpha.com/input/?i=%280%C2%B0+5%27%29+in+radians 
+#define MAGDEC -1.454  // Paris. your local Magnetic Declination in radian. Get it from here: http://magnetic-declination.com/  then convert it in milliradian: http://www.wolframalpha.com/input/?i=%280%C2%B0+5%27%29+in+radians 
 
 //########### LCD ########################################################################################
 
@@ -40,7 +40,7 @@
 
 
 //###################################################################################################################
-#define TELEMETRY_BAUD  19200		//Telemetry baudrate used
+#define TELEMETRY_BAUD  2400		//Telemetry baudrate used
 
 //Minimum distance in meters where it will stop moving servos. 
 #define DONTTRACKUNDER  3
@@ -92,8 +92,8 @@
 				//If we have 180/180 config, this is used the opposite way, if your heading goes more than 90° on your side, but less than 108°, it won't switch the Tilt axis ( & inverse pan ) to track behind.
 
 // BEARING REFERENCE TO NORTH METHOD
-//#define BEARING_METHOD_1  // 1=calculation from home pos & uav pos heading 20m away straight to neutral pan servo pos.	
-#define BEARING_METHOD_2   // 2=manually enter the heading reference from a compass	
+#define BEARING_METHOD_1  // 1=calculation from home pos & uav pos heading 20m away straight to neutral pan servo pos.	
+//#define BEARING_METHOD_2   // 2=manually enter the heading reference from a compass	
 //#define BEARING_METHOD_3   // 3=don't bother, just point your tracker to the north.		
 //#define BEARING_METHOD_4  // 4=Use HMC5883 compass reading                          
           
