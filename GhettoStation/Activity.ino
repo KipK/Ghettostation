@@ -4,7 +4,7 @@ void check_activity() {
     
     if (activityMetro.check() == 1) 
       {
-          if (uav_satellites_visible >= 5) { gps_fix = true; }
+      if (uav_satellites_visible >= 5) { gps_fix = true; }
         
    	  if (current_activity == 0) { //MENU
 		display_menu();

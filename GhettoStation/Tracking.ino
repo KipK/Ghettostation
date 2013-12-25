@@ -1,7 +1,7 @@
 void antenna_tracking() {
 // Tracking general function
     //only move servo if gps has a 3D fix, or standby to last known position.
-    if (uav_fix_type == 3) {
+    if (gps_fix) {
 	
 	int rel_alt = uav_alt - home_alt; // relative altitude to ground in decimeters
 	
