@@ -92,8 +92,8 @@
 				//If we have 180/180 config, this is used the opposite way, if your heading goes more than 90° on your side, but less than 108°, it won't switch the Tilt axis ( & inverse pan ) to track behind.
 
 // BEARING REFERENCE TO NORTH METHOD
-#define BEARING_METHOD_1  // 1=calculation from home pos & uav pos heading 20m away straight to neutral pan servo pos.	
-//#define BEARING_METHOD_2   // 2=manually enter the heading reference from a compass	
+//#define BEARING_METHOD_1  // 1=calculation from home pos & uav pos heading 20m away straight to neutral pan servo pos.	
+#define BEARING_METHOD_2   // 2=manually enter the heading reference from a compass	
 //#define BEARING_METHOD_3   // 3=don't bother, just point your tracker to the north.		
 //#define BEARING_METHOD_4  // 4=Use HMC5883 compass reading                          
           

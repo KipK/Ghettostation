@@ -141,8 +141,8 @@ init_lcdscreen();
 	attach_servo(tilt_servo, TILT_SERVOPIN, configuration.tilt_minpwm, configuration.tilt_maxpwm); 
 
         
-	// move servo to neutral pan & 45° tilt at startup to prevent forcing on endpoints if misconfigured
-        servoPathfinder(0, 0);
+	// move servo to neutral pan & 30° tilt at startup to prevent forcing on endpoints if misconfigured
+        servoPathfinder(0, 20);
        
        // setup button callback events
        enter_button.releaseHandler(enterButtonReleaseEvents);

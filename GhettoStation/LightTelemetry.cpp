@@ -93,7 +93,7 @@ void ltm_check() {
     
     uav_lat = ltmread32() / 10000000.0;
     uav_lon = ltmread32() / 10000000.0;
-    uav_groundspeed = ltmread16();
+    uav_groundspeed = ltmread16()*3600/1000;
     uav_alt = (int32_t)ltmread32() / 10;
     uint8_t ltm_satsfix = ltmread8();
     uav_satellites_visible         = (int)((ltm_satsfix >> 2) & 0xFF);

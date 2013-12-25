@@ -4,11 +4,11 @@ void check_activity() {
     
     if (activityMetro.check() == 1) 
       {
-          if (uav_fix_type == 3) { gps_fix = true; }
+          if (uav_satellites_visible >= 5) { gps_fix = true; }
         
    	  if (current_activity == 0) { //MENU
 		display_menu();
-                servoPathfinder(0, 0); // refresh servo to prevent idle jitter
+                servoPathfinder(0, 20); // refresh servo to prevent idle jitter
                 if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press 
                    displaymenu.back();
                 }
@@ -17,7 +17,7 @@ void check_activity() {
 	  }
           if (current_activity == 1 ) { //TRACK
            if ((!home_pos) || (!home_bear)) {  // check if home is set before start tracking
-             servoPathfinder(0, 0); // refresh servo to prevent idle jitter
+             servoPathfinder(0, 20); // refresh servo to prevent idle jitter
              current_activity = 2;
            } else if (home_bear) {
              antenna_tracking();
