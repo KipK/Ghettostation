@@ -1,12 +1,13 @@
 void init_serial() {
-//#if !defined(TEENSYPLUS2) 
+#if !defined(TEENSYPLUS2) 
         
       Serial.begin(TELEMETRY_BAUD);
 
-//#endif
+#endif
 #if defined(TEENSYPLUS2) 
 
       Uart.begin(TELEMETRY_BAUD);
+//      Serial.begin(TELEMETRY_BAUD); //DEBUG
  
 #endif
 
@@ -18,14 +19,14 @@ void init_serial() {
 
 //Preparing adding other protocol
 void get_telemetry() {
- if (telemetryMetro.check() == 1) {
+// if (telemetryMetro.check() == 1) {
    if (millis() - lastpacketreceived > 2000) {
       telemetry_ok = false;
       
      
    }
         
-#if defined(PROTOCOL_UAVTALK) // OpenPilot / Taulabs
+#if defined(PROTOCOL_UAVTALK) // OpenPilot / Taulabs 
  #ifdef TEENSYPLUS2
    if (configuration.telemetry==0) {
  #endif
@@ -47,7 +48,7 @@ void get_telemetry() {
  #endif
 #endif
 
-#if defined(PROTOCOL_LIGHTTELEMETRY) // Open protocol. 
+#if defined(PROTOCOL_LIGHTTELEMETRY) // Ghettostation custom light protocol. 
  #ifdef TEENSYPLUS2
    if (configuration.telemetry==2) {
  #endif
@@ -57,7 +58,7 @@ void get_telemetry() {
  #endif
 #endif
 
-#if defined(PROTOCOL_MAVLINK) // Ardupilot / PixHawk / Taulabs / Other
+#if defined(PROTOCOL_MAVLINK) // Ardupilot / PixHawk / Taulabs ( mavlink output ) / Other
  #ifdef TEENSYPLUS2
     if (configuration.telemetry==3) {
  #endif
@@ -66,7 +67,7 @@ void get_telemetry() {
     }
  #endif
 #endif
-  }
+//  }
 }
 
 void telemetry_off() {

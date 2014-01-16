@@ -40,11 +40,12 @@ void ltm_read() {
 #ifndef TEENSYPLUS2
 
   while (Serial.available()) {
-    c = Serial.read();
+    c = char(Serial.read());
 #else
 
   while (Uart.available()) {
-    c = Uart.read();
+    c = char(Uart.read());
+//    Serial.write(c); //debug
   
 #endif
 
@@ -73,10 +74,13 @@ void ltm_read() {
         if(LTMrcvChecksum == 0) {
 	    telemetry_ok = true;
             lastpacketreceived = millis();
-	    protocol = "LTM"; 
+	        protocol = "LTM"; 
             ltm_check();
         }
+        else {
         c_state = IDLE;
+        
+        }
       }
       else LTMserialBuffer[LTMreceiverIndex++]=c;
     }
@@ -93,7 +97,7 @@ void ltm_check() {
     
     uav_lat = ltmread32() / 10000000.0;
     uav_lon = ltmread32() / 10000000.0;
-    uav_groundspeed = ltmread16()*3600/1000;
+    uav_groundspeed = ltmread8()*3600/1000;
     uav_alt = (int32_t)ltmread32() / 10;
     uint8_t ltm_satsfix = ltmread8();
     uav_satellites_visible         = (int)((ltm_satsfix >> 2) & 0xFF);

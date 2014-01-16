@@ -1,25 +1,23 @@
 void antenna_tracking() {
 // Tracking general function
     //only move servo if gps has a 3D fix, or standby to last known position.
-    if (gps_fix) {
+    if (gps_fix && telemetry_ok) {
 	
-	int rel_alt = uav_alt - home_alt; // relative altitude to ground in decimeters
-	
-	calc_tracking( home_lon, home_lat, uav_lon, uav_lat, rel_alt); //calculate tracking bearing/azimuth
-	
-	//set current GPS bearing relative to home_bearing
-	
-	if(Bearing >= home_bearing){
-          Bearing-=home_bearing;
-        }
-        else
-        {
-          Bearing+=360-home_bearing;
-        }
-	// serv command
-        if(home_dist>DONTTRACKUNDER) { //don't track when <10m 
-	    servoPathfinder(Bearing,Elevation);
-        }
+		int rel_alt = uav_alt - home_alt; // relative altitude to ground in decimeters
+		calc_tracking( home_lon, home_lat, uav_lon, uav_lat, rel_alt); //calculate tracking bearing/azimuth
+		//set current GPS bearing relative to home_bearing
+		
+		if(Bearing >= home_bearing){
+			Bearing-=home_bearing;
+		}
+		else
+		{
+			Bearing+=360-home_bearing;
+		}
+		// serv command
+		if(home_dist>DONTTRACKUNDER) { //don't track when <10m 
+			servoPathfinder(Bearing,Elevation);
+		}
    } 
 }
 
