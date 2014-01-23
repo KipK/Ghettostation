@@ -24,19 +24,14 @@
    * with this program; if not, see <http://www.gnu.org/licenses/> or write to the 
    * Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
    */
-  
-
-  //#define DEBUG
-
-
-
-#if defined(PROTOCOL_UAVTALK)
-
+  #include <Arduino.h>
   #include "UAVTalk.h"
  
+
+
   static unsigned long last_gcstelemetrystats_send = 0;
   static unsigned long last_flighttelemetry_connect = 0;
-  static uint8_t gcstelemetrystatus = TELEMETRYSTATS_STATE_DISCONNECTED;
+  static uint8_t       gcstelemetrystatus = TELEMETRYSTATS_STATE_DISCONNECTED;
   
   
   //// CRC lookup table
@@ -90,65 +85,63 @@
   
   
   void uavtalk_send_msg(uavtalk_message_t *msg) {
+  #ifndef UAVTALK_MODE_PASSIVE
+ 
   	uint8_t *d;
   	uint8_t i;
   	uint8_t c;
-  	
-  	if (op_uavtalk_mode & UAVTALK_MODE_PASSIVE)
-  		return;
-  	
   	c = (uint8_t) (msg->Sync);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
+#ifdef MEGA
+  	Serial1.write(c);
 #else
         Uart.write(c);
 #endif
   	msg->Crc = crc_table[0 ^ c];
   	c = (uint8_t) (msg->MsgType);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
+#ifdef MEGA
+  	Serial1.write(c);
 #else
         Uart.write(c);
 #endif
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) (msg->Length & 0xff);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
+#ifdef MEGA
+  	Serial1.write(c);
 #else
         Uart.write(c);
 #endif
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) ((msg->Length >> 8) & 0xff);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
+#ifdef MEGA
+  	Serial1.write(c);
 #else
         Uart.write(c);
 #endif
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) (msg->ObjID & 0xff);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
+#ifdef MEGA
+  	Serial1.write(c);
 #else
         Uart.write(c);
 #endif
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) ((msg->ObjID >> 8) & 0xff);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
+#ifdef MEGA
+  	Serial1.write(c);
 #else
         Uart.write(c);
 #endif
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) ((msg->ObjID >> 16) & 0xff);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
+#ifdef MEGA
+  	Serial1.write(c);
 #else
         Uart.write(c);
 #endif
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) ((msg->ObjID >> 24) & 0xff);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
+#ifdef MEGA
+  	Serial1.write(c);
 #else
         Uart.write(c);
 #endif
@@ -157,18 +150,19 @@
   	  d = msg->Data;
   	  for (i=0; i<msg->Length-8; i++) {
   		c = *d++;
-#ifndef TEENSYPLUS2
-  	        Serial.write(c);
+#ifdef MEGA
+  	        Serial1.write(c);
 #else
                 Uart.write(c);
 #endif
   		msg->Crc = crc_table[msg->Crc ^ c];
             }
   	}
-#ifndef TEENSYPLUS2
-  	Serial.write(msg->Crc);
+#if defined(MEGA)
+     Serial1.write(msg->Crc);
 #else
      Uart.write(msg->Crc);
+#endif
 #endif
   }
   
@@ -329,16 +323,14 @@
   	// grabbing data
 
   
-    #ifndef TEENSYPLUS2
-  	        while (!show_prio_info && Serial.available() > 0) {
-  		uint8_t c = Serial.read();
-    #else
+#if defined(MEGA)
+  	        while (!show_prio_info && Serial1.available() > 0) {
+  		uint8_t c = Serial1.read();
+#else
                 while (!show_prio_info && Uart.available() > 0) {
   		uint8_t c = Uart.read();
-    #endif
-
-
-  		
+#endif
+		
   		// needed for MinimOSD upload, while no UAVTalk is established
   		if (gcstelemetrystatus == TELEMETRYSTATS_STATE_DISCONNECTED && millis() < 20000 && millis() > 5000) {
   			if (c == '\n' || c == '\r') {
@@ -432,5 +424,3 @@
   	return gcstelemetrystatus;
   }
 
-
-#endif

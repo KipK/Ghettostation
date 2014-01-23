@@ -14,7 +14,7 @@ void debug() {
        Serial.println(Elevation);
        Serial.print("Be:");
        Serial.println(Bearing);
-              Serial.print("Be:");
+       Serial.print("Be:");
        Serial.println(home_bearing);
     }
   

@@ -1,6 +1,6 @@
-
-#if defined(PROTOCOL_MSP)
+#include <arduino.h>
 #include "MSP.h"
+
 
 #define MWCSERIALBUFFERSIZE 256
   static uint8_t MSPserialBuffer[MWCSERIALBUFFERSIZE];
@@ -45,15 +45,12 @@ void msp_read() {
   }
   c_state = IDLE;
   
-#ifndef TEENSYPLUS2
-
-  while(Serial.available()) {
-    c = Serial.read();
+#ifdef MEGA
+  while(Serial1.available()) {
+    c = Serial1.read();
 #else
-
   while (Uart.available()) {
     c = Uart.read();
-  
 #endif
 
     if (c_state == IDLE) {
@@ -155,11 +152,11 @@ void msp_check() {
 //    pMeterSum=read16();
 //    MwRssi = read16();
   }
-#ifdef BARO_ALT
-uav_alt = msp_baroalt / 10;
-#else
-uav_alt = msp_gpsalt * 10;
-#endif
+ #ifdef BARO_ALT
+ uav_alt = msp_baroalt / 10;
+ #else
+ uav_alt = msp_gpsalt * 10;
+ #endif
 }
 
 
@@ -167,4 +164,3 @@ uav_alt = msp_gpsalt * 10;
 // --------------------------------------------------------------------------------------
 
 
-#endif

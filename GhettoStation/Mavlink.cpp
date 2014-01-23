@@ -21,23 +21,21 @@
  
 */
 
-#ifdef PROTOCOL_MAVLINK
 
 #include <Arduino.h>
 #include <cstdint>
 #include <mavlink.h>
-
+#include "Mavlink.h"
+#define MAVLINK10
 
 mavlink_system_t mavlink_system = {12,1,0,0};
 
 void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 {
-#if defined __AVR_ATmega32U4_
+#if defined MEGA
   Serial1.write(ch);
-#elseif defined TEENSYPLUS2
-	Uart.write(ch);
 #else
-  Serial.write(ch);
+ Uart.write(ch);
 #endif
 }
 
@@ -116,16 +114,12 @@ void mavlink_read()
    mavlink_message_t msg; 
    mavlink_status_t status;
 
-#if defined __AVR_ATmega32U4_  
+#if defined MEGA
    while (Serial1.available() > 0) {
-            uint8_t ch = Serial1.read();
-			
-#elseif defined TEENSYPLUS2
+            uint8_t ch = Serial1.read();			
+#else
    while (Uart.available() > 0) {
             uint8_t ch = Uart.read();
-#else
-   while (Serial.available() > 0) {
-            uint8_t ch = Serial.read();
 #endif
 
       if(mavlink_parse_char(MAVLINK_COMM_0, ch, &msg, &status)) {
@@ -218,4 +212,3 @@ namespace {
 }// ~namespace
 
 
-#endif

@@ -37,10 +37,8 @@ struct config_t
 } configuration;
 
 
-//FLASH arrays stored in EEPROM
+//strings stored in flash
 
-//FLASH_STRING_ARRAY(boot_string, PSTR("  [GHETTOSTATION]   "), PSTR("                    "), PSTR(" __________________ "));
-//FLASH_STRING_ARRAY(menu_string, PSTR("START"), PSTR("SET HOME"), PSTR("CONFIGURE"), PSTR("SERVOS"), PSTR("PAN"), PSTR("PAN MINPWM"), PSTR("PAN MAXPWM"), PSTR("PAN MINANGLE"), PSTR("PAN MAXANGLE"), PSTR("TILT"), PSTR("TILT MINPWM"), PSTR("TILT MAXPWM"), PSTR("TILT MINANGLE"), PSTR("TILT MAXANGLE"), PSTR("TEST SERVOS"), PSTR("BAUDRATE"), PSTR("    [PAN SERVO]     "), PSTR("    [TILT SERVO]    "), PSTR("min endpoint: <"), PSTR("min angle: <"), PSTR("max endpoint: <"), PSTR("max angle: <"), PSTR(" Long press to quit "), PSTR("  Waiting for Data  "), PSTR("   No GPS 3D FIX    "), PSTR("     3D FIX OK      "), PSTR("    Please Wait.    "), PSTR("  Save Home pos now?") , PSTR(" Move UAV 20m ahead "), PSTR(" & press enter      "), PSTR("    HOME IS SET     "), PSTR("Enter:Start Tracking"), PSTR("<< Menu     Reset >>") );
 FLASH_STRING(string_load1, "  [GHETTOSTATION]   ");
 FLASH_STRING(string_load2, "                    ");
 FLASH_STRING(string_load3, " __________________ ");
@@ -58,37 +56,20 @@ FLASH_STRING(string_shome9, " & press enter      ");
 FLASH_STRING(string_shome10, "    HOME IS SET     ");
 FLASH_STRING(string_shome11, "Enter:Start Tracking");
 FLASH_STRING(string_shome12, "<< Menu     Reset >>");
-#ifdef TEENSYPLUS2
 FLASH_STRING(string_telemetry1, "  SELECT PROTOCOL:  ");
 FLASH_STRING(string_telemetry2, "      UAVTALK     >>");
 FLASH_STRING(string_telemetry3, "<<    MULTIWII    >>");
 FLASH_STRING(string_telemetry4, "<< LIGHTTELEMETRY >>");
 FLASH_STRING(string_telemetry5, "<<     MAVLINK      ");
-#endif
-
-
-
-//PROGMEM menu variables
-//Menu
-//prog_char string_1[] PROGMEM = "START";
-//prog_char string_2[] PROGMEM = "SET HOME";
-//prog_char string_3[] PROGMEM = "CONFIGURE";
-//prog_char string_4[] PROGMEM = "SERVOS";
-//prog_char string_5[] PROGMEM = "PAN";
-//prog_char string_6[] PROGMEM = "PAN MINPWM";
-//prog_char string_7[] PROGMEM = "PAN MAXPWM";
-//prog_char string_8[] PROGMEM = "PAN MINANGLE";
-//prog_char string_9[] PROGMEM = "PAN MAXANGLE";
-//prog_char string_10[] PROGMEM = "TILT";
-//prog_char string_11[] PROGMEM = "TILT MINPWM";
-//prog_char string_12[] PROGMEM = "TILT MAXPWM";
-//prog_char string_13[] PROGMEM = "TILT MINANGLE";
-//prog_char string_14[] PROGMEM = "TILT MAXANGLE";
-//prog_char string_15[] PROGMEM = "TEST SERVOS";
-//prog_char string_16[] PROGMEM = "BAUDRATE";
-
-    
-
+FLASH_STRING(string_baudrate, "  SELECT BAUDRATE:  ");
+FLASH_STRING(string_baudrate0, "        1200      >>");
+FLASH_STRING(string_baudrate1, "<<      2400      >>");
+FLASH_STRING(string_baudrate2, "<<      4800      >>");
+FLASH_STRING(string_baudrate3, "<<      9600      >>");
+FLASH_STRING(string_baudrate4, "<<     19200      >>");
+FLASH_STRING(string_baudrate5, "<<     38400      >>");
+FLASH_STRING(string_baudrate6, "<<     57600      >>");
+FLASH_STRING(string_baudrate7, "<<    115200        ");
 
 void clear_eeprom() {
 	// clearing eeprom
@@ -104,37 +85,9 @@ void clear_eeprom() {
 	configuration.tilt_minangle = TILT_MINANGLE;
 	configuration.tilt_maxpwm = TILT_MAXPWM;
         configuration.tilt_maxangle = TILT_MAXANGLE;
-	configuration.baudrate = TELEMETRY_BAUD;
+	configuration.baudrate = 6; // defaulting to 57600
         configuration.telemetry = 0;
 	EEPROM_write(0, configuration);
-
-        
 }
 
 
-//PROGMEM const char *string_table[] = 	  
-//{   
-//  string_0,
-//  string_1,
-//  string_2,
-//  string_3
-//  string_4,
-//  string_5,
-//  string_6,
-//  string_7,
-//  string_8,
-//  string_9,
-//  string_10,
-//  string_11,
-//  string_12,
-//  string_13,
-//  string_14,
-//  string_15,
-//  string_16
-//};
-//
-//char* printString(int i) {
-//  char buffer[21];
-//  strcpy_P( buffer, (char*)pgm_read_word(&(string_table[i])));
-//  return buffer;
-//}

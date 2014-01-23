@@ -1,6 +1,6 @@
-
-#if defined(PROTOCOL_LIGHTTELEMETRY)
+#include <Arduino.h>
 #include "LightTelemetry.h"
+
   static uint8_t LTMserialBuffer[LIGHTTELEMETRY_GFRAMELENGTH-4];
   static uint8_t LTMreceiverIndex;
   static uint8_t LTMcmd;
@@ -37,16 +37,12 @@ void ltm_read() {
   }
   c_state = IDLE;
   
-#ifndef TEENSYPLUS2
-
-  while (Serial.available()) {
-    c = char(Serial.read());
+#if defined(MEGA)
+  while (Serial1.available()) {
+    c = char(Serial1.read());
 #else
-
   while (Uart.available()) {
     c = char(Uart.read());
-//    Serial.write(c); //debug
-  
 #endif
 
     if (c_state == IDLE) {
@@ -113,4 +109,4 @@ void ltm_check() {
 // --------------------------------------------------------------------------------------
 
 
-#endif
+

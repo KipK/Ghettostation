@@ -1,14 +1,9 @@
 void init_serial() {
-#if !defined(TEENSYPLUS2) 
-        
-      Serial.begin(TELEMETRY_BAUD);
-
+#if defined(MEGA) 
+    Serial1.begin(baudrates[configuration.baudrate]);
 #endif
 #if defined(TEENSYPLUS2) 
-
-      Uart.begin(TELEMETRY_BAUD);
-//      Serial.begin(TELEMETRY_BAUD); //DEBUG
- 
+    Uart.begin(baudrates[configuration.baudrate]); 
 #endif
 
 #ifdef DEBUG
@@ -19,55 +14,34 @@ void init_serial() {
 
 //Preparing adding other protocol
 void get_telemetry() {
-// if (telemetryMetro.check() == 1) {
-   if (millis() - lastpacketreceived > 2000) {
+// if (telemetryMetro.check() == 1) {  
+   if (millis() - lastpacketreceived > 2000) { 
       telemetry_ok = false;
-      
-     
    }
-        
-#if defined(PROTOCOL_UAVTALK) // OpenPilot / Taulabs 
- #ifdef TEENSYPLUS2
+ 
+ // OpenPilot / Taulabs 
    if (configuration.telemetry==0) {
- #endif
       if (uavtalk_read()) {
          protocol = "UAVT";
       }
-  #ifdef TEENSYPLUS2
    }
- #endif
-#endif
 
-#if defined(PROTOCOL_MSP) // Multiwii
- #ifdef TEENSYPLUS2
+// Multiwii / Baseflight
     if (configuration.telemetry==1) {
- #endif
       msp_read(); 
- #ifdef TEENSYPLUS2
     }
- #endif
-#endif
 
-#if defined(PROTOCOL_LIGHTTELEMETRY) // Ghettostation custom light protocol. 
- #ifdef TEENSYPLUS2
+
+// Ghettostation custom light protocol. 
    if (configuration.telemetry==2) {
- #endif
       ltm_read();
- #ifdef TEENSYPLUS2
    }
- #endif
-#endif
 
-#if defined(PROTOCOL_MAVLINK) // Ardupilot / PixHawk / Taulabs ( mavlink output ) / Other
- #ifdef TEENSYPLUS2
+
+// Ardupilot / PixHawk / Taulabs ( mavlink output ) / Other
     if (configuration.telemetry==3) {
- #endif
       mavlink_read(); 
- #ifdef TEENSYPLUS2
     }
- #endif
-#endif
-//  }
 }
 
 void telemetry_off() {
@@ -80,6 +54,6 @@ void telemetry_off() {
   uav_groundspeed = 0;
   protocol = "";
   telemetry_ok = false;
-  }
+}
 
 

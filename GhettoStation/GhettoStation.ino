@@ -2,7 +2,7 @@
  ******************************************************************************
  *
  * @file       GhettoStation.ino
- * @author     Guillaume Sartre 
+ * @author     Guillaume Sartre ( KipK )
  * @brief      Arduino based antenna tracker & telemetry display for UAV projects.
  * @project	   https://code.google.com/p/ghettostation/
  * 
@@ -13,8 +13,7 @@
  *
  *****************************************************************************/
 
-#define CONFIG_VERSION 2004 // Edit only if you want to reset eeprom
-
+#define CONFIG_VERSION 200 // Edit only if you want to reset eeprom
 #include "Config.h"
 #include <avr/pgmspace.h>
 
@@ -36,50 +35,31 @@
 #include <EEPROM.h>
 #include <Flash.h>
 
-
 #include "Eeprom.h"
 #include "GhettoStation.h"
 
-
-
-#ifdef PROTOCOL_UAVTALK
-#include "UAVTalk.cpp"
-#endif
-
-#ifdef PROTOCOL_MSP
-#include "MSP.cpp"
-#endif
-
-#ifdef PROTOCOL_LIGHTTELEMETRY
-#include "LightTelemetry.cpp"
-#endif
-
-#ifdef PROTOCOL_MAVLINK
+//#include "UAVTalk.cpp"
+//#include "MSP.cpp"
+//#include "LightTelemetry.cpp"
 #include <mavlink.h>
-#include "Mavlink.cpp"
-#endif
-
-
+//#include "Mavlink.cpp"
 
 //################################### SETTING OBJECTS ###############################################
-
-
-
-
-
 
 // Set the pins on the I2C chip used for LCD connections:
 //                    addr, en,rw,rs,d4,d5,d6,d7,bl,blpol
 LiquidCrystal_I2C LCD(I2CADDRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1" 
-//iquidCrystal_I2C lcd(I2CADDRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  // Arduino-IIC-LCD GY-LCD-V1
+//LiquidCrystal_I2C lcd(I2CADDRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  // Arduino-IIC-LCD GY-LCD-V1
 
-
-
+//Initialise Uart port for Teensy++2
+#if defined(TEENSYPLUS2)
+HardwareSerial Uart = HardwareSerial();
+#endif
 //##### SERVOS 
 
 //Declaring pan/tilt servos using ServoEaser library
- Servo pan_servo;
- Servo tilt_servo;
+Servo pan_servo;
+Servo tilt_servo;
 
 //#####	LOOP RATES
 Metro telemetryMetro = Metro(100);
@@ -153,6 +133,10 @@ init_lcdscreen();
   set_simugps();
 #endif
 
+#ifdef DEBUG
+  Serial.begin(115200); //DEBUG
+#endif
+
 //COMPASS
 #if defined(BEARING_METHOD_4)
   compass = HMC5883L(); // Construct a new HMC5883 compass.
@@ -176,7 +160,7 @@ void loop() {
 #ifdef SIMUGPS
   simulate_gps();
 #else
-	//get telemetry data 
+  //get telemetry data 
   get_telemetry();
 #endif
   }

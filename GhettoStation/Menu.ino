@@ -1,4 +1,23 @@
-
+//Menu variables
+//MenuSystem displaymenu;
+Menu rootMenu("");
+MenuItem m1i1Item("START");
+MenuItem m1i2Item("SET HOME");
+Menu m1m3Menu("CONFIG");
+	Menu m1m3m1Menu("SERVOS");	
+		Menu m1m3m1m1Menu("PAN");
+				MenuItem m1m3m1m1l1Item("MINPWM");
+				MenuItem m1m3m1m1l2Item("MAXPWM");
+				MenuItem m1m3m1m1l3Item("MINANGLE");
+				MenuItem m1m3m1m1l4Item("MAXANGLE");			
+		Menu m1m3m1m2Menu("TILT");
+				MenuItem m1m3m1m2l1Item("MINPWM");
+				MenuItem m1m3m1m2l2Item("MAXPWM");
+				MenuItem m1m3m1m2l3Item("MINANGLE");
+				MenuItem m1m3m1m2l4Item("MAXANGLE");			
+		MenuItem m1m3m1i3Item("TEST");
+        MenuItem m1m3i2Item("TELEMETRY");
+        MenuItem m1m3i3Item("BAUDRATE");
 
 
 
@@ -19,9 +38,8 @@ void init_menu() {
                                 m1m3m1m2Menu.add_item(&m1m3m1m2l3Item, &configure_tilt_minangle); // tilt min angle
 				m1m3m1m2Menu.add_item(&m1m3m1m2l4Item, &configure_tilt_maxangle); // tilt max angle
                         m1m3m1Menu.add_item(&m1m3m1i3Item, &configure_test_servo);
-#ifdef TEENSYPLUS2
-                m1m3Menu.add_item(&m1m3i2Item, &configure_telemetry); // select telemetry protocol ( Teensy++2 only ) 
-#endif
+                m1m3Menu.add_item(&m1m3i2Item, &configure_telemetry); // select telemetry protocol 
+                m1m3Menu.add_item(&m1m3i3Item, &configure_baudrate); // select telemetry protocol
 	displaymenu.set_root_menu(&rootMenu);
 }
 
@@ -109,10 +127,10 @@ void configure_test_servo(MenuItem* p_menu_item) {
        current_activity = 11;
 }
 
-#ifdef TEENSYPLUS2
 void configure_telemetry(MenuItem* p_menu_item) {
       current_activity = 12;
 }
-#endif
 
-
+void configure_baudrate(MenuItem* p_menu_item) {
+      current_activity = 13;
+}

@@ -25,7 +25,7 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-
+ #include "Config.h"
 
 
 
@@ -44,7 +44,7 @@
 // QT Creator > Datei oder Projekt �ffnen... uavobjgenerator
 // generate release and copy exe to <top>\ground\uavobjgenerator
 // uavobjgenerator -flight ..\..\shared\uavobjectdefinition ..\..\
-
+#include "Config.h"
 //#if defined VERSION_RELEASE_12_10_1 || defined VERSION_RELEASE_12_10_2
 
 #define	FLIGHTTELEMETRYSTATS_OBJID			0x2F7E2902
@@ -198,4 +198,17 @@ typedef struct __uavtalk_message {
 int uavtalk_read(void);
 int uavtalk_state(void);
 
+void telemetry_off(void);
+extern boolean telemetry_ok;
+extern int lastpacketreceived;
+extern String protocol;
+extern float uav_lat;
+extern float uav_lon;
+extern int uav_satellites_visible;
+extern int uav_fix_type;
+extern long uav_alt;
+extern int uav_groundspeed;
+#if defined(TEENSYPLUS2)
+ extern HardwareSerial Uart;
+#endif
 

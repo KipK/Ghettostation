@@ -1,6 +1,4 @@
-void msp_read();
-void msp_check();
-
+#include "Config.h"
 // ---------------------------------------------------------------------------------------
 // Defines imported from Multiwii Serial Protocol MultiWii_shared svn r1337
 #define MSP_VERSION              0
@@ -48,5 +46,19 @@ void msp_check();
 #define MSP_DEBUG                254   //out message         debug1,debug2,debug3,debug4
 // End of imported defines from Multiwii Serial Protocol MultiWii_shared svn r1333
 // ---------------------------------------------------------------------------------------
+void msp_read();
+void msp_check();
+void telemetry_off(void);
+extern boolean telemetry_ok;
+extern int lastpacketreceived;
+extern String protocol;
+extern float uav_lat;
+extern float uav_lon;
+extern int uav_satellites_visible;
+extern int uav_fix_type;
+extern long uav_alt;
+extern int uav_groundspeed;
 
-
+#if defined(TEENSYPLUS2)
+extern HardwareSerial Uart;
+#endif
