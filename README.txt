@@ -49,8 +49,8 @@ What you need:
 
   * *Software*
 - Teensy++2 users: install Teensyduino.
- Important,  Arduino 1.0.5-rc2 & above needs you edit hardware\teensy\cores\teensy\new.cpp in your Arduino folder, 
-and uncomment all the latest lines:
+ Important,  you need to edit hardware\teensy\cores\teensy\new.cpp in your Arduino folder 
+ and uncomment all the latest lines:
 
 int __cxa_guard_acquire(__guard *g) {return !*(char *)(g);};
 void __cxa_guard_release (__guard *g) {*(char *)g = 1;};
