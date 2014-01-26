@@ -12,11 +12,9 @@
  * @see        The GNU Public License (GPL) Version 3
  *
  *****************************************************************************/
-
 #define CONFIG_VERSION 200 // Edit only if you want to reset eeprom
 #include "Config.h"
 #include <avr/pgmspace.h>
-
 #include <Wire.h> 
 
 

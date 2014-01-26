@@ -48,6 +48,15 @@ What you need:
 
 
   * *Software*
+- Teensy++2 users, important for Arduino 1.0.5-rc2 & above:
+ in your Arduino folder, hardware\teensy\cores\teensy\new.cpp
+ uncomment all the latest lines:
+
+int __cxa_guard_acquire(__guard *g) {return !*(char *)(g);};
+void __cxa_guard_release (__guard *g) {*(char *)g = 1;};
+void __cxa_guard_abort (__guard *) {}; 
+
+void __cxa_pure_virtual(void) {};
 
 - edit config.h according to your needs.
 
