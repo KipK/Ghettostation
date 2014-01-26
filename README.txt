@@ -7,7 +7,7 @@
 
 What you need:
 
-- A Teensy++2 
+- An Arduino MEGA 1280/2560 or a Teensy++2
 
 - a serial wireless link between the tracker and the UAV ( Xbee, Oplink, RF433, FSK audio modems )
 
@@ -28,6 +28,14 @@ What you need:
 
  - Follow the wiring scheme here:
    http://img839.imageshack.us/img839/2492/9jjr.png
+   
+   For Arduino Mega, follow the same scheme with those pins:
+    PAN_SERVOPIN 3        
+    TILT_SERVOPIN 4 
+    LEFT_BUTTON_PIN 32 
+    RIGHT_BUTTON_PIN 34 
+    ENTER_BUTTON_PIN 36 
+    Serial port for telemetry is uart1 so use R1/Tx1 pins ( 45/46 )
 
  - You can bridge telemetry with a bluetooth dongle if you want to use your groundstation software at the same time : 
    Wire bluetooth Tx to your serial module Rx, and BT rx to serial module Tx.
