@@ -150,11 +150,11 @@ int config_servo(int servotype, int valuetype, int value ) {
 	store_lcdline(4," Long press to quit ");
         //checking long press left right
            if (right_button.holdTime() >= 1000 && right_button.isPressed() ) {
-            value++;
+            value+=25;
             delay(200);
             }
             else if ( left_button.holdTime() >= 1000 && left_button.isPressed() ) {
-            value--;
+            value-=25;
             delay(200);
             }
 return value;
