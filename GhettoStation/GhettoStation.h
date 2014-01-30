@@ -5,8 +5,8 @@
 // VARIABLES DEFINITIONS
 #ifdef TEENSYPLUS2
 // This line defines a "Uart" object to access the serial port
-HardwareSerial Uart = HardwareSerial();
-HardwareSerial SerialPort1(Uart);
+HardwareSerial SerialPort1 = HardwareSerial();
+//HardwareSerial SerialPort1(Uart);
 #endif
 #ifdef MEGA
 HardwareSerial SerialPort1(Serial1);
