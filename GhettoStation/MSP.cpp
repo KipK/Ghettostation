@@ -44,17 +44,9 @@ void msp_read() {
     HEADER_CMD
   }
   c_state = IDLE;
-  
-#ifndef TEENSYPLUS2
 
-  while(Serial.available()) {
-    c = Serial.read();
-#else
-
-  while (Uart.available()) {
-    c = Uart.read();
-  
-#endif
+  while (SerialPort1.available()) {
+    c = SerialPort1.read();
 
     if (c_state == IDLE) {
       c_state = (c=='$') ? HEADER_START : IDLE;

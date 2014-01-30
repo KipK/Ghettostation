@@ -2,6 +2,10 @@
 #ifdef TEENSYPLUS2
 // This line defines a "Uart" object to access the serial port
 HardwareSerial Uart = HardwareSerial();
+HardwareSerial SerialPort1(Uart);
+#endif
+#ifdef MEGA
+HardwareSerial SerialPort1(Serial1);
 #endif
 
 //Telemetry protocol used variables
@@ -59,6 +63,9 @@ boolean home_bear = false;
 int servoconf_tmp[4];
 
 
+//baudrate selection
+long baudrates[8]= {1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200};
+
 
 //Menu variables
 MenuSystem displaymenu;
@@ -78,10 +85,7 @@ Menu m1m3Menu("CONFIG");
 				MenuItem m1m3m1m2l3Item("MINANGLE");
 				MenuItem m1m3m1m2l4Item("MAXANGLE");			
 		MenuItem m1m3m1i3Item("TEST");
-#ifdef TEENSYPLUS2
         MenuItem m1m3i2Item("TELEMETRY");
-        
-#endif
-
+        MenuItem m1m3i3Item("BAUDRATE");
 
 

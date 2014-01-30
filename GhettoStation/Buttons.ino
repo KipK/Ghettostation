@@ -66,15 +66,20 @@ void leftButtonReleaseEvents(Button &btn)
           if (current_activity == 12) {
              if (configuration.telemetry > 0) {
                configuration.telemetry -= 1;
-               }       
-            }
-      }
+             }       
+          }
+          if (current_activity == 13) {
+             if (configuration.baudrate > 0) {
+               configuration.baudrate -= 1;
+             }
+          }
+    }
     else if (current_activity==2) {
 #if defined(BEARING_METHOD_2) || defined(BEARING_METHOD_4)       
                if (home_pos && !home_bear) {
 
                   home_bearing--;
-                  if (home_bearing<0) home_bearing = 0;
+                  if (home_bearing<0) home_bearing = 359;
                }
 #endif     
                if (gps_fix && home_pos && home_bear) {
@@ -107,18 +112,23 @@ void rightButtonReleaseEvents(Button &btn)
           if (current_activity == 8) configuration.tilt_minangle++;        
           if (current_activity == 9) servoconf_tmp[3]++;
           if (current_activity == 10) configuration.tilt_maxangle++;
-          if (current_activity == 12) {
+           if (current_activity == 12) {
             if (configuration.telemetry < 3) {
                configuration.telemetry += 1;
-               }
-             }
+            }
           }
+          if (current_activity == 13) {
+             if (configuration.baudrate < 7) {
+               configuration.baudrate += 1;
+             }       
+          }
+    }
     else if (current_activity==2) {
 
 #if defined(BEARING_METHOD_2)  || defined(BEARING_METHOD_4) 
            if (home_pos && !home_bear) {
                   home_bearing++;
-                          if (home_bearing>360) home_bearing = 360;
+                          if (home_bearing>359) home_bearing = 0;
                }
 #endif    
            if (gps_fix && home_pos && home_bear) {

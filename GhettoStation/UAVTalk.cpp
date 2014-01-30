@@ -98,78 +98,37 @@
   		return;
   	
   	c = (uint8_t) (msg->Sync);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
-#else
-        Uart.write(c);
-#endif
-  	msg->Crc = crc_table[0 ^ c];
+        msg->Crc = crc_table[0 ^ c];
   	c = (uint8_t) (msg->MsgType);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
-#else
-        Uart.write(c);
-#endif
+  	SerialPort1.write(c);
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) (msg->Length & 0xff);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
-#else
-        Uart.write(c);
-#endif
+  	SerialPort1.write(c);
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) ((msg->Length >> 8) & 0xff);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
-#else
-        Uart.write(c);
-#endif
+  	SerialPort1.write(c);
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) (msg->ObjID & 0xff);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
-#else
-        Uart.write(c);
-#endif
+  	SerialPort1.write(c);
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) ((msg->ObjID >> 8) & 0xff);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
-#else
-        Uart.write(c);
-#endif
+  	SerialPort1.write(c);
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) ((msg->ObjID >> 16) & 0xff);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
-#else
-        Uart.write(c);
-#endif
+  	SerialPort1.write(c);
   	msg->Crc = crc_table[msg->Crc ^ c];
   	c = (uint8_t) ((msg->ObjID >> 24) & 0xff);
-#ifndef TEENSYPLUS2
-  	Serial.write(c);
-#else
-        Uart.write(c);
-#endif
+  	SerialPort1.write(c);
   	msg->Crc = crc_table[msg->Crc ^ c];
   	if (msg->Length > 8) {
   	  d = msg->Data;
   	  for (i=0; i<msg->Length-8; i++) {
   		c = *d++;
-#ifndef TEENSYPLUS2
-  	        Serial.write(c);
-#else
-                Uart.write(c);
-#endif
+  	        SerialPort1.write(c);
   		msg->Crc = crc_table[msg->Crc ^ c];
             }
   	}
-#ifndef TEENSYPLUS2
-  	Serial.write(msg->Crc);
-#else
-     Uart.write(msg->Crc);
-#endif
+  	SerialPort1.write(msg->Crc);
   }
   
   
@@ -328,17 +287,8 @@
   	
   	// grabbing data
 
-  
-    #ifndef TEENSYPLUS2
-  	        while (!show_prio_info && Serial.available() > 0) {
-  		uint8_t c = Serial.read();
-    #else
-                while (!show_prio_info && Uart.available() > 0) {
-  		uint8_t c = Uart.read();
-    #endif
-
-
-  		
+        while (!show_prio_info && SerialPort1.available() > 0) {
+  		uint8_t c = SerialPort1.read();
   		// needed for MinimOSD upload, while no UAVTalk is established
   		if (gcstelemetrystatus == TELEMETRYSTATS_STATE_DISCONNECTED && millis() < 20000 && millis() > 5000) {
   			if (c == '\n' || c == '\r') {
@@ -410,7 +360,7 @@
   		}
   
   		delayMicroseconds(190);  // wait at least 1 byte
-  	}
+        }
   	
   	// check connect timeout
   	if (last_flighttelemetry_connect + FLIGHTTELEMETRYSTATS_CONNECT_TIMEOUT < millis()) {

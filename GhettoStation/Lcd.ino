@@ -181,13 +181,13 @@ void lcddisp_setbearing() {
        
        //checking long press left right
        if (right_button.holdTime() >= 1000 && right_button.isPressed() ) {
-        home_bearing++;
+        home_bearing+=20;
         if (home_bearing>360) home_bearing = 360;
         else if (home_bearing<0) home_bearing = 0;
         delay(100);
         }
         else if ( left_button.holdTime() >= 1000 && left_button.isPressed() ) {
-        home_bearing--;
+        home_bearing-=20;
         delay(100);
         }
  }
@@ -223,18 +223,6 @@ void lcddisp_setbearing() {
 	 }
        currentline.toCharArray(string_buffer,21);
        store_lcdline(i,string_buffer);
-       
-       //checking long press left right
-       if (right_button.holdTime() >= 1000 && right_button.isPressed() ) {
-        home_bearing++;
-        if (home_bearing>360) home_bearing = 360;
-        else if (home_bearing<0) home_bearing = 0;
-        delay(100);
-        }
-        else if ( left_button.holdTime() >= 1000 && left_button.isPressed() ) {
-        home_bearing--;
-        delay(100);
-        }
  }
 }
 #endif
@@ -314,7 +302,6 @@ void lcddisp_tracking(){
     }
 }
 
-#ifdef TEENSYPLUS2
 void lcddisp_telemetry() {
     for ( int i = 1 ; i<5; i++ ) {
        char string_buffer[21];
@@ -355,5 +342,55 @@ void lcddisp_telemetry() {
     }
   
 }
-#endif
 
+void lcddisp_baudrate() {
+    for ( int i = 1 ; i<5; i++ ) {
+       char string_buffer[21];
+       char extract[21];
+       String currentline="";
+       switch (i) {
+           case 1: 
+                     currentline = String(string_baudrate.copy(extract));  break;
+           case 2:
+                     currentline = String(string_load2.copy(extract)); break;
+           case 3:
+                     switch (configuration.baudrate) {
+                       
+                        case 0:
+                                 // 1200
+                                currentline = String(string_baudrate0.copy(extract));  break;
+                        case 1:
+                                 //2400
+                                currentline = String(string_baudrate1.copy(extract));  break;
+                        case 2:
+                                 //4800
+                                currentline = String(string_baudrate2.copy(extract)); break;
+                        case 3:
+                                 //9600
+                                currentline = String(string_baudrate3.copy(extract));  break;
+                        case 4:
+                                 //19200
+                                currentline = String(string_baudrate4.copy(extract));  break;
+                        case 5:
+                                 //38400
+                                currentline = String(string_baudrate5.copy(extract));  break;
+                        case 6:
+                                 //57600
+                                currentline = String(string_baudrate6.copy(extract));  break;
+                        case 7:
+                                 //115200
+                                currentline = String(string_baudrate7.copy(extract));  break;                            
+                                              
+                     }
+                     break;
+       
+           case 4:      
+                     currentline = String(string_shome5.copy(extract)); break;
+           }
+       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
+	 currentline = currentline + " ";
+	 }
+       currentline.toCharArray(string_buffer,21);
+       store_lcdline(i,string_buffer);
+    }
+}

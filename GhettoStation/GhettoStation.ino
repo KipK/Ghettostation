@@ -13,7 +13,7 @@
  *
  *****************************************************************************/
 
-#define CONFIG_VERSION 2004 // Edit only if you want to reset eeprom
+#define CONFIG_VERSION 2007 // Edit only if you want to reset eeprom
 
 #include "Config.h"
 #include <avr/pgmspace.h>

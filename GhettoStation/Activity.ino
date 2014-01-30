@@ -154,7 +154,6 @@ void check_activity() {
              current_activity = 0; 
           }
           
-#ifdef TEENSYPLUS2
           if (current_activity == 12) { //Configure Telemetry
              lcddisp_telemetry();
             if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press
@@ -162,6 +161,12 @@ void check_activity() {
                current_activity=0;
                 }
           }
-#endif
+          if (current_activity == 13) { //Configure Baudrate
+             lcddisp_baudrate();
+             if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press
+               EEPROM_write(0, configuration);
+               current_activity=0;
+             }
+           }
       }
 }

@@ -37,17 +37,8 @@ void ltm_read() {
   }
   c_state = IDLE;
   
-#ifndef TEENSYPLUS2
-
-  while (Serial.available()) {
-    c = char(Serial.read());
-#else
-
-  while (Uart.available()) {
-    c = char(Uart.read());
-//    Serial.write(c); //debug
-  
-#endif
+  while (SerialPort1.available()) {
+    c = char(SerialPort1.read());
 
     if (c_state == IDLE) {
       c_state = (c=='$') ? HEADER_START1 : IDLE;
