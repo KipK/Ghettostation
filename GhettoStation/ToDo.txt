@@ -1,19 +1,14 @@
 - (done) add servos test 
 - (done)stop tracking when UAV/home distance is <10m
-- add credits
-- configure Baudrate from menu
-- add Multiwii protocol queries ( Active mode )
+- (done)configure Baudrate from menu
+- (done)add Multiwii protocol queries ( Active mode )
 - unify different protocol as libs with same code structure.
 - add FrSky protocol
-- add MavLink protocol
+- (done) add MavLink protocol
 - add raw NMEA protocol
-- smooth/ease servos
-- handle compass on the tracker to remove calibration.
+- (done)handle compass on the tracker to remove calibration.
 - handle a GPS  to manage a mobile tracker.
-- add Eosbandi GPS filtering to smooth out gps positions.
 - remove all Strings stuff & replace them with char[] ( will free some memory )
 - add a deadband margin before inverting pan/tilt servo on 180/180 config.
-- for Mega boards only: Define all telemetry protocols at compile time 
-  and autodetect it when running ( not enough memory on atmega 328 )
 - depending of memory, add some other telemetric values while flying ( flight time, voltage, flight mode, etc )
 - add a voltage divider on the arduino and display current ground battery voltage, with alert when getting low.

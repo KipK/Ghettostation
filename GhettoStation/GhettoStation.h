@@ -12,6 +12,7 @@ HardwareSerial SerialPort1 = HardwareSerial();
 HardwareSerial SerialPort1(Serial1);
 #endif
 
+
 //Telemetry protocol used variables
 float        uav_lat = 0;                    // latitude
 float        uav_lon = 0;                    // longitude
@@ -101,6 +102,7 @@ FLASH_STRING(string_baudrate4, "<<     19200      >>");
 FLASH_STRING(string_baudrate5, "<<     38400      >>");
 FLASH_STRING(string_baudrate6, "<<     57600      >>");
 FLASH_STRING(string_baudrate7, "<<    115200        ");
+FLASH_STRING(string_bank,      " LOAD SETTINGS BANK ");
 
 //Menu vars
 MenuSystem displaymenu;
@@ -122,5 +124,6 @@ Menu m1m3Menu("CONFIG");
 		MenuItem m1m3m1i3Item("TEST");
         MenuItem m1m3i2Item("TELEMETRY");
         MenuItem m1m3i3Item("BAUDRATE");
+MenuItem m1i4Item("SWITCH SETTINGS");
 
 

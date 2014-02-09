@@ -395,6 +395,34 @@ void lcddisp_baudrate() {
     }
 }
 
+// Settings Bank config
+void lcddisp_bank() {
+    for ( int i = 1 ; i<5; i++ ) {
+       char string_buffer[21];
+       char extract[21];
+       String currentline="";
+       switch (i) {
+           case 1: 
+                     currentline = String(string_bank.copy(extract));  break;
+           case 2:
+                     currentline = String(string_load2.copy(extract)); break;
+           case 3:
+                     currentline = " <<       ";
+                     currentline += current_bank+1;
+                     currentline += "       >>";
+                     break;
+       
+           case 4:      
+                     currentline = String(string_shome5.copy(extract)); break;
+           }
+       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
+	 currentline = currentline + " ";
+	 }
+       currentline.toCharArray(string_buffer,21);
+       store_lcdline(i,string_buffer);
+    }
+}
+
 
 // SERVO CONFIGURATION
 

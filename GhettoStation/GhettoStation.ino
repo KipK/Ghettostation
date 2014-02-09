@@ -2,7 +2,7 @@
  ******************************************************************************
  *
  * @file       GhettoStation.ino
- * @author     Guillaume Sartre 
+ * @author     Guillaume S
  * @brief      Arduino based antenna tracker & telemetry display for UAV projects.
  * @project	   https://code.google.com/p/ghettostation/
  * 
@@ -116,7 +116,12 @@ init_lcdscreen();
 	init_menu();
 	
 	// retrieve configuration from EEPROM
-	EEPROM_read(0, configuration);
+        current_bank = EEPROM.read(0);
+        if (current_bank > 3) {
+           current_bank = 0;
+           EEPROM.write(0,0);
+        }
+	EEPROM_read(config_bank[int(current_bank)], configuration);
         // set temp value for servo pwm config
         servoconf_tmp[0] = configuration.pan_minpwm;
         servoconf_tmp[1] = configuration.pan_maxpwm;
@@ -246,7 +251,7 @@ void check_activity() {
             
             if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press 
                configuration.pan_minpwm = servoconf_tmp[0];
-               EEPROM_write(0, configuration);
+               EEPROM_write(config_bank[int(current_bank)], configuration);
                attach_servo(pan_servo, PAN_SERVOPIN, configuration.pan_minpwm, configuration.pan_maxpwm);
                move_servo(pan_servo, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
                current_activity=0;
@@ -256,7 +261,7 @@ void check_activity() {
              configuration.pan_minangle = config_servo(1, 2, configuration.pan_minangle );
             pan_servo.writeMicroseconds(configuration.pan_minpwm);
              if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
-               EEPROM_write(0, configuration);
+               EEPROM_write(config_bank[int(current_bank)], configuration);
                move_servo(pan_servo, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
                current_activity=0;
                 }
@@ -271,7 +276,7 @@ void check_activity() {
             
              if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
                configuration.pan_maxpwm = servoconf_tmp[1];
-               EEPROM_write(0, configuration);
+               EEPROM_write(config_bank[int(current_bank)], configuration);
                attach_servo(pan_servo, PAN_SERVOPIN, configuration.pan_minpwm, configuration.pan_maxpwm);
                move_servo(pan_servo, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
                current_activity=0;
@@ -282,7 +287,7 @@ void check_activity() {
              configuration.pan_maxangle = config_servo(1, 4, configuration.pan_maxangle );
             pan_servo.writeMicroseconds(configuration.pan_maxpwm);
              if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
-               EEPROM_write(0, configuration);
+               EEPROM_write(config_bank[int(current_bank)], configuration);
                move_servo(pan_servo, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
                current_activity=0;
                 }
@@ -296,7 +301,7 @@ void check_activity() {
              tilt_servo.writeMicroseconds(servoconf_tmp[2]); 
              if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
                configuration.tilt_minpwm = servoconf_tmp[2];
-               EEPROM_write(0, configuration);
+               EEPROM_write(config_bank[int(current_bank)], configuration);
 	       attach_servo(tilt_servo,TILT_SERVOPIN, configuration.tilt_minpwm, configuration.tilt_maxpwm);
                move_servo(tilt_servo, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);;
                current_activity=0;
@@ -307,7 +312,7 @@ void check_activity() {
              configuration.tilt_minangle = config_servo(2, 2, configuration.tilt_minangle ); 
              tilt_servo.writeMicroseconds(configuration.tilt_minpwm);
              if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
-               EEPROM_write(0, configuration);
+               EEPROM_write(config_bank[int(current_bank)], configuration);
                move_servo(tilt_servo, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);
                current_activity=0;
                 }
@@ -321,7 +326,7 @@ void check_activity() {
              tilt_servo.writeMicroseconds(servoconf_tmp[3]);
              if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
                configuration.tilt_maxpwm = servoconf_tmp[3];
-               EEPROM_write(0, configuration);
+               EEPROM_write(config_bank[int(current_bank)], configuration);
 	       attach_servo(tilt_servo,TILT_SERVOPIN, configuration.tilt_minpwm, configuration.tilt_maxpwm);
                move_servo(tilt_servo, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);
                current_activity=0;
@@ -332,7 +337,7 @@ void check_activity() {
              configuration.tilt_maxangle = config_servo(2, 4, configuration.tilt_maxangle );
              tilt_servo.writeMicroseconds(configuration.tilt_maxpwm);
              if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
-               EEPROM_write(0, configuration);
+               EEPROM_write(config_bank[int(current_bank)], configuration);
                move_servo(tilt_servo, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);
                current_activity=0;
                 }
@@ -346,14 +351,26 @@ void check_activity() {
           if (current_activity == 12) { //Configure Telemetry
              lcddisp_telemetry();
             if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press
-               EEPROM_write(0, configuration);
+               EEPROM_write(config_bank[int(current_bank)], configuration);
                current_activity=0;
                 }
           }
           if (current_activity == 13) { //Configure Baudrate
              lcddisp_baudrate();
              if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press
-               EEPROM_write(0, configuration);
+               EEPROM_write(config_bank[int(current_bank)], configuration);
+               current_activity=0;
+             }
+           }
+          if (current_activity == 14) { //Change settings bank
+               lcddisp_bank();
+             if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press
+               EEPROM.write(0,current_bank);
+               EEPROM_read(config_bank[int(current_bank)], configuration);
+               servoconf_tmp[0] = configuration.pan_minpwm;
+               servoconf_tmp[1] = configuration.pan_maxpwm;
+               servoconf_tmp[2] = configuration.tilt_minpwm;
+               servoconf_tmp[3] = configuration.tilt_maxpwm;
                current_activity=0;
              }
            }
@@ -431,6 +448,12 @@ void leftButtonReleaseEvents(Button &btn)
                configuration.baudrate -= 1;
              }
           }
+          if (current_activity == 14) {
+             if (current_bank > 0) {
+               current_bank -= 1;
+             }
+             else current_bank = 3;
+          }
     }
     else if (current_activity==2) {
 #if defined(BEARING_METHOD_2) || defined(BEARING_METHOD_4)       
@@ -480,6 +503,12 @@ void rightButtonReleaseEvents(Button &btn)
                configuration.baudrate += 1;
              }       
           }
+          if (current_activity == 14) {
+             if (current_bank < 3) {
+               current_bank += 1;
+             }
+             else current_bank = 0;
+          }
     }
     else if (current_activity==2) {
 
@@ -502,7 +531,8 @@ void rightButtonReleaseEvents(Button &btn)
   }
 }
 
-//create menu
+//########################################################### MENU #######################################################################################
+
 void init_menu() {
 	rootMenu.add_item(&m1i1Item, &screen_tracking); //start track
 	rootMenu.add_item(&m1i2Item, &screen_sethome); //set home position
@@ -521,6 +551,7 @@ void init_menu() {
                         m1m3m1Menu.add_item(&m1m3m1i3Item, &configure_test_servo);
                 m1m3Menu.add_item(&m1m3i2Item, &configure_telemetry); // select telemetry protocol ( Teensy++2 only ) 
                 m1m3Menu.add_item(&m1m3i3Item, &configure_baudrate); // select telemetry protocol
+        rootMenu.add_item(&m1i4Item, &screen_bank); //set home position
 	displaymenu.set_root_menu(&rootMenu);
 }
 
@@ -615,6 +646,10 @@ void configure_telemetry(MenuItem* p_menu_item) {
 
 void configure_baudrate(MenuItem* p_menu_item) {
       current_activity = 13;
+}
+
+void screen_bank(MenuItem* p_menu_item) {
+	current_activity = 14;
 }
 
 
