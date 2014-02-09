@@ -212,7 +212,7 @@ void check_activity() {
           if (current_activity == 1 ) { //TRACK
            if ((!home_pos) || (!home_bear)) {  // check if home is set before start tracking
              servoPathfinder(0, 20); // refresh servo to prevent idle jitter
-             current_activity = 2;
+             current_activity = 2; //set bearing if not set.
            } else if (home_bear) {
              antenna_tracking();
              lcddisp_tracking();
@@ -236,7 +236,7 @@ void check_activity() {
             }
               else { lcddisp_homeok(); }
             }
-            if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press 
+            if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press
                    current_activity = 0;
                 }
           }
@@ -400,7 +400,8 @@ void enterButtonReleaseEvents(Button &btn)
              // saving home bearing
 #ifdef BEARING_METHOD_1             
                  //set_bearing(); 
-                 home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // store bearing relative to north       
+                 home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // store bearing relative to north
+                 configuration.bearing =     
                  home_bear = true;
 #else
                 //bearing reference is set manually from a compass

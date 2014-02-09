@@ -181,13 +181,13 @@ void lcddisp_setbearing() {
        
        //checking long press left right
        if (right_button.holdTime() >= 1000 && right_button.isPressed() ) {
-        home_bearing+=20;
+        home_bearing+=10;
         if (home_bearing>360) home_bearing = 360;
         else if (home_bearing<0) home_bearing = 0;
         delay(100);
         }
         else if ( left_button.holdTime() >= 1000 && left_button.isPressed() ) {
-        home_bearing-=20;
+        home_bearing-=10;
         delay(100);
         }
  }

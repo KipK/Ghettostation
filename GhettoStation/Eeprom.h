@@ -37,6 +37,7 @@ struct config_t
   int tilt_maxangle;
   int baudrate;
   int telemetry;
+  int bearing;
 } configuration;
 
 
@@ -59,6 +60,7 @@ void clear_eeprom() {
           configuration.tilt_maxangle = TILT_MAXANGLE;
 	  configuration.baudrate = 6;
           configuration.telemetry = 0;
+          configuration.bearing = 0;
 	  EEPROM_write(config_bank[j], configuration);
         }       
 }
