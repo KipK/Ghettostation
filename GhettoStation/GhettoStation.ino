@@ -401,12 +401,13 @@ void enterButtonReleaseEvents(Button &btn)
 #ifdef BEARING_METHOD_1             
                  //set_bearing(); 
                  home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // store bearing relative to north
-                 configuration.bearing =     
                  home_bear = true;
 #else
                 //bearing reference is set manually from a compass
                  home_bear = true;
 #endif
+                 configuration.bearing = home_bearing;
+                 EEPROM_write(config_bank[int(current_bank)], configuration);
             }
             else if ((gps_fix) && (home_pos) && (home_bear)) {
               // START TRACKING 

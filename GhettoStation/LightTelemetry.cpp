@@ -79,7 +79,7 @@ void ltm_read() {
 }
 
 // --------------------------------------------------------------------------------------
-// Here are decoded received commands from MultiWii
+// Here are decoded received commands 
 void ltm_check() {
   LTMreadIndex = 0;
                     
