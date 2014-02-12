@@ -65,8 +65,9 @@ void ltm_read() {
         if(LTMrcvChecksum == 0) {
 	    telemetry_ok = true;
             lastpacketreceived = millis();
-	        protocol = "LTM"; 
+	    protocol = "LTM"; 
             ltm_check();
+            c_state = IDLE;
         }
         else {
         c_state = IDLE;
