@@ -327,7 +327,7 @@
                                         lastpacketreceived = millis();  
   					uav_lat			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LAT) / 10000000.0;
   					uav_lon			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LON) / 10000000.0;
-                    uav_satellites_visible	= uavtalk_get_int8(&msg, GPSPOSITION_OBJ_SATELLITES);
+                                        uav_satellites_visible	= uavtalk_get_int8(&msg, GPSPOSITION_OBJ_SATELLITES);
   					uav_fix_type		= uavtalk_get_int8(&msg, GPSPOSITION_OBJ_STATUS);
   					//uav_heading		= uavtalk_get_float(&msg, GPSPOSITION_OBJ_HEADING);
   #ifndef BARO_ALT

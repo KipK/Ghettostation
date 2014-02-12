@@ -6,6 +6,7 @@
   static uint8_t LTMcmd;
   static uint8_t LTMrcvChecksum;
   static uint8_t LTMreadIndex;
+  static uint8_t LTMframelength;
 
 
 
@@ -49,10 +50,24 @@ void ltm_read() {
         //Serial.println("header T" );
     }
     else if (c_state == HEADER_START2) {
-      c_state = (c=='G') ? HEADER_MSGTYPE : IDLE;
-        //Serial.println("header G" );
-	  LTMcmd = c;
-	  LTMreceiverIndex=0;
+      switch (c) {
+         case 'G':
+           LTMframelength = LIGHTTELEMETRY_GFRAMELENGTH;
+           c_state = HEADER_MSGTYPE;
+           break;
+         case 'A':
+           LTMframelength = LIGHTTELEMETRY_AFRAMELENGTH;
+           c_state = HEADER_MSGTYPE;
+           break;
+         case 'S':
+           LTMframelength = LIGHTTELEMETRY_SFRAMELENGTH;
+           c_state = HEADER_MSGTYPE;
+           break;
+         default:
+           c_state = IDLE;
+      }
+      LTMcmd = c;
+      LTMreceiverIndex=0;
     }
     else if (c_state == HEADER_MSGTYPE) {
 	  if(LTMreceiverIndex == 0) {
@@ -61,15 +76,15 @@ void ltm_read() {
 	  else {
 	  LTMrcvChecksum ^= c;
 	  }
-      if(LTMreceiverIndex == LIGHTTELEMETRY_GFRAMELENGTH-4) { // received checksum byte
+      if(LTMreceiverIndex == LTMframelength-4) {   // received checksum byte
         if(LTMrcvChecksum == 0) {
 	    telemetry_ok = true;
             lastpacketreceived = millis();
-	        protocol = "LTM"; 
+	    protocol = "LTM"; 
             ltm_check();
         }
-        else {
-        c_state = IDLE;
+        else {                                                   // wrong checksum, drop packet
+        c_state = IDLE; 
         
         }
       }
@@ -93,9 +108,27 @@ void ltm_check() {
     uint8_t ltm_satsfix = ltmread8();
     uav_satellites_visible         = (int)((ltm_satsfix >> 2) & 0xFF);
     uav_fix_type                   = (int)(ltm_satsfix & 0b00000011);
-    memset(LTMserialBuffer, 0, LIGHTTELEMETRY_GFRAMELENGTH-4);
+    //memset(LTMserialBuffer, 0, LIGHTTELEMETRY_GFRAMELENGTH-4); //still wondering what's it doing here
     //Serial.println("lat : lon : speed: alt : sats : fix" );
     //Serial.print(uav_lat,10);Serial.print("  ");Serial.print(uav_lon,10);Serial.print("  ");Serial.print(uav_groundspeed);Serial.print("  ");Serial.print(uav_alt);Serial.print("  ");Serial.print(uav_satellites_visible);Serial.print("  ");Serial.println(uav_fix_type);
+  }
+  
+  if (LTMcmd==LIGHTTELEMETRY_AFRAME)
+  {
+    uav_pitch = ltmread16();
+    uav_roll = ltmread16();
+    uav_heading = ltmread16();
+  }
+  if (LTMcmd==LIGHTTELEMETRY_SFRAME)
+  {
+    uav_bat = ltmread16();
+    uav_amp = ltmread16();
+    uav_rssi = ltmread8();
+    uav_airspeed = ltmread8();
+    uint8_t ltm_armfsmode = ltmread8();
+    uav_flightmode = (ltm_armfsmode >> 2) & 0xFF; 
+    uav_failsafe = (ltm_armfsmode >> 1) & 0b00000001;
+    uav_arm = ltm_armfsmode & 0b00000001;
   }
 }
 
