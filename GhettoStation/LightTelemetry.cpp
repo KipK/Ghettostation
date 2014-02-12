@@ -82,6 +82,7 @@ void ltm_read() {
             lastpacketreceived = millis();
 	    protocol = "LTM"; 
             ltm_check();
+            c_state = IDLE;
         }
         else {                                                   // wrong checksum, drop packet
         c_state = IDLE; 

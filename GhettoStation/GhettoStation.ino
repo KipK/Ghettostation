@@ -175,6 +175,7 @@ void loop() {
         left_button.isPressed();
         right_button.isPressed();
   }
+  
   if (current_activity==1 || current_activity==2) {    
 #ifdef SIMUGPS
   simulate_gps();
@@ -1003,7 +1004,14 @@ home_bearing = (int)round(heading * 180/M_PI);
 
 #if defined(DEBUG)
 void debug() {
+  
     if (debugMetro.check() == 1)  {
+       Serial.print("activ:");
+       Serial.println(current_activity);
+       Serial.print("conftelem:");
+       Serial.println(configuration.telemetry);
+       Serial.print("baud");
+       Serial.println(configuration.baudrate);
        Serial.print("lat=");
        Serial.println(uav_lat,7);
        Serial.print("lon=");
@@ -1017,8 +1025,29 @@ void debug() {
        Serial.println(Elevation);
        Serial.print("Be:");
        Serial.println(Bearing);
-              Serial.print("Be:");
+       Serial.print("Be:");
        Serial.println(home_bearing);
+       Serial.print("pitch:");
+       Serial.println(uav_pitch);
+       Serial.print("roll:");
+       Serial.println(uav_roll);
+       Serial.print("yaw:");
+       Serial.println(uav_heading);
+       Serial.print("rbat:");
+       Serial.println(uav_bat);
+       Serial.print("amp:");
+       Serial.println(uav_amp);
+       Serial.print("rssi:");
+       Serial.println(uav_rssi);
+       Serial.print("aspeed:");
+       Serial.println(uav_airspeed);
+       Serial.print("armed:");
+       Serial.println(uav_arm);
+       Serial.print("fs:");
+       Serial.println(uav_failsafe);
+       Serial.print("fmode:");
+       Serial.println(uav_flightmode);
+            
     }
   
 }
@@ -1035,9 +1064,9 @@ void set_simugps() {
   home_lat = 48.86917;		
   home_lon =  2.24111;		
   uav_alt =  0;
-  //home_bearing = 0;
+  home_bearing = 0;
   home_pos = true;
-  //home_bear = true;
+  home_bear = true;
 } 
 void simulate_gps() {
   if (simugpsMetro.check() == 1) {
