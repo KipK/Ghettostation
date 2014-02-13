@@ -62,7 +62,6 @@ namespace{
 // The same as the minimosd
 
    mav_sr_t MAVStreams[] = {
-      {MAV_DATA_STREAM_RAW_SENSORS,0x02},
       {MAV_DATA_STREAM_EXTENDED_STATUS,0x02},
       {MAV_DATA_STREAM_RC_CHANNELS,0x05},
       {MAV_DATA_STREAM_POSITION,0x02},
@@ -97,6 +96,9 @@ namespace{
      void do_mavlink_gps_raw_int(mavlink_message_t * pmsg);
    #endif
      void do_mavlink_vfr_hud(mavlink_message_t * pmsg);
+     void do_mavlink_rc_channels_raw(mavlink_message_t * pmsg);
+     void do_mavlink_attitude(mavlink_message_t * pmsg);
+     
 
 } // ~namespace
 
@@ -140,6 +142,13 @@ void mavlink_read()
             case MAVLINK_MSG_ID_VFR_HUD:
                do_mavlink_vfr_hud(&msg);
             break;
+            case MAVLINK_MSG_ID_RC_CHANNELS_RAW:
+               do_mavlink_rc_channels_raw(&msg);
+            break;
+            case MAVLINK_MSG_ID_ATTITUDE:
+               do_mavlink_attitude(&msg);
+            break;
+            
             default:
             break;
          }
@@ -157,6 +166,22 @@ namespace {
       apm_mav_system    = pmsg->sysid;
       apm_mav_component = pmsg->compid;
       apm_mav_type      = mavlink_msg_heartbeat_get_type(pmsg);
+      uav_arm = mavlink_msg_heartbeat_get_base_mode(pmsg);
+      if(getBit(uav_arm,7)) uav_arm = 1;
+      else uav_arm = 0;
+      uav_flightmode = (uint8_t)mavlink_msg_heartbeat_get_custom_mode(pmsg);
+      if (uav_flightmode == 0) uav_flightmode = 0; //Manual 
+      if (uav_flightmode == 1) uav_flightmode = 12; //CIRCLE 
+      if (uav_flightmode == 2) uav_flightmode = 2; //Stabilize
+      if (uav_flightmode == 3) uav_flightmode = 4; //Acro training
+      if (uav_flightmode == 4) uav_flightmode = 3; //rate
+      if (uav_flightmode == 5) uav_flightmode = 10; //FLY_BY_WIRE_A
+      if (uav_flightmode == 6) uav_flightmode = 10; //FLY_BY_WIRE_B 
+      if (uav_flightmode == 7) uav_flightmode = 2; //Cruise
+      if (uav_flightmode == 10) uav_flightmode = 10; //AUTO
+      if (uav_flightmode == 11) uav_flightmode = 13; //Return to Launch 
+      if (uav_flightmode == 12) uav_flightmode = 9; //Loiter
+      if (uav_flightmode == 15) uav_flightmode = 10; //GUIDED
         
      ++num_heartbeats;
    }
@@ -186,6 +211,7 @@ namespace {
 #endif
       uav_fix_type = mavlink_msg_gps_raw_int_get_fix_type(pmsg);
       uav_satellites_visible = mavlink_msg_gps_raw_int_get_satellites_visible(pmsg);
+      uav_gpsheading = (int16_t) mavlink_msg_gps_raw_int_get_cog(pmsg);
    }
 #endif
 
@@ -193,13 +219,38 @@ namespace {
    {
       // mavlink_msg_vfr_hud_get_groundspeed retirns val in m/s
       uav_groundspeed = (int)round(mavlink_msg_vfr_hud_get_groundspeed(pmsg));
+      uav_airspeed = (uint8_t)round(mavlink_msg_vfr_hud_get_airspeed(pmsg));
+      //uav_heading = mavlink_msg_vfr_hud_get_heading(&msg);     // 100 = 100 deg //not used, will take headng from IMU yaw data
 
       // baroalt
 #ifdef BARO_ALT
       uav_alt = (int)round(mavlink_msg_vfr_hud_get_alt(pmsg) * 10);  // to decimeters
 #endif
-   }
+                                  
 
+                                  
+   }
+   void do_mavlink_attitude(mavlink_message_t * pmsg)
+   {
+       uav_roll = (int16_t)round(toDeg(mavlink_msg_attitude_get_roll(pmsg)));
+       uav_pitch = (int16_t)round(toDeg(mavlink_msg_attitude_get_pitch(pmsg)));
+       uav_heading = (int16_t)round(toDeg(mavlink_msg_attitude_get_yaw(pmsg)));
+   }
+   
+   void do_mavlink_sys_status(mavlink_message_t * pmsg)
+   {
+       uav_bat = mavlink_msg_sys_status_get_voltage_battery(pmsg);
+       uav_current = mavlink_msg_sys_status_get_current_battery(pmsg)/10;  
+       uav_amp = (int16_t)mavlink_msg_sys_status_get_battery_remaining(pmsg); //Mavlink send battery remaining % , will use this instead
+   }
+   void do_mavlink_rc_channels_raw(mavlink_message_t * pmsg)
+   {
+       uav_rssi      = mavlink_msg_rc_channels_raw_get_rssi(pmsg);
+       uav_chan5_raw = mavlink_msg_rc_channels_raw_get_chan5_raw(pmsg);
+       uav_chan6_raw = mavlink_msg_rc_channels_raw_get_chan6_raw(pmsg);
+       uav_chan7_raw = mavlink_msg_rc_channels_raw_get_chan7_raw(pmsg);
+       uav_chan8_raw = mavlink_msg_rc_channels_raw_get_chan8_raw(pmsg);
+   }
 }// ~namespace
 
 

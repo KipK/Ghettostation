@@ -310,8 +310,8 @@ int uavtalk_read(void) {
 	uint8_t show_prio_info = 0;
 	
 	// grabbing data
-	while (!show_prio_info && Serial.available() > 0) {
-		uint8_t c = Serial.read();
+	while (SerialPort1.available() > 0) {
+		uint8_t c = SerialPort1.read();
 		
 		// parse data to msg
 		if (uavtalk_parse_char(c, &msg)) {
@@ -349,23 +349,26 @@ int uavtalk_read(void) {
 				case FLIGHTSTATUS_OBJID_001:
 				case FLIGHTSTATUS_OBJID_002:
 				case FLIGHTSTATUS_OBJID_003:
-                case FLIGHTSTATUS_OBJID_004:
-        		uav_arm = uavtalk_get_int8(&msg, FLIGHTSTATUS_OBJ_ARMED);
-                        //remap flight modes id to Ghettostation ones
-                        switch (uavtalk_get_int8(&msg, FLIGHTSTATUS_OBJ_FLIGHTMODE)) {
-                            case 0: uav_flightmode = 0;  break;   //manual
-                            case 1: uav_flightmode = 5;  break;   //stabilized 1
-                            case 2: uav_flightmode = 6;  break;   //stabilized 2
-                            case 3: uav_flightmode = 7;  break;   //stabilized 3
-                            case 4: uav_flightmode = 16; break;   //autotune (unknown)
-                            case 5: uav_flightmode = 8;  break;   //altitude hold
-                            case 6: uav_flightmode = 16; break;   //velocity control (unknown)
-                            case 7: uav_flightmode = 9;  break;   //pos hold
-                            case 8: uav_flightmode = 13; break;   //RTH
-                            case 9: uav_flightmode = 10; break;   //pathplanner (auto)
-                        }
-  
-                                uav_failsafe = uavtalk_get_int8(&msg, FLIGHTSTATUS_CONTROLSOURCE_FAILSAFE);
+                                case FLIGHTSTATUS_OBJID_004:
+        	                	uav_arm = uavtalk_get_int8(&msg, FLIGHTSTATUS_OBJ_ARMED);
+                                       //remap flight modes id to Ghettostation ones
+                                        switch (uavtalk_get_int8(&msg, FLIGHTSTATUS_OBJ_FLIGHTMODE)) {
+                                            case 0: uav_flightmode = 0;  break;   //manual
+                                            case 1: uav_flightmode = 5;  break;   //stabilized 1
+                                            case 2: uav_flightmode = 6;  break;   //stabilized 2
+                                            case 3: uav_flightmode = 7;  break;   //stabilized 3
+                                            case 4: uav_flightmode = 16; break;   //autotune (unknown)
+                                            case 5: uav_flightmode = 8;  break;   //altitude hold
+                                            case 6: uav_flightmode = 16; break;   //velocity control (unknown)
+                                            case 7: uav_flightmode = 9;  break;   //pos hold
+                                            case 8: uav_flightmode = 13; break;   //RTH
+                                            case 9: uav_flightmode = 10; break;   //pathplanner (auto)
+                                        }
+
+        
+                                        //if (msg.ObjID==FLIGHTSTATUS_OBJID_004) {
+                                          uav_failsafe = (uavtalk_get_int8(&msg, FLIGHTSTATUS_OBJ_CONTROLSOURCE) == 1) ? 1 : 0; // Taulabs only
+                                        //}
                                 break;
                                 case MANUALCONTROLCOMMAND_OBJID: // OP
                 	                uav_chan5_raw		= uavtalk_get_int16(&msg, MANUALCONTROLCOMMAND_OBJ_CHANNEL_4);
@@ -393,7 +396,7 @@ int uavtalk_read(void) {
 				break;
 
 				case FLIGHTBATTERYSTATE_OBJID:
-        			        uav_bat		= (int16_t) (100.0 * uavtalk_get_float(&msg, FLIGHTBATTERYSTATE_OBJ_VOLTAGE));
+        			        uav_bat		= (int16_t) (1000.0 * uavtalk_get_float(&msg, FLIGHTBATTERYSTATE_OBJ_VOLTAGE));
 					uav_current	= (int16_t) (100.0 * uavtalk_get_float(&msg, FLIGHTBATTERYSTATE_OBJ_CURRENT));
 					uav_amp		= (int16_t) uavtalk_get_float(&msg, FLIGHTBATTERYSTATE_OBJ_CONSUMED_ENERGY);
 				break;

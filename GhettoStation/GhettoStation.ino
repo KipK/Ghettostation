@@ -939,17 +939,7 @@ int calc_elevation(float lon1, float lat1, float lon2, float lat2, int alt) {
   return b;
 }
 
-float toRad(float angle) {
-// convert degrees to radians
-	angle = angle*0.01745329; // (angle/180)*pi
-	return angle;
-}
 
-float toDeg(float angle) {
-// convert radians to degrees.
-	angle = angle*57.29577951;   // (angle*180)/pi
-        return angle;
-}
 	
 
 
