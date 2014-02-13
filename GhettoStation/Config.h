@@ -28,20 +28,17 @@
 //Minimum distance in meters where it will stop moving servos.
 #define DONTTRACKUNDER  2
 
+//Prevent Ghettostation to send packets to the flightcontroler
+#define PASSIVEMODE 1
 
+//Use Mag+imu for heading or GPS heading if not set.
+#define MAGHEADING 1
 //########### LCD ##################################################################################################
 
 
 //#define I2CADDRESS 0xc6 // LCD03 i2C from Robot Electronics 
 #define I2CADDRESS 0x27 // IIC/I2C/TWI Serial 2004 20x4 lcd ( Hobbyking )
 //#define I2CADDRESS 020 // Arduino-IIC-LCD GY-LCD-V1
-
-
-
-//########### TELEMETRY OPTIONS####################################################################################
-//### UAVTALK OPENPILOT
-   
-#define UAVTALK_MODE_PASSIVE  // If you already have GCS or OSD running. Arduino won't send anything on the Tx line. If undefined, it will send UAVTalk queries.
 
 
 //#################################### SERVOS ENDPOINTS ################################################################

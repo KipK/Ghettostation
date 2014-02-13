@@ -15,7 +15,7 @@
 
 #include "Config.h"
 #include <avr/pgmspace.h>
-
+#include <arduino.h>
 #include <Wire.h> 
 
 
@@ -69,7 +69,7 @@
 // Set the pins on the I2C chip used for LCD connections:
 //                    addr, en,rw,rs,d4,d5,d6,d7,bl,blpol
 LiquidCrystal_I2C LCD(I2CADDRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1" 
-//iquidCrystal_I2C lcd(I2CADDRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  // Arduino-IIC-LCD GY-LCD-V1
+//LiquidCrystal_I2C lcd(I2CADDRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  // Arduino-IIC-LCD GY-LCD-V1
 
 
 
@@ -175,15 +175,14 @@ void loop() {
         left_button.isPressed();
         right_button.isPressed();
   }
-  
-  if (current_activity==1 || current_activity==2) {    
+
+//  if (current_activity==1 || current_activity==2) {    
 #ifdef SIMUGPS
   simulate_gps();
 #else
-	//get telemetry data 
   get_telemetry();
 #endif
-  }
+//  }
   check_activity();     
   refresh_lcd();
 #if defined(DEBUG)
@@ -558,8 +557,6 @@ void init_menu() {
 	displaymenu.set_root_menu(&rootMenu);
 }
 
-//######################################## MENUS #####################################################################
-
 void display_menu() {
         Menu const* displaymenu_current = displaymenu.get_current_menu();
 	MenuComponent const* displaymenu_sel = displaymenu_current->get_selected();
@@ -660,8 +657,6 @@ void screen_bank(MenuItem* p_menu_item) {
 void init_serial() {
     
       SerialPort1.begin(baudrates[configuration.baudrate]);
-      //SerialPort1.begin(2400);
-
 
 #ifdef DEBUG
     Serial.println("Serial initialised"); 

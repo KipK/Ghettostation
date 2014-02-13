@@ -18,19 +18,28 @@ float        uav_lat = 0;                    // latitude
 float        uav_lon = 0;                    // longitude
 int          uav_satellites_visible = 0;     // number of satelites
 int          uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
-long         uav_alt = 0;                    // altitude (dm)
+int16_t      uav_alt = 0;                    // altitude (dm)
 int          uav_groundspeed = 0;            // ground speed
 int16_t      uav_pitch = 0;                  // attitude pitch
 int16_t      uav_roll = 0;                   // attitude roll
-int16_t      uav_heading = 0;                // attitude heading (imu+mag or gps)
+int16_t      uav_heading = 0;                // attitude heading
+int16_t      uav_gpsheading=0;               // gps heading
 uint16_t     uav_bat = 0;                    // battery voltage (mv)
 uint16_t     uav_amp = 0;                    // consumed mah.
-uint8_t      uav_rssi = 0;                   // radio rx RSSI (%)
+uint16_t     uav_current = 0;                // actual current
+uint8_t      uav_rssi = 0;                   // radio RSSI (%)
+uint8_t      uav_linkquality = 0;             // radio link quality
 uint8_t      uav_airspeed = 0;               // Airspeed sensor (m/s)
 uint8_t      uav_arm = 0;                    // 0: disarmed, 1: armed
 uint8_t      uav_failsafe = 0;               // 0: normal,   1: failsafe 
 uint8_t      uav_flightmode = 16;              // Flight mode(0-16): 0: Manual, 1: Rate, 2: Attitude/Angle, 3: Horizon, 4: Acro, 5: Stabilized1, 6: Stabilized2, 7: Stabilized3,
-                                             // 8: Altitude Hold, 9: Loiter/GPS Hold, 10: Auto/Waypoints, 11: Heading Hold, 12: Circle, 13: RTH, 14: FollowMe, 15: LAND, 16:Unknown
+                                             // 8: Altitude Hold, 9: Loiter/GPS Hold, 10: Auto/Waypoints, 11: Heading Hold, 12: Circle, 13: RTH, 14: FollowMe, 15: LAND, 16:Unkwon
+int16_t      uav_chan5_raw;      
+int16_t      uav_chan6_raw; 
+int16_t      uav_chan7_raw; 
+int16_t      uav_chan8_raw; 
+
+
 
 
 
