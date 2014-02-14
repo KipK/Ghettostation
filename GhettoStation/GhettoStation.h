@@ -99,7 +99,7 @@ static uint8_t      apm_mav_component;
 static boolean      enable_mav_request = 0;
 
 //baudrate selection
-long baudrates[8]= {1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200};
+long baudrates[8]= {1200, 2400, 4800, 9600, 19200, 38400, BAUDRATE56K, 115200};
 
 //flash strings
 FLASH_STRING(string_load1, "  [GHETTOSTATION]   ");

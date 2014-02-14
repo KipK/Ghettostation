@@ -7,6 +7,11 @@
 #define TEENSYPLUS2 // Teensy++2 support. 
 //#define MEGA // Arduino Mega boards
 
+//If you have communication problem at 56K , set this on. ( ie APM 2/2.5/2.6/AIO )
+// Most Arduino have a +2.18% error at 57600 bd, Teensyduino has a -0.74% error. Booth cumulated are too much.
+// Successfull com with arduino requires 58824 bauds.
+#define BAUDRATE56K 58824 
+//#define BAUDRATE56K 57600
 
 //########## OPTIONS ###############################################################################################
 #define BARO_ALT // Use Baro for Altitude. Comment for using GPS altitude instead.

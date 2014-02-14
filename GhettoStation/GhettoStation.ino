@@ -656,7 +656,7 @@ void screen_bank(MenuItem* p_menu_item) {
 //######################################## TELEMETRY FUNCTIONS #############################################
 void init_serial() {
     
-      SerialPort1.begin(baudrates[configuration.baudrate]);
+    SerialPort1.begin(baudrates[configuration.baudrate]);
 
 #ifdef DEBUG
     Serial.println("Serial initialised"); 
