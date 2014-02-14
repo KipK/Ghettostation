@@ -89,6 +89,14 @@ boolean home_bear = false;
 //servo temp configuration before saving
 int servoconf_tmp[4];
 
+//MAVLink session control
+static boolean      mavbeat = 0;
+//static boolean      landing = 0;
+static float        lastMAVBeat = 0;
+static boolean      waitingMAVBeats = 1;
+static uint8_t      apm_mav_system; 
+static uint8_t      apm_mav_component;
+static boolean      enable_mav_request = 0;
 
 //baudrate selection
 long baudrates[8]= {1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200};

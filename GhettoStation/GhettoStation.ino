@@ -695,7 +695,12 @@ void get_telemetry() {
 
 #if defined(PROTOCOL_MAVLINK) // Ardupilot / PixHawk / Taulabs ( mavlink output ) / Other
     if (configuration.telemetry==3) {
-      mavlink_read(); 
+      if(enable_mav_request == 1){//Request rate control
+ 	enable_mav_request = 0;
+        waitingMAVBeats = 0; 
+	lastMAVBeat = millis();//Preventing error from delay sensing 
+      }
+      read_mavlink(); 
     }
 #endif
 //  }
