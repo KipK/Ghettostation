@@ -1,0 +1,35 @@
+To use the F("...") inline "flash string" notation with Print::print() and 
+Print::println(), a small patch needs to be added to the core Print.h file.  
+
+This patch effectively tells the Print class that the Flash library objects
+all support a print method, and that calling, for example
+
+  Serial.print(obj);
+
+is simply an alias for calling 
+
+  obj.print(Serial);
+
+To insert the patch, first insert this code near the top of Print.h, just
+before the declaration of class Print:
+
+  #define ARDUINO_CORE_PRINTABLE_SUPPORT
+  class Print;
+  class _Printable
+  {
+  public:
+    virtual void print(Print &stream) const = 0;
+  };
+
+Then, inside the body of the Print class, add these lines, defining two
+new methods:
+
+  void print(const _Printable &obj) { obj.print(*this); }
+  void println(const _Printable &obj) { obj.print(*this); println(); }
+
+That's it!
+
+If you have correctly patched the file, the flash_inline_strings.pde 
+example should compile and work correctly.
+
+Mikal
