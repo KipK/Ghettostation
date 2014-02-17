@@ -12,66 +12,49 @@
  * @see        The GNU Public License (GPL) Version 3
  *
  *****************************************************************************/
-
 #include "Config.h"
+
 #include <avr/pgmspace.h>
 #include <arduino.h>
+#include <Servo.h>
+#ifdef TEENSYPLUS2
+#include <SoftwareSerial.h> // Use for future OSD serial data.
+#endif
 #include <Wire.h> 
-
-
 
 #ifdef BEARING_METHOD_4 //use additional hmc5883L mag breakout
 //HMC5883L i2c mag b
 #include <HMC5883L.h>
 #endif
-
 #include <LiquidCrystal_I2C.h>
-
 #include <Metro.h>
 #include <MenuSystem.h>
 #include <Button.h>
-#include <Servo.h>
 #include <EEPROM.h>
 #include <Flash.h>
-
 
 #include "Eeprom.h"
 #include "GhettoStation.h"
 
-
-
 #ifdef PROTOCOL_UAVTALK
 #include "UAVTalk.cpp"
 #endif
-
 #ifdef PROTOCOL_MSP
 #include "MSP.cpp"
 #endif
-
 #ifdef PROTOCOL_LIGHTTELEMETRY
 #include "LightTelemetry.cpp"
 #endif
-
 #ifdef PROTOCOL_MAVLINK
 #include <mavlink.h>
 #include "Mavlink.cpp"
 #endif
 
-
-
 //################################### SETTING OBJECTS ###############################################
-
-
-
-
-
-
 // Set the pins on the I2C chip used for LCD connections:
 //                    addr, en,rw,rs,d4,d5,d6,d7,bl,blpol
 LiquidCrystal_I2C LCD(I2CADDRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1" 
 //LiquidCrystal_I2C lcd(I2CADDRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  // Arduino-IIC-LCD GY-LCD-V1
-
-
 
 //##### SERVOS 
 

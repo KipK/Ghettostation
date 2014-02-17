@@ -133,6 +133,10 @@ FLASH_STRING(string_baudrate5, "<<     38400      >>");
 FLASH_STRING(string_baudrate6, "<<     57600      >>");
 FLASH_STRING(string_baudrate7, "<<    115200        ");
 FLASH_STRING(string_bank,      " LOAD SETTINGS BANK ");
+FLASH_STRING(string_bank1,      BANK1);
+FLASH_STRING(string_bank2,      BANK2);
+FLASH_STRING(string_bank3,      BANK3);
+FLASH_STRING(string_bank4,      BANK4);
 
 //Menu vars
 MenuSystem displaymenu;

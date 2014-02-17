@@ -407,9 +407,14 @@ void lcddisp_bank() {
            case 2:
                      currentline = String(string_load2.copy(extract)); break;
            case 3:
-                     currentline = " <<       ";
-                     currentline += current_bank+1;
-                     currentline += "       >>";
+                     currentline = "> ";
+                     switch (current_bank+1) {
+                        case 1: currentline += String(string_bank1.copy(extract));break;
+                        case 2: currentline += String(string_bank2.copy(extract));break;
+                        case 3: currentline += String(string_bank3.copy(extract));break;
+                        case 4: currentline += String(string_bank4.copy(extract));break;
+                     }
+                     
                      break;
        
            case 4:      
