@@ -1,9 +1,9 @@
-###################################################################################################
-#                                   Ghettostation antenna tracker                                 #
-#                                            README                                               #
-###################################################################################################
+##############################################################################
+#                   Ghettostation antenna tracker                            #
+#                               README                                       #
+##############################################################################
 
-###################################################################################################
+##############################################################################
 FEATURES:
 
 - Multiple protocol compatible: MAVLINK, UAVTALK, MULTIWII MSP, LIGHTTELEMETRY
@@ -28,7 +28,8 @@ What you need:
 
 - 3 push buttons
 
-- an LCD03/LCD05 I2C 20x4 lcd panel ( http://www.hobbyking.com/hobbyking/store/__26852__IIC_I2C_TWI_Serial_2004_20x4_LCD_Module_Shield_For_Arduino_UNO_MEGA_R3.html )
+- an LCD03/LCD05 I2C 20x4 lcd panel 
+( http://www.hobbyking.com/hobbyking/store/__26852__IIC_I2C_TWI_Serial_2004_20x4_LCD_Module_Shield_For_Arduino_UNO_MEGA_R3.html )
 
 
 
