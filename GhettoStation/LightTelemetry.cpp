@@ -110,8 +110,7 @@ void ltm_check() {
     uav_satellites_visible         = (int)((ltm_satsfix >> 2) & 0xFF);
     uav_fix_type                   = (int)(ltm_satsfix & 0b00000011);
     //memset(LTMserialBuffer, 0, LIGHTTELEMETRY_GFRAMELENGTH-4); //still wondering what's it doing here
-    //Serial.println("lat : lon : speed: alt : sats : fix" );
-    //Serial.print(uav_lat,10);Serial.print("  ");Serial.print(uav_lon,10);Serial.print("  ");Serial.print(uav_groundspeed);Serial.print("  ");Serial.print(uav_alt);Serial.print("  ");Serial.print(uav_satellites_visible);Serial.print("  ");Serial.println(uav_fix_type);
+
   }
   
   if (LTMcmd==LIGHTTELEMETRY_AFRAME)

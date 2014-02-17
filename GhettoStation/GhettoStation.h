@@ -32,8 +32,8 @@ uint8_t      uav_linkquality = 0;             // radio link quality
 uint8_t      uav_airspeed = 0;               // Airspeed sensor (m/s)
 uint8_t      uav_arm = 0;                    // 0: disarmed, 1: armed
 uint8_t      uav_failsafe = 0;               // 0: normal,   1: failsafe 
-uint8_t      uav_flightmode = 16;              // Flight mode(0-16): 0: Manual, 1: Rate, 2: Attitude/Angle, 3: Horizon, 4: Acro, 5: Stabilized1, 6: Stabilized2, 7: Stabilized3,
-                                             // 8: Altitude Hold, 9: Loiter/GPS Hold, 10: Auto/Waypoints, 11: Heading Hold, 12: Circle, 13: RTH, 14: FollowMe, 15: LAND, 16:Unkwon
+uint8_t      uav_flightmode = 16;              // Flight mode(0-19): 0: Manual, 1: Rate, 2: Attitude/Angle, 3: Horizon, 4: Acro, 5: Stabilized1, 6: Stabilized2, 7: Stabilized3,
+                                             // 8: Altitude Hold, 9: Loiter/GPS Hold, 10: Auto/Waypoints, 11: Heading Hold / headFree, 12: Circle, 13: RTH, 14: FollowMe, 15: LAND, 16:FlybyWireA, 17: FlybywireB, 18: Cruise, 19: Unknown
 int16_t      uav_chan5_raw;      
 int16_t      uav_chan6_raw; 
 int16_t      uav_chan7_raw; 

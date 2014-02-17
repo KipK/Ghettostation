@@ -391,7 +391,9 @@ int uavtalk_read(void) {
 					uav_satellites_visible	= uavtalk_get_int8(&msg, GPSPOSITION_OBJ_SATELLITES);
 					uav_fix_type		= uavtalk_get_int8(&msg, GPSPOSITION_OBJ_STATUS);
 					uav_gpsheading		= (int16_t) uavtalk_get_float(&msg, GPSPOSITION_OBJ_HEADING);
+                                        #ifndef BARO_ALT
 					uav_alt			= uavtalk_get_float(&msg, GPSPOSITION_OBJ_ALTITUDE);
+                                        #endif
 					uav_groundspeed		= uavtalk_get_float(&msg, GPSPOSITION_OBJ_GROUNDSPEED);
 				break;
 
@@ -403,7 +405,9 @@ int uavtalk_read(void) {
 
 				case BAROALTITUDE_OBJID:
 				case BAROSENSOR_OBJID:
+                                        #ifdef BARO_ALT
 					uav_alt		= (int16_t) (uavtalk_get_float(&msg, BAROALTITUDE_OBJ_ALTITUDE) * 10);
+                                        #endif
 				break;
 				case OPLINKSTATUS_OBJID:
 				case OPLINKSTATUS_OBJID_001:

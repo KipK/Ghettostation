@@ -72,7 +72,7 @@ Metro simugpsMetro = Metro(1000);
 #endif
 #if defined(DEBUG)
 //Debug output
-Metro debugMetro = Metro(1000); // output serial debug data each second.
+Metro debugMetro = Metro(100); // output serial debug data each second.
 #endif
 
 
