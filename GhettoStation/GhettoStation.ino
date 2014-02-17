@@ -12,66 +12,49 @@
  * @see        The GNU Public License (GPL) Version 3
  *
  *****************************************************************************/
-
 #include "Config.h"
+
 #include <avr/pgmspace.h>
-
+#include <arduino.h>
+#include <Servo.h>
+#ifdef TEENSYPLUS2
+#include <SoftwareSerial.h> // Use for future OSD serial data.
+#endif
 #include <Wire.h> 
-
-
 
 #ifdef BEARING_METHOD_4 //use additional hmc5883L mag breakout
 //HMC5883L i2c mag b
 #include <HMC5883L.h>
 #endif
-
 #include <LiquidCrystal_I2C.h>
-
 #include <Metro.h>
 #include <MenuSystem.h>
 #include <Button.h>
-#include <Servo.h>
 #include <EEPROM.h>
 #include <Flash.h>
-
 
 #include "Eeprom.h"
 #include "GhettoStation.h"
 
-
-
 #ifdef PROTOCOL_UAVTALK
 #include "UAVTalk.cpp"
 #endif
-
 #ifdef PROTOCOL_MSP
 #include "MSP.cpp"
 #endif
-
 #ifdef PROTOCOL_LIGHTTELEMETRY
 #include "LightTelemetry.cpp"
 #endif
-
 #ifdef PROTOCOL_MAVLINK
 #include <mavlink.h>
 #include "Mavlink.cpp"
 #endif
 
-
-
 //################################### SETTING OBJECTS ###############################################
-
-
-
-
-
-
 // Set the pins on the I2C chip used for LCD connections:
 //                    addr, en,rw,rs,d4,d5,d6,d7,bl,blpol
 LiquidCrystal_I2C LCD(I2CADDRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1" 
-//iquidCrystal_I2C lcd(I2CADDRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  // Arduino-IIC-LCD GY-LCD-V1
-
-
+//LiquidCrystal_I2C lcd(I2CADDRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  // Arduino-IIC-LCD GY-LCD-V1
 
 //##### SERVOS 
 
@@ -89,7 +72,7 @@ Metro simugpsMetro = Metro(1000);
 #endif
 #if defined(DEBUG)
 //Debug output
-Metro debugMetro = Metro(1000); // output serial debug data each second.
+Metro debugMetro = Metro(100); // output serial debug data each second.
 #endif
 
 
@@ -175,14 +158,14 @@ void loop() {
         left_button.isPressed();
         right_button.isPressed();
   }
-  if (current_activity==1 || current_activity==2) {    
+
+//  if (current_activity==1 || current_activity==2) {    
 #ifdef SIMUGPS
   simulate_gps();
 #else
-	//get telemetry data 
   get_telemetry();
 #endif
-  }
+//  }
   check_activity();     
   refresh_lcd();
 #if defined(DEBUG)
@@ -557,8 +540,6 @@ void init_menu() {
 	displaymenu.set_root_menu(&rootMenu);
 }
 
-//######################################## MENUS #####################################################################
-
 void display_menu() {
         Menu const* displaymenu_current = displaymenu.get_current_menu();
 	MenuComponent const* displaymenu_sel = displaymenu_current->get_selected();
@@ -658,9 +639,7 @@ void screen_bank(MenuItem* p_menu_item) {
 //######################################## TELEMETRY FUNCTIONS #############################################
 void init_serial() {
     
-      SerialPort1.begin(baudrates[configuration.baudrate]);
-      //SerialPort1.begin(2400);
-
+    SerialPort1.begin(baudrates[configuration.baudrate]);
 
 #ifdef DEBUG
     Serial.println("Serial initialised"); 
@@ -699,7 +678,12 @@ void get_telemetry() {
 
 #if defined(PROTOCOL_MAVLINK) // Ardupilot / PixHawk / Taulabs ( mavlink output ) / Other
     if (configuration.telemetry==3) {
-      mavlink_read(); 
+      if(enable_mav_request == 1){//Request rate control
+ 	enable_mav_request = 0;
+        waitingMAVBeats = 0; 
+	lastMAVBeat = millis();//Preventing error from delay sensing 
+      }
+      read_mavlink(); 
     }
 #endif
 //  }
@@ -943,17 +927,7 @@ int calc_elevation(float lon1, float lat1, float lon2, float lat2, int alt) {
   return b;
 }
 
-float toRad(float angle) {
-// convert degrees to radians
-	angle = angle*0.01745329; // (angle/180)*pi
-	return angle;
-}
 
-float toDeg(float angle) {
-// convert radians to degrees.
-	angle = angle*57.29577951;   // (angle*180)/pi
-        return angle;
-}
 	
 
 
@@ -1003,7 +977,14 @@ home_bearing = (int)round(heading * 180/M_PI);
 
 #if defined(DEBUG)
 void debug() {
+  
     if (debugMetro.check() == 1)  {
+       Serial.print("activ:");
+       Serial.println(current_activity);
+       Serial.print("conftelem:");
+       Serial.println(configuration.telemetry);
+       Serial.print("baud");
+       Serial.println(configuration.baudrate);
        Serial.print("lat=");
        Serial.println(uav_lat,7);
        Serial.print("lon=");
@@ -1017,8 +998,29 @@ void debug() {
        Serial.println(Elevation);
        Serial.print("Be:");
        Serial.println(Bearing);
-              Serial.print("Be:");
+       Serial.print("Be:");
        Serial.println(home_bearing);
+       Serial.print("pitch:");
+       Serial.println(uav_pitch);
+       Serial.print("roll:");
+       Serial.println(uav_roll);
+       Serial.print("yaw:");
+       Serial.println(uav_heading);
+       Serial.print("rbat:");
+       Serial.println(uav_bat);
+       Serial.print("amp:");
+       Serial.println(uav_amp);
+       Serial.print("rssi:");
+       Serial.println(uav_rssi);
+       Serial.print("aspeed:");
+       Serial.println(uav_airspeed);
+       Serial.print("armed:");
+       Serial.println(uav_arm);
+       Serial.print("fs:");
+       Serial.println(uav_failsafe);
+       Serial.print("fmode:");
+       Serial.println(uav_flightmode);
+            
     }
   
 }
@@ -1035,9 +1037,9 @@ void set_simugps() {
   home_lat = 48.86917;		
   home_lon =  2.24111;		
   uav_alt =  0;
-  //home_bearing = 0;
+  home_bearing = 0;
   home_pos = true;
-  //home_bear = true;
+  home_bear = true;
 } 
 void simulate_gps() {
   if (simugpsMetro.check() == 1) {

@@ -1,206 +1,142 @@
-/*/*
-
-(
-  Some parts of this work are based on: 
-  http://code.google.com/p/arducam-osd/source/browse/trunk/ArduCAM_OSD/MAVLink.ino
-  Copyright (c) 2011. Sandro Benigno
-)
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
- 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU General Public License for more details.
- 
- You should have received a copy of the GNU General Public License
- along with this program. If not, see <http://www.gnu.org/licenses/>
- 
-*/
-
 #ifdef PROTOCOL_MAVLINK
 
-#include <Arduino.h>
-#include <cstdint>
-#include <mavlink.h>
+#include "../mavlink/include/mavlink.h"
 
+// true when we have received at least 1 MAVLink packet
+static bool mavlink_active;
+static uint8_t crlf_count = 0;
 
-mavlink_system_t mavlink_system = {12,1,0,0};
-
-void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
+static int packet_drops = 0;
+static int parse_error = 0;
+mavlink_message_t msg; 
+mavlink_status_t status;
+void request_mavlink_rates()
 {
-SerialPort1.write(ch);
+    const int  maxStreams = 6;
+    const uint8_t MAVStreams[maxStreams] = {
+        MAV_DATA_STREAM_RAW_SENSORS,
+        MAV_DATA_STREAM_EXTENDED_STATUS,
+        MAV_DATA_STREAM_RC_CHANNELS,
+        MAV_DATA_STREAM_POSITION,
+        MAV_DATA_STREAM_EXTRA1, 
+        MAV_DATA_STREAM_EXTRA2};
+    const uint16_t MAVRates[maxStreams] = {0x02, 0x02, 0x05, 0x02, 0x05, 0x02};
+    for (int i=0; i < maxStreams; i++) {
+        mavlink_msg_request_data_stream_pack(127, 0, &msg, 7, 1, MAVStreams[i], MAVRates[i], 1);
+        uint8_t buf[MAVLINK_MAX_PACKET_LEN];
+        uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
+        SerialPort1.write(buf, len);
+//          mavlink_msg_request_data_stream_send(MAVLINK_COMM_0,
+//          apm_mav_system, apm_mav_component,
+//          MAVStreams[i], MAVRates[i], 1);
+    }
 }
 
-namespace {
+void read_mavlink(){
+    mavlink_message_t msg; 
+    mavlink_status_t status;
 
-  
-   uint32_t  num_heartbeats = 0U;
-   
-}
+    //grabing data 
+    while(SerialPort1.available() > 0) { 
+        uint8_t c = SerialPort1.read();
+        //Serial.print(c,HEX);Serial.print(" ");
 
-// return number of heartbeats since boot
-uint32_t get_num_heartbeats()
-{
-   return  num_heartbeats;
-}
-
-namespace{
-
-   uint8_t  apm_mav_type;
-   uint8_t  apm_mav_system; 
-   uint8_t  apm_mav_component;
-
-   struct mav_sr_t{
-      uint8_t stream_number;
-      uint16_t rate;
-   };
-
-// The same as the minimosd
-
-   mav_sr_t MAVStreams[] = {
-      {MAV_DATA_STREAM_RAW_SENSORS,0x02},
-      {MAV_DATA_STREAM_EXTENDED_STATUS,0x02},
-      {MAV_DATA_STREAM_RC_CHANNELS,0x05},
-      {MAV_DATA_STREAM_POSITION,0x02},
-      {MAV_DATA_STREAM_EXTRA1, 0x05},
-      {MAV_DATA_STREAM_EXTRA2,0x02}
-   };
-
-   void request_mavlink_rate(uint8_t mav_system, uint8_t mav_component, uint8_t stream_number, uint16_t rate );
-
-   void request_mavlink_rate(uint8_t system, uint8_t component, uint8_t stream_number, uint16_t rate)
-   {
-        mavlink_msg_request_data_stream_send(MAVLINK_COMM_0,system, component, stream_number, rate, 1);
-   }
-
-   bool rate_request_sent_flag = false;
-
-   void  request_mavlink_rates()
-   {
-     static const size_t  NumStreams = sizeof(MAVStreams) / sizeof(mav_sr_t);
-     for (size_t i=0; i < NumStreams; ++i) {
-         request_mavlink_rate(apm_mav_system, apm_mav_component,MAVStreams[i].stream_number, MAVStreams[i].rate);
-     }
-     rate_request_sent_flag = true;
-   }
-
-     void do_mavlink_heartbeat(mavlink_message_t* pmsg);
-     void do_mavlink_sys_status(mavlink_message_t *pmsg);
-   #ifndef MAVLINK10
-     void do_mavlink_gps_raw(mavlink_message_t * pmsg);
-     void do_mavlink_gps_status(mavlink_message_t * pmsg);
-   #else
-     void do_mavlink_gps_raw_int(mavlink_message_t * pmsg);
-   #endif
-     void do_mavlink_vfr_hud(mavlink_message_t * pmsg);
-
-} // ~namespace
-
-void mavlink_read()
-{
-
-   static bool mavlink_active = false;
-   static int packet_drops = 0;
-   static int  parse_error = 0;
-  
-   mavlink_message_t msg; 
-   mavlink_status_t status;
-
-   while (SerialPort1.available() > 0) {
-            uint8_t ch = SerialPort1.read();
-
-      if(mavlink_parse_char(MAVLINK_COMM_0, ch, &msg, &status)) {
-         mavlink_active = true;
-         telemetry_ok = true;
-         protocol = "MAV";
-         lastpacketreceived = millis();
-         switch(msg.msgid) {
+        //trying to grab msg  
+        if(mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
+            mavlink_active = 1;
+            telemetry_ok = true;
+            protocol = "MAV";
+            lastpacketreceived = millis();
+            //handle msg
+            switch(msg.msgid) {
             case MAVLINK_MSG_ID_HEARTBEAT:
-               do_mavlink_heartbeat(&msg);
-               if ( rate_request_sent_flag == false){
-                  request_mavlink_rates();
-               }
-            break;
-#ifndef MAVLINK10 
-            case MAVLINK_MSG_ID_GPS_RAW:
-               do_mavlink_gps_raw(&msg);
-            break;
-            case MAVLINK_MSG_ID_GPS_STATUS:
-               do_mavlink_gps_status(&msg);
-            break;
-#else
+                {
+                    mavbeat = 1;
+                    //apm_mav_system    = msg.sysid;
+                    //apm_mav_component = msg.compid;
+
+                    uav_flightmode = (uint8_t)mavlink_msg_heartbeat_get_custom_mode(&msg);
+                    if (uav_flightmode == 0) uav_flightmode = 2; //Stabilize 
+                    if (uav_flightmode == 1) uav_flightmode = 1; //Acro 
+                    if (uav_flightmode == 2) uav_flightmode = 8; //Alt Hold
+                    if (uav_flightmode == 3) uav_flightmode = 10; //Auto
+                    if (uav_flightmode == 4) uav_flightmode = 10; //Guided -> Auto
+                    if (uav_flightmode == 5) uav_flightmode = 9; //Loiter
+                    if (uav_flightmode == 6) uav_flightmode = 13; //RTL 
+                    if (uav_flightmode == 7) uav_flightmode = 12; //Circle
+                    if (uav_flightmode == 8) uav_flightmode = 9; //Position -> Loiter
+                    if (uav_flightmode == 9) uav_flightmode = 15; //Land 
+                    if (uav_flightmode == 10) uav_flightmode = 9; //OF Loiter
+                    if (uav_flightmode == 11) uav_flightmode = 5; //Drift -> Stabilize1
+                    if (uav_flightmode == 12) uav_flightmode = 6; //Sport -> Stabilize2
+                    
+                    //Mode (arducoper armed/disarmed)
+                    uav_arm = mavlink_msg_heartbeat_get_base_mode(&msg);
+                    if(getBit(uav_arm,7)) uav_arm = 1;
+                    else uav_arm = 0;
+       
+                    lastMAVBeat = millis();
+                    if(waitingMAVBeats == 1){
+                        enable_mav_request = 1;
+                    }
+                }
+                break;
+            case MAVLINK_MSG_ID_SYS_STATUS:
+                {
+                    uav_bat = mavlink_msg_sys_status_get_voltage_battery(&msg);
+                    uav_current = mavlink_msg_sys_status_get_current_battery(&  msg)/10;  
+                    uav_amp = (int16_t)mavlink_msg_sys_status_get_battery_remaining(  &msg); //Mavlink send battery remaining % , will use this instead
+                }
+                break;
+
             case MAVLINK_MSG_ID_GPS_RAW_INT:
-               do_mavlink_gps_raw_int(&msg);
-            break;
-#endif          
+                {
+                    uav_lat =  (float)mavlink_msg_gps_raw_int_get_lat(&msg)/10000000.0f ;
+                    uav_lon =  (float)mavlink_msg_gps_raw_int_get_lon(&msg)/10000000.0f;
+                   #ifndef BARO_ALT
+                    uav_alt = (int)round(mavlink_msg_gps_raw_int_get_alt(&msg)/100.0f); // to decimeters
+                   #endif
+                    uav_fix_type = mavlink_msg_gps_raw_int_get_fix_type(&msg);
+                    uav_satellites_visible = mavlink_msg_gps_raw_int_get_satellites_visible(&msg);
+                    uav_gpsheading = (int16_t) mavlink_msg_gps_raw_int_get_cog(&msg);
+                }
+                break; 
             case MAVLINK_MSG_ID_VFR_HUD:
-               do_mavlink_vfr_hud(&msg);
-            break;
-            default:
-            break;
-         }
-      }
-   }
- 
-  packet_drops += status.packet_rx_drop_count;
-  parse_error += status.parse_error;
+                {
+                    uav_groundspeed = (int)round(mavlink_msg_vfr_hud_get_groundspeed(&msg));
+                    uav_airspeed = (uint8_t)round(mavlink_msg_vfr_hud_get_airspeed(&msg));
+                  #ifdef BARO_ALT
+                    uav_alt = (int)round(mavlink_msg_vfr_hud_get_alt(&msg) * 10);  // to decimeters
+                  #endif
+                }
+                break;
+            case MAVLINK_MSG_ID_ATTITUDE:
+                {
+                    uav_roll = (int16_t)round(toDeg(mavlink_msg_attitude_get_roll(&msg)));
+                    uav_pitch = (int16_t)round(toDeg(mavlink_msg_attitude_get_pitch(&msg)));
+                    uav_heading = (int16_t)round(toDeg(mavlink_msg_attitude_get_yaw(&msg)));
+                }
+                break;
+
+            case MAVLINK_MSG_ID_RC_CHANNELS_RAW:
+                {
+
+                   uav_rssi      = mavlink_msg_rc_channels_raw_get_rssi(&msg);
+                   uav_chan5_raw = mavlink_msg_rc_channels_raw_get_chan5_raw(&msg);
+                   uav_chan6_raw = mavlink_msg_rc_channels_raw_get_chan6_raw(&msg);
+                   uav_chan7_raw = mavlink_msg_rc_channels_raw_get_chan7_raw(&msg);
+                   uav_chan8_raw = mavlink_msg_rc_channels_raw_get_chan8_raw(&msg);
+                }
+                break;           
+            }
+        }
+        delayMicroseconds(138);
+        //next one
+    }
+    // Update global packet drops counter
+    packet_drops += status.packet_rx_drop_count;
+    parse_error += status.parse_error;
+
 }
-
-namespace {
-
-  void do_mavlink_heartbeat(mavlink_message_t* pmsg)
-  {    
-      apm_mav_system    = pmsg->sysid;
-      apm_mav_component = pmsg->compid;
-      apm_mav_type      = mavlink_msg_heartbeat_get_type(pmsg);
-        
-     ++num_heartbeats;
-   }
-
-
-#ifndef MAVLINK10
-#error wrong version
-   void do_mavlink_gps_raw(mavlink_message_t * pmsg)
-   {
-      uav_lat = mavlink_msg_gps_raw_get_lat(pmsg);
-      uav_lon = mavlink_msg_gps_raw_get_lon(pmsg);
-      uav_fix_type = mavlink_msg_gps_raw_get_fix_type(pmsg);
-   }
-   void do_mavlink_gps_status(mavlink_message_t * pmsg)
-   {
-      uav_satellites_visible = mavlink_msg_gps_status_get_satellites_visible(pmsg);
-   }
-#else
-
-  void do_mavlink_gps_raw_int(mavlink_message_t * pmsg)
-   {
-
-      uav_lat =  (float)mavlink_msg_gps_raw_int_get_lat(pmsg)/10000000 ;
-      uav_lon =  (float)mavlink_msg_gps_raw_int_get_lon(pmsg)/10000000;
-#ifndef BARO_ALT
-      uav_alt = (int)round(mavlink_msg_gps_raw_int_get_alt(pmsg)/100); // to decimeters
-#endif
-      uav_fix_type = mavlink_msg_gps_raw_int_get_fix_type(pmsg);
-      uav_satellites_visible = mavlink_msg_gps_raw_int_get_satellites_visible(pmsg);
-   }
-#endif
-
-   void do_mavlink_vfr_hud(mavlink_message_t * pmsg)
-   {
-      // mavlink_msg_vfr_hud_get_groundspeed retirns val in m/s
-      uav_groundspeed = (int)round(mavlink_msg_vfr_hud_get_groundspeed(pmsg));
-
-      // baroalt
-#ifdef BARO_ALT
-      uav_alt = (int)round(mavlink_msg_vfr_hud_get_alt(pmsg) * 10);  // to decimeters
-#endif
-   }
-
-}// ~namespace
-
 
 #endif

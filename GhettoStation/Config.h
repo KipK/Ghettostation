@@ -1,11 +1,16 @@
 //################################################################# CONFIGURATION #############################################################################
 //# Comment/uncomment/edit according to your needs.
 //#############################################################################################################################################################
-#define CONFIG_VERSION 2011 // Edit only if you want to reset eeprom
-
+#define CONFIG_VERSION 2011 // Edit only if you want to reset eeprome
 //########## BOARD ################################################################################################
 #define TEENSYPLUS2 // Teensy++2 support. 
 //#define MEGA // Arduino Mega boards
+
+//If you have communication problem at 56K , set this on. ( ie APM 2/2.5/2.6/AIO )
+// Most Arduino have a +2.18% error at 57600 bd, Teensyduino has a -0.74% error. Booth cumulated are too much.
+// Successfull com between Teensy & arduino requires 58824 bauds for Teensy.
+//#define BAUDRATE56K 57600
+#define BAUDRATE56K 58824 
 
 
 //########## OPTIONS ###############################################################################################
@@ -28,6 +33,17 @@
 //Minimum distance in meters where it will stop moving servos.
 #define DONTTRACKUNDER  2
 
+//Prevent Ghettostation to send packets to the flightcontroler
+#define PASSIVEMODE 1
+
+//Use Mag+imu for heading or GPS heading if not set.
+#define MAGHEADING 1
+
+//Memory bank name to display on LCD (20 char max)
+#define BANK1  "1.2 GHZ"
+#define BANK2  "5.8 Ghz"
+#define BANK3  "Bank 3"
+#define BANK4  "Bank 4"
 
 //########### LCD ##################################################################################################
 
@@ -35,13 +51,6 @@
 //#define I2CADDRESS 0xc6 // LCD03 i2C from Robot Electronics 
 #define I2CADDRESS 0x27 // IIC/I2C/TWI Serial 2004 20x4 lcd ( Hobbyking )
 //#define I2CADDRESS 020 // Arduino-IIC-LCD GY-LCD-V1
-
-
-
-//########### TELEMETRY OPTIONS####################################################################################
-//### UAVTALK OPENPILOT
-   
-#define UAVTALK_MODE_PASSIVE  // If you already have GCS or OSD running. Arduino won't send anything on the Tx line. If undefined, it will send UAVTalk queries.
 
 
 //#################################### SERVOS ENDPOINTS ################################################################
@@ -66,11 +75,12 @@
 
 //pintout for TEENSY++ 2
 #ifdef TEENSYPLUS2
-  #define PAN_SERVOPIN 26	//PWM Pin for pan servo
-  #define TILT_SERVOPIN 25	//PWM Pin for tilt servo
+  #define PAN_SERVOPIN 26	//PWM Pin for pan servo ( Timer 1, do not use with altsoftserial )
+  #define TILT_SERVOPIN 25	//PWM Pin for tilt servo ( Timer 1, do not use with altsoftserial )
   #define LEFT_BUTTON_PIN 10    //Any Digital pin
   #define RIGHT_BUTTON_PIN 9    //Any Digital pin
   #define ENTER_BUTTON_PIN 8    //Any Digital pin
+  #define SOFTSERIAL_TX 14      //Digital pin used by SoftSerial for sending telemetry to ground osd.
 #endif
 
 //pinout for Arduino Mega 1280/2560

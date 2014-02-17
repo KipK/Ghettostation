@@ -3,6 +3,15 @@
 #                                            README                                               #
 ###################################################################################################
 
+###################################################################################################
+FEATURES:
+
+- Multiple protocol compatible: MAVLINK, UAVTALK, MULTIWII MSP, LIGHTTELEMETRY
+- 4 bank of settings stored in EEPROM
+- Easy configuration trough LCD menu
+- Manage any type of servo based Pan/Tilt setup: 180P/180T, 360P/90T, custom ones
+- HMC5883L compass support (optional)
+
 
 
 What you need:
@@ -13,7 +22,7 @@ What you need:
 
 - optional: a bluetooth dongle to bridge telemetry from the tracker to your GCS.
 
-- 2 servos
+- 2 servos (no unlimited rotation servo)
 
 - a 5V ubec with enough amps for your servos
 
@@ -60,12 +69,6 @@ void __cxa_pure_virtual(void) {};
 
 - edit config.h according to your needs.
 
-Default servo pwm endpoints & max/min angles can be setup here, you can configure this later trough the menu while running. 
-
-You can put some conservative default parameters to avoid forcing on the servo for first configuration.
-
-Check in the config.h what those parameters means.
-
 
 Compile & start.
 
@@ -83,12 +86,12 @@ You will now you have good endpoints values when you don't ear your servo forcin
 
 Then configure your servos angle limits. 90° as min& max angle for pan means you have a 180° pan config.
 
-Once all those parameters are set, Ghettostation will now your hardware capabilities and adapt servo path to it's need.
+Once all those parameters are set, Ghettostation will know your hardware capabilities and adapt servo path to it's need.
 
 It means if your pan servo is limited to 180° but your tilt can go almost 180° too, you can cover 360 by reversing your pan and tilt.
 If you servo can go further, it'll just continue to it's own limits and then switch if needed.
 
-If there's no path possible because your servo can go further, it will just stop & wait you come back in a covered area.
+If there's no path possible because your servo can go further, it will stop & wait you come back in a covered area.
 
 - Go to SET HOME first & wait for telemetry data.
 
@@ -102,6 +105,10 @@ Method 1: put your UAV 20m ahead, with the tracker pointing it, and click Enter 
 Method 2: manually enter bearing value from an external compass ( your smartphone one will do the job )
 
 Method 3: just point the tracker to the North.
+
+Method 4: Use internal HMC5883 compass reading   
+
+
 
 Method 4 (auto): use HMC5883L compass ( experimental )
 

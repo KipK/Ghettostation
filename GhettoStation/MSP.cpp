@@ -158,5 +158,15 @@ uav_alt = msp_gpsalt * 10;
 // End of decoded received commands from MultiWii
 // --------------------------------------------------------------------------------------
 
+// Request data to Multiwii
+void blankserialRequest(char requestMSP) 
+{
+  Serial.write('$');
+  Serial.write('M');
+  Serial.write('<');
+  Serial.write((byte)0x00);
+  Serial.write(requestMSP);
+  Serial.write(requestMSP);
+}
 
 #endif
