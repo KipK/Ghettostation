@@ -158,7 +158,7 @@ uav_alt = msp_gpsalt * 10;
 // End of decoded received commands from MultiWii
 // --------------------------------------------------------------------------------------
 
-// Request data to Multiwii
+// Request data to Multiwii ( unused yet )
 void blankserialRequest(char requestMSP) 
 {
   Serial.write('$');
@@ -168,5 +168,73 @@ void blankserialRequest(char requestMSP)
   Serial.write(requestMSP);
   Serial.write(requestMSP);
 }
+
+//########################################### TX OSD OUTPUT###############################################################
+//static uint8_t MSPtxChecksum;
+//
+//void serialize8(uint8_t a) {
+//  SerialPort2.write(a);
+//  MSPtxChecksum ^= a;
+//}
+//void serialize16(int16_t a) {
+//  serialize8((a   ) & 0xFF);
+//  serialize8((a>>8) & 0xFF);
+//}
+//void serialize32(uint32_t a) {
+//  serialize8((a    ) & 0xFF);
+//  serialize8((a>> 8) & 0xFF);
+//  serialize8((a>>16) & 0xFF);
+//  serialize8((a>>24) & 0xFF);
+//}
+//void headSerialResponse(uint8_t err, uint8_t s) {
+//  serialize8('$');
+//  serialize8('M');
+//  serialize8(err ? '!' : '>');
+//  MSPtxChecksum = 0; // start calculating a new checksum
+//  serialize8(s);
+//  serialize8(cmdMSP[CURRENTPORT]);
+//}
+//
+//void headSerialReply(uint8_t s) {
+//  headSerialResponse(0, s);
+//}
+//void inline headSerialError(uint8_t s) {
+//  headSerialResponse(1, s);
+//}
+//
+//void tailSerialReply() {
+//  serialize8(MSPtxChecksum)s;
+//}
+//
+//void serializeNames(PGM_P s) {
+//  headSerialReply(strlen_P(s));
+//  for (PGM_P c = s; pgm_read_byte(c); c++) {
+//    serialize8(pgm_read_byte(c));
+//  }
+//}
+//
+//void  s_struct(uint8_t *cb,uint8_t siz) {
+//  headSerialReply(siz);
+//  while(siz--) serialize8(*cb++);
+//}
+//
+//void s_struct_w(uint8_t *cb,uint8_t siz) {
+// headSerialReply(0);
+//  while(siz--) *cb++ = read8();
+//}
+//
+//
+//void MSPsendPacket(uint8_t MSPtxCmd) {
+//  uint32_t tmp=0; 
+//
+//  switch(MSPtxCmd) {
+//    
+//    
+//  }
+//}
+//
+//
+//
+
 
 #endif
