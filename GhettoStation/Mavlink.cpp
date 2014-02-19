@@ -26,9 +26,6 @@ void request_mavlink_rates()
         uint8_t buf[MAVLINK_MAX_PACKET_LEN];
         uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
         SerialPort1.write(buf, len);
-//          mavlink_msg_request_data_stream_send(MAVLINK_COMM_0,
-//          apm_mav_system, apm_mav_component,
-//          MAVStreams[i], MAVRates[i], 1);
     }
 }
 

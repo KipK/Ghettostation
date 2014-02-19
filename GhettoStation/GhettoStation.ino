@@ -32,8 +32,7 @@
 #include <Button.h>
 #include <EEPROM.h>
 #include <Flash.h>
-
-#include "Eeprom.h"
+#include <EEPROM.h>
 #include "GhettoStation.h"
 
 #ifdef PROTOCOL_UAVTALK
@@ -52,9 +51,9 @@
 
 //################################### SETTING OBJECTS ###############################################
 // Set the pins on the I2C chip used for LCD connections:
-//                    addr, en,rw,rs,d4,d5,d6,d7,bl,blpol
+// addr, en,rw,rs,d4,d5,d6,d7,bl,blpol
 LiquidCrystal_I2C LCD(I2CADDRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1" 
-//LiquidCrystal_I2C lcd(I2CADDRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  // Arduino-IIC-LCD GY-LCD-V1
+//LiquidCrystal_I2C LCD(I2CADDRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  // Arduino-IIC-LCD GY-LCD-V1
 
 //##### SERVOS 
 
@@ -680,7 +679,10 @@ void get_telemetry() {
     if (configuration.telemetry==3) {
       if(enable_mav_request == 1){//Request rate control
  	enable_mav_request = 0;
-        waitingMAVBeats = 0; 
+        waitingMAVBeats = 0;
+        if (PASSIVEMODE) {
+           request_mavlink_rates();
+        }
 	lastMAVBeat = millis();//Preventing error from delay sensing 
       }
       read_mavlink(); 
