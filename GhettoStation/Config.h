@@ -39,7 +39,7 @@
 //Use Mag+imu for heading or GPS heading if not set.
 #define MAGHEADING 1
 
-//Memory bank name to display on LCD (20 char max)
+//Memory bank name to display on LCD (18 char max)
 #define BANK1  "1.2 GHZ"
 #define BANK2  "5.8 Ghz"
 #define BANK3  "Bank 3"
