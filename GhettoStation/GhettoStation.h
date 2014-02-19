@@ -1,8 +1,9 @@
-#define PROTOCOL_UAVTALK     // OpenPilot / Taulabs protocol
-#define PROTOCOL_MSP        // MSP from Multiwii , only passive for now ( ie doesn't send request to Multiwii so you need a multiwii OSD or ground station client running at the same time )
-#define PROTOCOL_LIGHTTELEMETRY // Ghettostation internal protocol. It use really low baudrate ( 1200 bauds ). 
-#define PROTOCOL_MAVLINK  // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs ( in mavlink mode ) 
-// VARIABLES DEFINITIONS
+/* ########################################  DEFINES ######################################################*/
+#define PROTOCOL_UAVTALK                        // OpenPilot / Taulabs protocol
+#define PROTOCOL_MSP                            // MSP from Multiwii 
+#define PROTOCOL_LIGHTTELEMETRY                 // Ghettostation internal protocol. 
+#define PROTOCOL_MAVLINK                        // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
+/* ######################################## SERIAL HAL ####################################################*/
 #ifdef TEENSYPLUS2
 // This line defines a "Uart" object to access the serial port
 HardwareSerial SerialPort1 = HardwareSerial();
@@ -11,6 +12,7 @@ HardwareSerial SerialPort1 = HardwareSerial();
 #ifdef MEGA
 HardwareSerial SerialPort1(Serial1);
 #endif
+/* ########################################  VARIABLES #####################################################*/
 
 
 //Telemetry variables
@@ -28,40 +30,39 @@ uint16_t     uav_bat = 0;                    // battery voltage (mv)
 uint16_t     uav_amp = 0;                    // consumed mah.
 uint16_t     uav_current = 0;                // actual current
 uint8_t      uav_rssi = 0;                   // radio RSSI (%)
-uint8_t      uav_linkquality = 0;             // radio link quality
+uint8_t      uav_linkquality = 0;            // radio link quality
 uint8_t      uav_airspeed = 0;               // Airspeed sensor (m/s)
 uint8_t      uav_arm = 0;                    // 0: disarmed, 1: armed
 uint8_t      uav_failsafe = 0;               // 0: normal,   1: failsafe 
-uint8_t      uav_flightmode = 16;              // Flight mode(0-19): 0: Manual, 1: Rate, 2: Attitude/Angle, 3: Horizon, 4: Acro, 5: Stabilized1, 6: Stabilized2, 7: Stabilized3,
-                                             // 8: Altitude Hold, 9: Loiter/GPS Hold, 10: Auto/Waypoints, 11: Heading Hold / headFree, 12: Circle, 13: RTH, 14: FollowMe, 15: LAND, 16:FlybyWireA, 17: FlybywireB, 18: Cruise, 19: Unknown
+uint8_t      uav_flightmode = 16;            // Flight mode(0-19): 0: Manual, 1: Rate, 2: Attitude/Angle, 3: Horizon, 4: Acro, 5: Stabilized1, 6: Stabilized2, 7: Stabilized3,
+                                             // 8: Altitude Hold, 9: Loiter/GPS Hold, 10: Auto/Waypoints, 11: Heading Hold / headFree, 12: Circle, 13: RTH, 14: FollowMe, 15: LAND, 
+                                             // 16:FlybyWireA, 17: FlybywireB, 18: Cruise, 19: Unknown
 int16_t      uav_chan5_raw;      
 int16_t      uav_chan6_raw; 
 int16_t      uav_chan7_raw; 
 int16_t      uav_chan8_raw; 
 
-
-
-
-
-
 char* protocol = "";
 long lastpacketreceived;
-//Specific protocol variables
-//UAVTalk
-uint8_t op_uavtalk_mode = 1;            // OP UAVTalk Active/Passive mode ( 1 = Passive )
 
+//Protocol specifics
+//MAVLink session control
+static boolean      mavbeat = 0;
+//static boolean      landing = 0;
+static float        lastMAVBeat = 0;
+static boolean      waitingMAVBeats = 1;
+static uint8_t      apm_mav_system; 
+static uint8_t      apm_mav_component;
+static boolean      enable_mav_request = 0;
 
-//home variables
+//home 
 float home_lon;
 float home_lat;
 int home_alt;
 int home_bearing = 0;
 int home_dist;
 
-
-
-
-//tracking variables
+//tracking 
 int Bearing;
 int Elevation;
 int servoBearing=0;
@@ -72,36 +73,25 @@ char lcd_line1[21];
 char lcd_line2[21];
 char lcd_line3[21];
 char lcd_line4[21];
-//String empty_line = "                    ";
-String cur_string;
 
 
-//status variables
-int current_activity = 0; // acctivity status 0: Menu , 1: Track, 2: SET_HOME, 3: PAN_MINPWM, 4: PAN_MINANGLE, 5: PAN_MAXPWM, 6: PAN_MAXANGLE, 7: TILT_MINPWM, 8: TILT_MINANGLE, 9: TILT_MAXPWM, 10: TILT_MAXANGLE, 11: TEST_SERVO, 12: SET_RATE
-//String current_activity = "MENU"; //default activity 
-boolean gps_fix;
-boolean btholdstate = false;
+//status 
+int current_activity = 0; // Activity status 0: Menu , 1: Track, 2: SET_HOME, 3: PAN_MINPWM, 4: PAN_MINANGLE, 5: PAN_MAXPWM, 
+                          // 6: PAN_MAXANGLE, 7: TILT_MINPWM, 8: TILT_MINANGLE, 9: TILT_MAXPWM, 10: TILT_MAXANGLE, 11: TEST_SERVO, 12: SET_RATE
+boolean gps_fix      = false;
+boolean btholdstate  = false;
 boolean telemetry_ok = false;
-boolean home_pos = false;
-boolean home_bear = false;
-
+boolean home_pos     = false;
+boolean home_bear    = false;
 
 //servo temp configuration before saving
 int servoconf_tmp[4];
 
-//MAVLink session control
-static boolean      mavbeat = 0;
-//static boolean      landing = 0;
-static float        lastMAVBeat = 0;
-static boolean      waitingMAVBeats = 1;
-static uint8_t      apm_mav_system; 
-static uint8_t      apm_mav_component;
-static boolean      enable_mav_request = 0;
-
 //baudrate selection
 long baudrates[8]= {1200, 2400, 4800, 9600, 19200, 38400, BAUDRATE56K, 115200};
 
-//flash strings
+/*##################################### STRINGS STORED IN FLASH #############################################*/
+
 FLASH_STRING(string_load1,      "  [GHETTOSTATION]   ");
 FLASH_STRING(string_load2,      "                    ");
 FLASH_STRING(string_load3,      " __________________ ");
@@ -140,7 +130,7 @@ FLASH_STRING(string_bank2,      BANK2);
 FLASH_STRING(string_bank3,      BANK3);
 FLASH_STRING(string_bank4,      BANK4);
 
-//Menu vars
+/*########################################### MENU ##################################################*/
 MenuSystem displaymenu;
 Menu rootMenu("");
 MenuItem m1i1Item("START");
@@ -162,8 +152,7 @@ Menu m1m3Menu("CONFIG");
         MenuItem m1m3i3Item("BAUDRATE");
 MenuItem m1i4Item("SWITCH SETTINGS");
 
-//Common functions
-
+/*##################################### COMMON FUNCTIONS #############################################*/
 boolean getBit(byte Reg, byte whichBit) {
     boolean State;
     State = Reg & (1 << whichBit);
@@ -191,4 +180,71 @@ float toDeg(float angle) {
 	angle = angle*57.29577951;   // (angle*180)/pi
         return angle;
 }
+
+
+
+int config_bank[]= {1, 51, 101,151}; // 50 bytes reserved per bank. 
+uint8_t current_bank;
+
+template <class T> int EEPROM_write(int ee, const T& value)
+{
+    const byte* p = (const byte*)(const void*)&value;
+    unsigned int i;
+    for (i = 0; i < sizeof(value); i++)
+          EEPROM.write(ee++, *p++);
+    return i;
+}
+
+template <class T> int EEPROM_read(int ee, T& value)
+{
+    byte* p = (byte*)(void*)&value;
+    unsigned int i;
+    for (i = 0; i < sizeof(value); i++)
+          *p++ = EEPROM.read(ee++);
+    return i;
+}
+
+
+//Configuration stored in EEprom
+struct config_t
+{
+  int config_crc;
+  int pan_minpwm;
+  int pan_minangle;
+  int pan_maxpwm;
+  int pan_maxangle;
+  int tilt_minpwm;
+  int tilt_minangle;
+  int tilt_maxpwm;
+  int tilt_maxangle;
+  int baudrate;
+  int telemetry;
+  int bearing;
+} configuration;
+
+
+
+void clear_eeprom() {
+	// clearing eeprom
+	for (int i = 0; i < 1025; i++)
+		EEPROM.write(i, 0);
+		// eeprom is clear  we can write default config
+        //writing 4 setting banks.
+        for (int j = 0; j < 4; j++) {          
+	  configuration.config_crc = CONFIG_VERSION;  // config version check
+	  configuration.pan_minpwm = PAN_MINPWM;
+	  configuration.pan_minangle = PAN_MINANGLE;
+	  configuration.pan_maxpwm = PAN_MAXPWM;
+	  configuration.pan_maxangle = PAN_MAXANGLE;
+	  configuration.tilt_minpwm = TILT_MINPWM;
+	  configuration.tilt_minangle = TILT_MINANGLE;
+	  configuration.tilt_maxpwm = TILT_MAXPWM;
+          configuration.tilt_maxangle = TILT_MAXANGLE;
+	  configuration.baudrate = 6;
+          configuration.telemetry = 0;
+          configuration.bearing = 0;
+	  EEPROM_write(config_bank[j], configuration);
+        }       
+}
+
 
