@@ -68,127 +68,108 @@ void refresh_lcd() {
 void lcddisp_sethome() {
    for ( int i = 1 ; i<5; i++ ) {
      char extract[21];
-     char string_buffer[21];
-     String currentline;
+     char currentline[21] = "";
      switch (i) {
            case 1:
                 //line1
-                if (!telemetry_ok) { currentline = "L:NO"; }
-                else if (telemetry_ok) { currentline = "L:" + protocol;}
-                //currentline = "L:" + c;
-                currentline += " SATS:";
-                currentline += String(uav_satellites_visible);
-                currentline += " FIX:";
-                currentline += String(uav_fix_type);
+                if (!telemetry_ok) { strcpy(currentline, "P:NO TELEMETRY"); }
+                else if (telemetry_ok) 
+                { 
+                  sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type);
+                }
                 break;
             case 2:
                  //line 2
-                 if (!telemetry_ok) currentline = String(string_shome1.copy(extract)); // waiting for data
-                 else {
-                   if (!gps_fix) currentline = String(string_shome2.copy(extract));  // waiting for gps fix
+                 if (!telemetry_ok) strcpy(currentline, string_shome1.copy(extract)); // waiting for data
+                 else 
+                 {
+                   if (!gps_fix) strcpy(currentline, string_shome2.copy(extract));  // waiting for gps fix
                    else {
-                         currentline = String(string_shome3.copy(extract)); // fix ok save home
-                         currentline += String(round((uav_alt)/10));
-                         currentline += "m";      
-                   }
-                 }
+                         sprintf(currentline, "%s%dm",string_shome3.copy(extract),round((uav_alt)/10));    
+                        }
+                    }
                  break;
       
              case 3:
-                    if (!gps_fix) currentline = String(string_shome4.copy(extract));
+                    if (!gps_fix) strcpy(currentline, string_shome4.copy(extract));
                     else {
                          char bufferl[10];
                          char bufferL[10];
-                         currentline = String(dtostrf(uav_lat, 5, 5, bufferl));
-                         currentline += " ";
-                         currentline += String(dtostrf(uav_lon, 5, 5, bufferL));
+                         sprintf(currentline,"%s %s", dtostrf(uav_lat, 5, 5, bufferl),dtostrf(uav_lon, 5, 5, bufferL));
                     }
                     break;
       
              case 4:
-                   if (!gps_fix) currentline = String(string_shome5.copy(extract));
-                   else currentline = String(string_shome6.copy(extract));
+                   if (!gps_fix) strcpy(currentline,string_shome5.copy(extract));
+                   else strcpy(currentline,string_shome6.copy(extract));
                    break;
               }
      
-    for ( int l = currentline.length() ; l<21 ; l++ ) {
-	 currentline += " ";
+    for ( int l = strlen(currentline); l<20 ; l++ ) {
+	 strcat(currentline," ");
 	 }
-    currentline.toCharArray(string_buffer,21);
-    store_lcdline(i,string_buffer);
+    store_lcdline(i,currentline);
    } 
 }
 
 #ifdef BEARING_METHOD_1
 void lcddisp_setbearing() {
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[21];
        char extract[21];
-       String currentline="";
+       char currentline[21] = "";
        switch (i) {
            case 1: 
-                        if (!telemetry_ok) { currentline = "L:NO"; }
-                else if (telemetry_ok) { currentline = "L:" + protocol;}
-                        currentline += " SATS:";
-                        currentline += String(uav_satellites_visible);
-                        currentline += " FIX:";
-                        currentline += String(uav_fix_type);
-                        break;
+                if (!telemetry_ok) { strcpy(currentline,"P:NO TELEMETRY"); }
+                else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type); 
+                break;
            case 2:
-                        currentline = String(string_load2.copy(extract));  break;
+                strcpy(currentline, string_load2.copy(extract));  break;
            case 3:
-                        currentline = String(string_shome8.copy(extract)); break;
+                strcpy(currentline, string_shome8.copy(extract)); break;
            case 4:      
-                        currentline = String(string_shome9.copy(extract)); break;
+                strcpy(currentline, string_shome9.copy(extract)); break;
 
        }
-       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
-	 currentline = currentline + " ";
+       for ( int l = strlen(currentline); l<20 ; l++ ) {
+	 strcat(currentline," ");
 	 }
-       currentline.toCharArray(string_buffer,21);
-       store_lcdline(i,string_buffer);
+       store_lcdline(i,currentline);
     }
 }
 #endif
 #ifdef BEARING_METHOD_2
 void lcddisp_setbearing() {
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[21];
        char extract[21];
-       String currentline="";
+       char currentline[21] = "";
        switch (i) {
            case 1: 
-                        if (!telemetry_ok) { currentline = "L:NO"; }
-                else if (telemetry_ok) { currentline = "L:" + protocol;}
-                        currentline += " SATS:";
-                        currentline += String(uav_satellites_visible);
-                        currentline += " FIX:";
-                        currentline += String(uav_fix_type);
-                        break;
+                if (!telemetry_ok) { strcpy(currentline, "P:NO TELEMETRY"); }
+                else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type);
+                break;
            case 2:
-                        currentline = String(string_shome7.copy(extract));  break;
+                strcpy(currentline, string_shome7.copy(extract));  break;
            case 3:
-                        currentline = String(home_bearing); break;
+                sprintf(currentline, "     << %3d >>", home_bearing); break;
            case 4:      
-                        currentline = String(string_load2.copy(extract)); break;
-
+                strcpy(currentline, string_load2.copy(extract)); break;
        }
-       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
-	 currentline = currentline + " ";
+       
+       for ( int l = strlen(currentline); l<20 ; l++ ) {
+	 strcat(currentline," ");
 	 }
-       currentline.toCharArray(string_buffer,21);
-       store_lcdline(i,string_buffer);
+       store_lcdline(i,currentline);
        
        //checking long press left right
-       if (right_button.holdTime() >= 1000 && right_button.isPressed() ) {
+       if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
         home_bearing+=10;
         if (home_bearing>360) home_bearing = 360;
         else if (home_bearing<0) home_bearing = 0;
-        delay(100);
+        delay(500);
         }
-        else if ( left_button.holdTime() >= 1000 && left_button.isPressed() ) {
+        else if ( left_button.holdTime() >= 700 && left_button.isPressed() ) {
         home_bearing-=10;
-        delay(100);
+        delay(500);
         }
  }
 }
@@ -198,31 +179,25 @@ void lcddisp_setbearing() {
 void lcddisp_setbearing() {
     retrieve_mag();
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[21];
        char extract[21];
-       String currentline="";
+       char currentline[21]="";
        switch (i) {
            case 1: 
-                        if (!telemetry_ok) { currentline = "L:NO"; }
-                else if (telemetry_ok) { currentline = "L:" + protocol;}
-                        currentline += " SATS:";
-                        currentline += String(uav_satellites_visible);
-                        currentline += " FIX:";
-                        currentline += String(uav_fix_type);
-                        break;
+                if (!telemetry_ok) { strcpy(currentline, "P:NO TELEMETRY"); }
+                else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type);
+                break;
            case 2:
-                        currentline = String(string_shome7.copy(extract));  break;
+                strcpy(currentline, string_shome7.copy(extract));  break;
            case 3:
-                        currentline = String(home_bearing); break;
+                sprintf(currentline, "        %3d", home_bearing); break;
            case 4:      
-                        currentline = String(string_load2.copy(extract)); break;
+                strcpy(currentline,string_load2.copy(extract)); break;
 
        }
-       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
-	 currentline = currentline + " ";
+       for ( int l = strlen(currentline); l<20 ; l++ ) {
+	 strcat(currentline," ");
 	 }
-       currentline.toCharArray(string_buffer,21);
-       store_lcdline(i,string_buffer);
+       store_lcdline(i,currentline);
  }
 }
 #endif
@@ -231,200 +206,169 @@ void lcddisp_homeok() {
     for ( int i = 1 ; i<5; i++ ) {
        char string_buffer[21];
        char extract[21];
-       String currentline="";
+       char currentline[21] = "";
        switch (i) {
            case 1: 
-                        if (!telemetry_ok) { currentline = "L:NO"; }
-                        else if (telemetry_ok) { currentline = "L:" + protocol;}
-                        currentline += "SATS:";
-                        currentline += String(uav_satellites_visible);
-                        currentline += " FIX:";
-                        currentline += String(uav_fix_type);
-                        break;
+                if (!telemetry_ok) { strcpy(currentline, "P:NO TELEMETRY"); }
+                else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type);
+                break;
            case 2:
-                        currentline = String(string_shome10.copy(extract)); break;
+                strcpy(currentline, string_shome10.copy(extract)); break;
            case 3:
-                        currentline = String(string_shome11.copy(extract)); break;
-
-           case 4:      currentline = String(string_shome12.copy(extract)); break;
-       
+                strcpy(currentline, string_shome11.copy(extract)); break;                
+           case 4:
+                strcpy(currentline, string_shome12.copy(extract)); break;
            }
-       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
-         currentline = currentline + " ";
+       for ( int l = strlen(currentline); l<20 ; l++ ) {
+	 strcat(currentline," ");
          }
-       currentline.toCharArray(string_buffer,21);
-       store_lcdline(i,string_buffer);
+       store_lcdline(i,currentline);
        }
 }
 
 void lcddisp_tracking(){
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[21];
-       String currentline="";
+       char currentline[21]="";
        switch (i) {
            case 1: 
-                        if (!telemetry_ok) { currentline = "L:NO"; }
-                        else if (telemetry_ok) { currentline = "L:" + protocol;}
-                        currentline += " SATS:";
-                        currentline += String(uav_satellites_visible);
-                        currentline += " FIX:";
-                        currentline += String(uav_fix_type);
-                        break;
+                if (!telemetry_ok) { strcpy(currentline, "P:NO TELEMETRY"); }
+                else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type);
+                break;
            case 2:
-                        currentline = "Alt:"; 
-                        int calt;
-                        calt = round((uav_alt - home_alt)/10);
-                        currentline += String(calt);
-                        currentline += "m Spd:";
-                        currentline += String((int) uav_groundspeed);
-                        currentline += "kmh";
-                        break;
+                sprintf(currentline, "Alt:%dm Spd:%dkmh", round((uav_alt - home_alt)/10), uav_groundspeed);
+                break;
            case 3:
-                        char buffer[7];
-                        currentline = "Dist:";
-                        currentline += String(home_dist);
-                        currentline += "m";
-                        break;
-           case 4:      
-                        char bufferl[10];
-                        char bufferL[10];
-                        currentline = String(dtostrf(uav_lat, 5, 6, bufferl));
-                        currentline += " ";
-                        currentline += String(dtostrf(uav_lon, 5, 6, bufferL));
-                        break;
-
+                sprintf(currentline, "Dist:%dm", home_dist);
+                break;
+           case 4:   
+                char bufferl[10];
+                char bufferL[10];   
+                sprintf(currentline, "%s %s", dtostrf(uav_lat, 5, 6,bufferl), dtostrf(uav_lon, 5, 6,bufferL));
+                break;
        }
-       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
-	 currentline = currentline + " ";
+       for ( int l = strlen(currentline); l<20 ; l++ ) {
+	 strcat(currentline," ");
 	 }
-       currentline.toCharArray(string_buffer,21);
-       store_lcdline(i,string_buffer);
+       store_lcdline(i,currentline);
     }
 }
 
 void lcddisp_telemetry() {
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[21];
        char extract[21];
-       String currentline="";
+       char currentline[21]="";
        switch (i) {
            case 1: 
-                        currentline = String(string_telemetry1.copy(extract));  break;
+                        strcpy(currentline, string_telemetry1.copy(extract));  break;
            case 2:
-                        currentline = String(string_load2.copy(extract));  break;
+                        strcpy(currentline, string_load2.copy(extract));  break;
            case 3:
                      switch (configuration.telemetry) {
                        
                         case 0:
                                  // currentline = "UAVTalk"; break;
-                                currentline = String(string_telemetry2.copy(extract)); break;
+                                strcpy(currentline, string_telemetry2.copy(extract)); break;
                         case 1:
                                  //currentline = "MSP"; break;
-                                currentline = String(string_telemetry3.copy(extract)); break;
+                                strcpy(currentline, string_telemetry3.copy(extract)); break;
                         case 2:
                                 //currentline = "AudioModem"; break;
-                                currentline = String(string_telemetry4.copy(extract)); break;
+                                strcpy(currentline, string_telemetry4.copy(extract)); break;
                         case 3:
                                 //currentline = "MavLink"; break;
-                                currentline = String(string_telemetry5.copy(extract)); break;
+                                strcpy(currentline, string_telemetry5.copy(extract)); break;
                         
                      }
                      break;
            case 4:      
-                        currentline = String(string_shome5.copy(extract)); break;
+                        strcpy(currentline, string_shome5.copy(extract)); break;
 
        }
-       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
-	 currentline = currentline + " ";
-	 }
-       currentline.toCharArray(string_buffer,21);
-       store_lcdline(i,string_buffer);
+       for ( int l = strlen(currentline); l<20 ; l++ ) {
+	 strcat(currentline," ");
+       }
+       store_lcdline(i,currentline);
     }
   
 }
 
 void lcddisp_baudrate() {
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[21];
        char extract[21];
-       String currentline="";
+       char currentline[21]="";
        switch (i) {
            case 1: 
-                     currentline = String(string_baudrate.copy(extract));  break;
+                     strcpy(currentline, string_baudrate.copy(extract));  break;
            case 2:
-                     currentline = String(string_load2.copy(extract)); break;
+                     strcpy(currentline, string_load2.copy(extract)); break;
            case 3:
                      switch (configuration.baudrate) {
                        
                         case 0:
                                  // 1200
-                                currentline = String(string_baudrate0.copy(extract));  break;
+                                strcpy(currentline, string_baudrate0.copy(extract));  break;
                         case 1:
                                  //2400
-                                currentline = String(string_baudrate1.copy(extract));  break;
+                                strcpy(currentline, string_baudrate1.copy(extract));  break;
                         case 2:
                                  //4800
-                                currentline = String(string_baudrate2.copy(extract)); break;
+                                strcpy(currentline, string_baudrate2.copy(extract)); break;
                         case 3:
                                  //9600
-                                currentline = String(string_baudrate3.copy(extract));  break;
+                                strcpy(currentline, string_baudrate3.copy(extract));  break;
                         case 4:
                                  //19200
-                                currentline = String(string_baudrate4.copy(extract));  break;
+                                strcpy(currentline, string_baudrate4.copy(extract));  break;
                         case 5:
                                  //38400
-                                currentline = String(string_baudrate5.copy(extract));  break;
+                                strcpy(currentline, string_baudrate5.copy(extract));  break;
                         case 6:
                                  //57600
-                                currentline = String(string_baudrate6.copy(extract));  break;
+                                strcpy(currentline, string_baudrate6.copy(extract));  break;
                         case 7:
                                  //115200
-                                currentline = String(string_baudrate7.copy(extract));  break;                            
+                                strcpy(currentline, string_baudrate7.copy(extract));  break;                            
                                               
                      }
                      break;
        
            case 4:      
-                     currentline = String(string_shome5.copy(extract)); break;
+                     strcpy(currentline, string_shome5.copy(extract)); break;
            }
-       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
-	 currentline = currentline + " ";
-	 }
-       currentline.toCharArray(string_buffer,21);
-       store_lcdline(i,string_buffer);
+       for ( int l = strlen(currentline); l<20 ; l++ ) {
+	 strcat(currentline," ");
+       }
+       store_lcdline(i,currentline);
     }
 }
 
 // Settings Bank config
 void lcddisp_bank() {
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[21];
        char extract[21];
-       String currentline="";
+       char currentline[21]="";
        switch (i) {
            case 1: 
-                     currentline = String(string_bank.copy(extract));  break;
+                     strcpy(currentline, string_bank.copy(extract));  break;
            case 2:
-                     currentline = String(string_load2.copy(extract)); break;
+                     strcpy(currentline, string_load2.copy(extract)); break;
            case 3:
-                     currentline = "> ";
                      switch (current_bank+1) {
-                        case 1: currentline += String(string_bank1.copy(extract));break;
-                        case 2: currentline += String(string_bank2.copy(extract));break;
-                        case 3: currentline += String(string_bank3.copy(extract));break;
-                        case 4: currentline += String(string_bank4.copy(extract));break;
+                        case 1: sprintf(currentline,"> %s", string_bank1.copy(extract));break;
+                        case 2: sprintf(currentline,"> %s", string_bank2.copy(extract));break;
+                        case 3: sprintf(currentline,"> %s", string_bank3.copy(extract));break;
+                        case 4: sprintf(currentline,"> %s", string_bank4.copy(extract));break;
                      }
                      
                      break;
        
            case 4:      
-                     currentline = String(string_shome5.copy(extract)); break;
+                     strcpy(currentline, string_shome5.copy(extract)); break;
            }
-       for ( int l = currentline.length()-1 ; l<21 ; l++ ) {
-	 currentline = currentline + " ";
+       for ( int l = strlen(currentline); l<20 ; l++ ) {
+	 strcat(currentline," ");
 	 }
-       currentline.toCharArray(string_buffer,21);
-       store_lcdline(i,string_buffer);
+       store_lcdline(i,currentline);
     }
 }
 
@@ -433,45 +377,38 @@ void lcddisp_bank() {
 
 int config_servo(int servotype, int valuetype, int value ) {
 	// servo configuration screen function return configured value
-        String currentline;
-        String param = String(value);
-        char string_buffer[21];
+        char currentline[21];
+        char extract[21];
         
 	if (servotype==1) {
-	  store_lcdline(1,"    [PAN SERVO]     ");
+	  strcpy(currentline, string_servos1.copy(extract));                              // Pan servo
+          store_lcdline(1, currentline);
 	}
 	else if (servotype==2) {
-	  store_lcdline(1,"    [TILT SERVO]    ");
+          strcpy(currentline, string_servos2.copy(extract));                              // Tilt servo
+          store_lcdline(2, currentline);
 	}
-	store_lcdline(2,"                    ");
-	if (valuetype==1) {	//minpwm
-          currentline = "min endpoint: <" + param;
-          currentline += ">";
+	strcpy(currentline, string_load2.copy(extract));
+	switch (valuetype) 
+       {	        
+              case 1: sprintf(currentline, "min endpoint: <%4d>",  value); break;          //minpwm
+    	      case 2: sprintf(currentline, "min angle: <%3d>    ", value); break;         //minangle
+	      case 3: sprintf(currentline, "max endpoint: <%4d>",  value); break;          //maxpwm
+              case 4: sprintf(currentline, "max angle: <%3d>    ", value); break;         //maxangle
+
 	}
-	else if (valuetype==2) { //minangle
-          currentline = "min angle: <" + param;
-          currentline += ">    ";
-	}
-	else if (valuetype==3) {	//maxpwm
-	  currentline = "max endpoint: <" + param;
-          currentline += ">";
-	}
-	else if (valuetype==4) { //maxangle
-	  currentline = "max angle: <" + param;
-          currentline += ">";
-	}
-        currentline.toCharArray(string_buffer,21);
-	store_lcdline(3,string_buffer);
-	store_lcdline(4," Long press to quit ");
+	store_lcdline(3, currentline);
+        strcpy(currentline,string_shome5.copy(extract));
+	store_lcdline(4, currentline); 
         //checking long press left right
-           if (right_button.holdTime() >= 1000 && right_button.isPressed() ) {
-            value+=20;
-            delay(100);
-            }
-            else if ( left_button.holdTime() >= 1000 && left_button.isPressed() ) {
-            value-=20;
-            delay(100);
-            }
+        if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
+              value+=20;
+              delay(500);
+        }
+        else if ( left_button.holdTime() >= 700 && left_button.isPressed() ) {
+              value-=20;
+              delay(500);
+        }
 return value;
            
 }

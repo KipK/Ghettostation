@@ -199,7 +199,7 @@ void check_activity() {
            } else if (home_bear) {
              antenna_tracking();
              lcddisp_tracking();
-                if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press 
+                if (enter_button.holdTime() >= 700 && enter_button.held()) { //long press 
                    current_activity = 0;
                    telemetry_off();
                 }
@@ -219,7 +219,7 @@ void check_activity() {
             }
               else { lcddisp_homeok(); }
             }
-            if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press
+            if (enter_button.holdTime() >= 700 && enter_button.held()) { //long press
                    current_activity = 0;
                 }
           }
@@ -232,7 +232,7 @@ void check_activity() {
             pan_servo.writeMicroseconds(servoconf_tmp[0]);
            
             
-            if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press 
+            if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press 
                configuration.pan_minpwm = servoconf_tmp[0];
                EEPROM_write(config_bank[int(current_bank)], configuration);
                attach_servo(pan_servo, PAN_SERVOPIN, configuration.pan_minpwm, configuration.pan_maxpwm);
@@ -243,7 +243,7 @@ void check_activity() {
           if (current_activity == 4) { //PAN_MINANGLE
              configuration.pan_minangle = config_servo(1, 2, configuration.pan_minangle );
             pan_servo.writeMicroseconds(configuration.pan_minpwm);
-             if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
+             if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press
                EEPROM_write(config_bank[int(current_bank)], configuration);
                move_servo(pan_servo, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
                current_activity=0;
@@ -257,7 +257,7 @@ void check_activity() {
                   } 
              pan_servo.writeMicroseconds(servoconf_tmp[1]);
             
-             if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
+             if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press
                configuration.pan_maxpwm = servoconf_tmp[1];
                EEPROM_write(config_bank[int(current_bank)], configuration);
                attach_servo(pan_servo, PAN_SERVOPIN, configuration.pan_minpwm, configuration.pan_maxpwm);
@@ -269,7 +269,7 @@ void check_activity() {
           if (current_activity == 6) { //PAN_MAXANGLE
              configuration.pan_maxangle = config_servo(1, 4, configuration.pan_maxangle );
             pan_servo.writeMicroseconds(configuration.pan_maxpwm);
-             if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
+             if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press
                EEPROM_write(config_bank[int(current_bank)], configuration);
                move_servo(pan_servo, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
                current_activity=0;
@@ -282,7 +282,7 @@ void check_activity() {
               attach_servo(tilt_servo, TILT_SERVOPIN, servoconf_tmp[2], configuration.tilt_maxpwm); 
               }
              tilt_servo.writeMicroseconds(servoconf_tmp[2]); 
-             if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
+             if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press
                configuration.tilt_minpwm = servoconf_tmp[2];
                EEPROM_write(config_bank[int(current_bank)], configuration);
 	       attach_servo(tilt_servo,TILT_SERVOPIN, configuration.tilt_minpwm, configuration.tilt_maxpwm);
@@ -294,7 +294,7 @@ void check_activity() {
           if (current_activity == 8) { //TILT_MINANGLE
              configuration.tilt_minangle = config_servo(2, 2, configuration.tilt_minangle ); 
              tilt_servo.writeMicroseconds(configuration.tilt_minpwm);
-             if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
+             if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press
                EEPROM_write(config_bank[int(current_bank)], configuration);
                move_servo(tilt_servo, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);
                current_activity=0;
@@ -307,7 +307,7 @@ void check_activity() {
               attach_servo(tilt_servo, TILT_SERVOPIN, configuration.tilt_minpwm, servoconf_tmp[3]); 
               }
              tilt_servo.writeMicroseconds(servoconf_tmp[3]);
-             if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
+             if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press
                configuration.tilt_maxpwm = servoconf_tmp[3];
                EEPROM_write(config_bank[int(current_bank)], configuration);
 	       attach_servo(tilt_servo,TILT_SERVOPIN, configuration.tilt_minpwm, configuration.tilt_maxpwm);
@@ -319,7 +319,7 @@ void check_activity() {
           if (current_activity == 10) { //TILT_MAXANGLE
              configuration.tilt_maxangle = config_servo(2, 4, configuration.tilt_maxangle );
              tilt_servo.writeMicroseconds(configuration.tilt_maxpwm);
-             if (enter_button.holdTime() >= 1000 && enter_button.held()) {//long press
+             if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press
                EEPROM_write(config_bank[int(current_bank)], configuration);
                move_servo(tilt_servo, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);
                current_activity=0;
@@ -333,21 +333,21 @@ void check_activity() {
           
           if (current_activity == 12) { //Configure Telemetry
              lcddisp_telemetry();
-            if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press
+            if (enter_button.holdTime() >= 700 && enter_button.held()) { //long press
                EEPROM_write(config_bank[int(current_bank)], configuration);
                current_activity=0;
                 }
           }
           if (current_activity == 13) { //Configure Baudrate
              lcddisp_baudrate();
-             if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press
+             if (enter_button.holdTime() >= 700 && enter_button.held()) { //long press
                EEPROM_write(config_bank[int(current_bank)], configuration);
                current_activity=0;
              }
            }
           if (current_activity == 14) { //Change settings bank
                lcddisp_bank();
-             if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press
+             if (enter_button.holdTime() >= 700 && enter_button.held()) { //long press
                EEPROM.write(0,current_bank);
                EEPROM_read(config_bank[int(current_bank)], configuration);
                servoconf_tmp[0] = configuration.pan_minpwm;
@@ -365,7 +365,7 @@ void check_activity() {
 void enterButtonReleaseEvents(Button &btn)
  {
      //Serial.println(current_activity);  
-     if ( enter_button.holdTime() < 1000 ) { // normal press
+     if ( enter_button.holdTime() < 700 ) { // normal press
        
         if ( current_activity == 0 ) { //button action depends activity state
             displaymenu.select();
@@ -407,7 +407,7 @@ void enterButtonReleaseEvents(Button &btn)
 // left button
 void leftButtonReleaseEvents(Button &btn)
 {
-  if ( left_button.holdTime() < 1000 ) {
+  if ( left_button.holdTime() < 700 ) {
 
     if (current_activity==0) {
         displaymenu.prev();
@@ -463,7 +463,7 @@ void leftButtonReleaseEvents(Button &btn)
 //right button
 void rightButtonReleaseEvents(Button &btn)
 {
-  if ( right_button.holdTime() < 1000 ) {
+  if ( right_button.holdTime() < 700 ) {
      
     if (current_activity==0) {
         displaymenu.next();
