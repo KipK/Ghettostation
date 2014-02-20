@@ -163,7 +163,7 @@ void lcddisp_setbearing() {
     }
 }
 #endif
-#ifdef BEARING_METHOD_2
+#if defined (BEARING_METHOD_2)
 void lcddisp_setbearing() {
      if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
     home_bearing+=10;
@@ -201,9 +201,13 @@ void lcddisp_setbearing() {
 }
 #endif
 
-#ifdef BEARING_METHOD_4
+#if defined (BEARING_METHOD_3) || defined (BEARING_METHOD_4)
 void lcddisp_setbearing() {
+    #if defined (BEARING_METHOD_4)
     retrieve_mag();
+    #else
+    home_bearing = uav_heading;  // use compass data from the uav.
+    #endif
     for ( int i = 1 ; i<5; i++ ) {
        char currentline[21]="";
        switch (i) {

@@ -632,6 +632,48 @@ void get_telemetry() {
 
 #if defined(PROTOCOL_MSP) // Multiwii
     if (configuration.telemetry==1) {
+      #ifdef PASSIVE
+      static unsigned long previous_millis_low = 0;
+      static unsigned long previous_millis_high = 0;
+      static unsigned long previous_millis_onsec = 0;
+      static uint8_t queuedMSPRequests = 0;
+      unsigned long currentMillis = millis();
+      if((currentMillis - previous_millis_low) >= 1000) // 1hz
+      {
+       setMspRequests(); 
+      }
+      if((currentMillis - previous_millis_low) >= 100)  // 10 Hz (Executed every 100ms)
+      {
+      blankserialRequest(MSP_ATTITUDE); 
+      previous_millis_low = millis();
+      }
+      if((currentMillis - previous_millis_high) >= 200) // 20 Hz (Executed every 50ms)
+      {
+      uint8_t MSPcmdsend;
+      if(queuedMSPRequests == 0)
+        queuedMSPRequests = modeMSPRequests;
+      uint32_t req = queuedMSPRequests & -queuedMSPRequests;
+      queuedMSPRequests &= ~req;
+      switch(req) {
+        case REQ_MSP_IDENT:
+          MSPcmdsend = MSP_IDENT;
+          break;
+        case REQ_MSP_STATUS:
+          MSPcmdsend = MSP_STATUS;
+          break;
+        case REQ_MSP_RAW_GPS:
+          MSPcmdsend = MSP_RAW_GPS;
+          break;
+        case REQ_MSP_ALTITUDE:
+          MSPcmdsend = MSP_ALTITUDE;
+          break;
+        case REQ_MSP_ANALOG:
+          MSPcmdsend = MSP_ANALOG;
+          break;
+      } 
+      previous_millis_high = millis();
+      }
+      #endif
       msp_read(); 
     }
 #endif
@@ -644,13 +686,11 @@ void get_telemetry() {
 
 #if defined(PROTOCOL_MAVLINK) // Ardupilot / PixHawk / Taulabs ( mavlink output ) / Other
     if (configuration.telemetry==3) {
-      if(enable_mav_request == 1){//Request rate control
- 	enable_mav_request = 0;
-        waitingMAVBeats = 0;
-        if (PASSIVEMODE) {
+      if(enable_frame_request == 1){//Request rate control
+ 	enable_frame_request = 0;
+        if (!PASSIVEMODE) {
            request_mavlink_rates();
         }
-	lastMAVBeat = millis();//Preventing error from delay sensing 
       }
       read_mavlink(); 
     }

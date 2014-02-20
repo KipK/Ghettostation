@@ -71,11 +71,6 @@ void read_mavlink(){
                     uav_arm = mavlink_msg_heartbeat_get_base_mode(&msg);
                     if(getBit(uav_arm,7)) uav_arm = 1;
                     else uav_arm = 0;
-       
-                    lastMAVBeat = millis();
-                    if(waitingMAVBeats == 1){
-                        enable_mav_request = 1;
-                    }
                 }
                 break;
             case MAVLINK_MSG_ID_SYS_STATUS:
@@ -127,8 +122,7 @@ void read_mavlink(){
                 break;           
             }
         }
-        delayMicroseconds(138);
-        //next one
+        //delayMicroseconds(138);
     }
     // Update global packet drops counter
     packet_drops += status.packet_rx_drop_count;

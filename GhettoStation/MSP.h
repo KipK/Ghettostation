@@ -46,6 +46,16 @@ void msp_check();
 
 #define MSP_DEBUGMSG             253   //out message         debug string buffer
 #define MSP_DEBUG                254   //out message         debug1,debug2,debug3,debug4
+
+#define REQ_MSP_IDENT     (1 <<  0)
+#define REQ_MSP_STATUS    (1 <<  1)
+#define REQ_MSP_RAW_IMU   (1 <<  2)
+#define REQ_MSP_RC        (1 <<  3)
+#define REQ_MSP_RAW_GPS   (1 <<  4)
+#define REQ_MSP_COMP_GPS  (1 <<  5)
+#define REQ_MSP_ATTITUDE  (1 <<  6)
+#define REQ_MSP_ALTITUDE  (1 <<  7)
+#define REQ_MSP_ANALOG    (1 <<  8)
 // End of imported defines from Multiwii Serial Protocol MultiWii_shared svn r1333
 // ---------------------------------------------------------------------------------------
 

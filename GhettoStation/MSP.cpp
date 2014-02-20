@@ -10,8 +10,7 @@
   static uint8_t MSPcmd;
   static uint8_t MSPrcvChecksum;
 
-  static long msp_baroalt;
-  static int msp_gpsalt;
+  static uint32_t modeMSPRequests;
   
   
 uint8_t read8()  {
@@ -111,8 +110,9 @@ void msp_check() {
     uav_satellites_visible=read8();
     uav_lat = read32() / 10000000.0;
     uav_lon = read32() / 10000000.0;
-
-    msp_gpsalt = read16();
+    #ifndef BARO_ALT
+    uav_alt = read16() * 10;
+    #endif
 
     uav_groundspeed = read16();
   }
@@ -134,9 +134,9 @@ void msp_check() {
 
   if (MSPcmd==MSP_ALTITUDE)
   {
-
-    msp_baroalt = read32();
-
+    #ifdef BARO_ALT
+    uav_alt = read32() / 10;
+    #endif
     //uav_vario = read16();
   }
 
@@ -147,11 +147,6 @@ void msp_check() {
 //    pMeterSum=read16();
 //    MwRssi = read16();
   }
-#ifdef BARO_ALT
-uav_alt = msp_baroalt / 10;
-#else
-uav_alt = msp_gpsalt * 10;
-#endif
 }
 
 
@@ -170,6 +165,15 @@ void blankserialRequest(char requestMSP)
 }
 
 //########################################### TX OSD OUTPUT###############################################################
+void setMspRequests() {
+    modeMSPRequests = 
+      REQ_MSP_IDENT|
+      REQ_MSP_STATUS|
+      REQ_MSP_RAW_GPS|
+      REQ_MSP_ANALOG|
+      REQ_MSP_ALTITUDE;
+}
+
 //static uint8_t MSPtxChecksum;
 //
 //void serialize8(uint8_t a) {
