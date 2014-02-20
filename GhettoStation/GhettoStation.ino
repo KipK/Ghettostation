@@ -183,7 +183,7 @@ void check_activity() {
       if (uav_satellites_visible >= 5) { gps_fix = true; } else gps_fix = false;
         
    	  if (current_activity == 0) { //MENU
-		display_menu();
+		lcddisp_menu();
                 servoPathfinder(0, 20); // refresh servo to prevent idle jitter
                 if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press 
                    displaymenu.back();
@@ -539,40 +539,7 @@ void init_menu() {
 	displaymenu.set_root_menu(&rootMenu);
 }
 
-void display_menu() {
-        Menu const* displaymenu_current = displaymenu.get_current_menu();
-	MenuComponent const* displaymenu_sel = displaymenu_current->get_selected();
 
-        for (int n = 1; n < 5; ++n) {
-          char string_buffer[21];
-	//
-            if ( (displaymenu_current->get_num_menu_components()) >= n ) {
-                
-      		  MenuComponent const* displaymenu_comp = displaymenu_current->get_menu_component(n-1);
-      		  String getname = displaymenu_comp->get_name();
-			  for ( int l = getname.length()-1 ; l<20 ; l++ ) {
-				getname = getname + " ";
-				}			  
-
-      		  if (displaymenu_sel == displaymenu_comp) {
- 
-      				getname.setCharAt(19,'<');
-      		  } else {
-      		  		getname.setCharAt(19, ' ');
-      		  }
-      	
-      		  getname.toCharArray(string_buffer,21);
-                
-            }
-            else {
-               //empty_line.toCharArray(string_buffer,21);
-               string_load2.copy(string_buffer);
-            }
-		store_lcdline(n, string_buffer);
-		
-	};
-		
-}
 
 //menu item callback functions
 

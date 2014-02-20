@@ -64,11 +64,38 @@ void refresh_lcd() {
     }
 }
 
+void lcddisp_menu() {
+        Menu const* displaymenu_current = displaymenu.get_current_menu();
+	MenuComponent const* displaymenu_sel = displaymenu_current->get_selected();
+
+        for (int n = 1; n < 5; ++n) {
+          char currentline[21];
+	//
+            if ( (displaymenu_current->get_num_menu_components()) >= n ) {
+                
+      		  MenuComponent const* displaymenu_comp = displaymenu_current->get_menu_component(n-1);
+      		  sprintf(currentline,displaymenu_comp->get_name());
+                          for ( int l = strlen(currentline); l<19 ; l++ ) {
+	                        strcat(currentline," ");
+				}			  
+      		  if (displaymenu_sel == displaymenu_comp) strcat(currentline,"<");
+                  else strcat(currentline,"<");
+            }
+            else {
+               //empty_line.toCharArray(string_buffer,21);
+               string_load2.copy(currentline);
+            }
+		store_lcdline(n, currentline);
+		
+	};
+		
+}
+
 // SET_HOME SCREEN
 void lcddisp_sethome() {
    for ( int i = 1 ; i<5; i++ ) {
-     char extract[21];
      char currentline[21] = "";
+     char extract[21];
      switch (i) {
            case 1:
                 //line1
@@ -80,10 +107,10 @@ void lcddisp_sethome() {
                 break;
             case 2:
                  //line 2
-                 if (!telemetry_ok) strcpy(currentline, string_shome1.copy(extract)); // waiting for data
+                 if (!telemetry_ok) string_shome1.copy(currentline); // waiting for data
                  else 
                  {
-                   if (!gps_fix) strcpy(currentline, string_shome2.copy(extract));  // waiting for gps fix
+                   if (!gps_fix) string_shome2.copy(currentline);  // waiting for gps fix
                    else {
                          sprintf(currentline, "%s%dm",string_shome3.copy(extract),round((uav_alt)/10));    
                         }
@@ -101,7 +128,7 @@ void lcddisp_sethome() {
       
              case 4:
                    if (!gps_fix) strcpy(currentline,string_shome5.copy(extract));
-                   else strcpy(currentline,string_shome6.copy(extract));
+                   else string_shome6.copy(currentline);
                    break;
               }
      
@@ -115,7 +142,6 @@ void lcddisp_sethome() {
 #ifdef BEARING_METHOD_1
 void lcddisp_setbearing() {
     for ( int i = 1 ; i<5; i++ ) {
-       char extract[21];
        char currentline[21] = "";
        switch (i) {
            case 1: 
@@ -123,11 +149,11 @@ void lcddisp_setbearing() {
                 else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type); 
                 break;
            case 2:
-                strcpy(currentline, string_load2.copy(extract));  break;
+                string_load2.copy(currentline);  break;
            case 3:
-                strcpy(currentline, string_shome8.copy(extract)); break;
+                string_shome8.copy(currentline); break;
            case 4:      
-                strcpy(currentline, string_shome9.copy(extract)); break;
+                string_shome9.copy(currentline); break;
 
        }
        for ( int l = strlen(currentline); l<20 ; l++ ) {
@@ -150,7 +176,6 @@ void lcddisp_setbearing() {
     delay(500);
     }
     for ( int i = 1 ; i<5; i++ ) {
-       char extract[21];
        char currentline[21] = "";
        switch (i) {
            case 1: 
@@ -158,11 +183,11 @@ void lcddisp_setbearing() {
                 else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type);
                 break;
            case 2:
-                strcpy(currentline, string_shome7.copy(extract));  break;
+                string_shome7.copy(currentline);  break;
            case 3:
                 sprintf(currentline, "     << %3d >>", home_bearing); break;
            case 4:      
-                strcpy(currentline, string_load2.copy(extract)); break;
+                string_load2.copy(currentline); break;
        }
        
        for ( int l = strlen(currentline); l<20 ; l++ ) {
@@ -180,7 +205,6 @@ void lcddisp_setbearing() {
 void lcddisp_setbearing() {
     retrieve_mag();
     for ( int i = 1 ; i<5; i++ ) {
-       char extract[21];
        char currentline[21]="";
        switch (i) {
            case 1: 
@@ -188,11 +212,11 @@ void lcddisp_setbearing() {
                 else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type);
                 break;
            case 2:
-                strcpy(currentline, string_shome7.copy(extract));  break;
+                string_shome7.copy(currentline);  break;
            case 3:
                 sprintf(currentline, "        %3d", home_bearing); break;
            case 4:      
-                strcpy(currentline,string_load2.copy(extract)); break;
+                string_load2.copy(currentline); break;
 
        }
        for ( int l = strlen(currentline); l<20 ; l++ ) {
@@ -205,8 +229,6 @@ void lcddisp_setbearing() {
 
 void lcddisp_homeok() {
     for ( int i = 1 ; i<5; i++ ) {
-       char string_buffer[21];
-       char extract[21];
        char currentline[21] = "";
        switch (i) {
            case 1: 
@@ -214,11 +236,11 @@ void lcddisp_homeok() {
                 else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type);
                 break;
            case 2:
-                strcpy(currentline, string_shome10.copy(extract)); break;
+                string_shome10.copy(currentline); break;
            case 3:
-                strcpy(currentline, string_shome11.copy(extract)); break;                
+                string_shome11.copy(currentline); break;                
            case 4:
-                strcpy(currentline, string_shome12.copy(extract)); break;
+                string_shome12.copy(currentline); break;
            }
        for ( int l = strlen(currentline); l<20 ; l++ ) {
 	 strcat(currentline," ");
@@ -256,28 +278,28 @@ void lcddisp_tracking(){
 
 void lcddisp_telemetry() {
     for ( int i = 1 ; i<5; i++ ) {
-       char extract[21];
        char currentline[21]="";
+       char extract[21];
        switch (i) {
            case 1: 
-                        strcpy(currentline, string_telemetry1.copy(extract));  break;
+                        string_telemetry1.copy(currentline);  break;
            case 2:
-                        strcpy(currentline, string_load2.copy(extract));  break;
+                        string_load2.copy(currentline);  break;
            case 3:
                      switch (configuration.telemetry) {
                        
                         case 0:
                                  // currentline = "UAVTalk"; break;
-                                strcpy(currentline, string_telemetry2.copy(extract)); break;
+                                string_telemetry2.copy(currentline); break;
                         case 1:
                                  //currentline = "MSP"; break;
-                                strcpy(currentline, string_telemetry3.copy(extract)); break;
+                                string_telemetry3.copy(currentline); break;
                         case 2:
                                 //currentline = "AudioModem"; break;
-                                strcpy(currentline, string_telemetry4.copy(extract)); break;
+                                string_telemetry4.copy(currentline); break;
                         case 3:
                                 //currentline = "MavLink"; break;
-                                strcpy(currentline, string_telemetry5.copy(extract)); break;
+                                string_telemetry5.copy(currentline); break;
                         
                      }
                      break;
@@ -295,11 +317,11 @@ void lcddisp_telemetry() {
 
 void lcddisp_baudrate() {
     for ( int i = 1 ; i<5; i++ ) {
-       char extract[21];
        char currentline[21]="";
+       char extract[21];
        switch (i) {
            case 1: 
-                     strcpy(currentline, string_baudrate.copy(extract));  break;
+                     string_baudrate.copy(currentline);  break;
            case 2:
                      strcpy(currentline, string_load2.copy(extract)); break;
            case 3:
@@ -307,34 +329,34 @@ void lcddisp_baudrate() {
                        
                         case 0:
                                  // 1200
-                                strcpy(currentline, string_baudrate0.copy(extract));  break;
+                                string_baudrate0.copy(currentline);  break;
                         case 1:
                                  //2400
-                                strcpy(currentline, string_baudrate1.copy(extract));  break;
+                                string_baudrate1.copy(currentline);  break;
                         case 2:
                                  //4800
-                                strcpy(currentline, string_baudrate2.copy(extract)); break;
+                                string_baudrate2.copy(currentline); break;
                         case 3:
                                  //9600
-                                strcpy(currentline, string_baudrate3.copy(extract));  break;
+                                string_baudrate3.copy(currentline);  break;
                         case 4:
                                  //19200
-                                strcpy(currentline, string_baudrate4.copy(extract));  break;
+                                string_baudrate4.copy(currentline);  break;
                         case 5:
                                  //38400
-                                strcpy(currentline, string_baudrate5.copy(extract));  break;
+                                string_baudrate5.copy(currentline);  break;
                         case 6:
                                  //57600
-                                strcpy(currentline, string_baudrate6.copy(extract));  break;
+                                string_baudrate6.copy(currentline);  break;
                         case 7:
                                  //115200
-                                strcpy(currentline, string_baudrate7.copy(extract));  break;                            
+                                string_baudrate7.copy(currentline);  break;                            
                                               
                      }
                      break;
        
            case 4:      
-                     strcpy(currentline, string_shome5.copy(extract)); break;
+                     string_shome5.copy(currentline); break;
            }
        for ( int l = strlen(currentline); l<20 ; l++ ) {
 	 strcat(currentline," ");
@@ -346,13 +368,13 @@ void lcddisp_baudrate() {
 // Settings Bank config
 void lcddisp_bank() {
     for ( int i = 1 ; i<5; i++ ) {
-       char extract[21];
        char currentline[21]="";
+       char extract[21];
        switch (i) {
            case 1: 
-                     strcpy(currentline, string_bank.copy(extract));  break;
+                     string_bank.copy(currentline);  break;
            case 2:
-                     strcpy(currentline, string_load2.copy(extract)); break;
+                     string_load2.copy(currentline); break;
            case 3:
                      switch (current_bank+1) {
                         case 1: sprintf(currentline,"> %s", string_bank1.copy(extract));break;
@@ -364,7 +386,7 @@ void lcddisp_bank() {
                      break;
        
            case 4:      
-                     strcpy(currentline, string_shome5.copy(extract)); break;
+                     string_shome5.copy(currentline); break;
            }
        for ( int l = strlen(currentline); l<20 ; l++ ) {
 	 strcat(currentline," ");
@@ -389,16 +411,15 @@ int config_servo(int servotype, int valuetype, int value ) {
         }
         char currentline[21];
         char extract[21];
-        
 	if (servotype==1) {
-	  strcpy(currentline, string_servos1.copy(extract));                              // Pan servo
+	  string_servos1.copy(currentline);                              // Pan servo
           store_lcdline(1, currentline);
 	}
 	else if (servotype==2) {
-          strcpy(currentline, string_servos2.copy(extract));                              // Tilt servo
+          string_servos2.copy(currentline);                              // Tilt servo
           store_lcdline(2, currentline);
 	}
-	strcpy(currentline, string_load2.copy(extract));
+	string_load2.copy(currentline);
 	switch (valuetype) 
        {	        
               case 1: sprintf(currentline, "min endpoint: <%4d>",  value); break;          //minpwm
@@ -408,7 +429,7 @@ int config_servo(int servotype, int valuetype, int value ) {
 
 	}
 	store_lcdline(3, currentline);
-        strcpy(currentline,string_shome5.copy(extract));
+        string_shome5.copy(currentline);
 	store_lcdline(4, currentline); 
 return value;
            
