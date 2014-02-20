@@ -139,6 +139,16 @@ void lcddisp_setbearing() {
 #endif
 #ifdef BEARING_METHOD_2
 void lcddisp_setbearing() {
+     if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
+    home_bearing+=10;
+    if (home_bearing>360) home_bearing = 360;
+    else if (home_bearing<0) home_bearing = 0;
+    delay(500);
+    }
+    else if ( left_button.holdTime() >= 700 && left_button.isPressed() ) {
+    home_bearing-=10;
+    delay(500);
+    }
     for ( int i = 1 ; i<5; i++ ) {
        char extract[21];
        char currentline[21] = "";
@@ -161,16 +171,7 @@ void lcddisp_setbearing() {
        store_lcdline(i,currentline);
        
        //checking long press left right
-       if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
-        home_bearing+=10;
-        if (home_bearing>360) home_bearing = 360;
-        else if (home_bearing<0) home_bearing = 0;
-        delay(500);
-        }
-        else if ( left_button.holdTime() >= 700 && left_button.isPressed() ) {
-        home_bearing-=10;
-        delay(500);
-        }
+
  }
 }
 #endif
@@ -377,6 +378,15 @@ void lcddisp_bank() {
 
 int config_servo(int servotype, int valuetype, int value ) {
 	// servo configuration screen function return configured value
+        //check long press left right
+        if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
+              value+=20;
+              delay(500);
+        }
+        else if ( left_button.holdTime() >= 700 && left_button.isPressed() ) {
+              value-=20;
+              delay(500);
+        }
         char currentline[21];
         char extract[21];
         
@@ -400,15 +410,6 @@ int config_servo(int servotype, int valuetype, int value ) {
 	store_lcdline(3, currentline);
         strcpy(currentline,string_shome5.copy(extract));
 	store_lcdline(4, currentline); 
-        //checking long press left right
-        if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
-              value+=20;
-              delay(500);
-        }
-        else if ( left_button.holdTime() >= 700 && left_button.isPressed() ) {
-              value-=20;
-              delay(500);
-        }
 return value;
            
 }
