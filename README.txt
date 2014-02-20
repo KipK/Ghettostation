@@ -105,7 +105,7 @@ Method 1: put your UAV 20m ahead, with the tracker pointing it, and click Enter 
 
 Method 2: manually enter bearing value from an external compass ( your smartphone one will do the job )
 
-Method 3: just point the tracker to the North.
+Method 3: use the uav compass data. Point yourr uav to the neutral direction of the tracker
 
 Method 4: Use internal HMC5883 compass reading   
 

@@ -44,8 +44,7 @@ int16_t      uav_chan8_raw;
 
 char* protocol = "";
 long lastpacketreceived;
-
-//Protocol specifics
+static boolean      enable_frame_request = 0;
 //MAVLink session control
 static boolean      mavbeat = 0;
 //static boolean      landing = 0;
@@ -53,7 +52,7 @@ static float        lastMAVBeat = 0;
 static boolean      waitingMAVBeats = 1;
 static uint8_t      apm_mav_system; 
 static uint8_t      apm_mav_component;
-static boolean      enable_mav_request = 0;
+
 
 //home 
 float home_lon;
