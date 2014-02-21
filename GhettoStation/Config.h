@@ -4,25 +4,25 @@
  #define CONFIG_VERSION 2011 // Edit only if you want to reset eeprom
 //########## BOARD ################################################################################################
  #define TEENSYPLUS2 // Teensy++2 support. 
-//#define MEGA // Arduino Mega boards
+//#define MEGA // Arduino Mega board
+
+//########## OPTIONS ###############################################################################################
 
 /* If you have communication problem at 56K , set this on. ( ie APM 2/2.5/2.6/AIO )
    Most Arduino have a +2.18% error at 57600 bd, Teensyduino has a -0.74% error. Booth cumulated are too much.
    Successfull com between Teensy & arduino requires 58824 bauds for Teensy.*/
 //#define BAUDRATE56K 57600
   #define BAUDRATE56K 58824 
-
-
-//########## OPTIONS ###############################################################################################
- #define BARO_ALT // Use Baro for Altitude. Comment for using GPS altitude instead.
+  
+  #define BARO_ALT // Use Baro for Altitude. Comment for using GPS altitude instead.
  
-//Use Mag+imu for heading or GPS heading if not set.
+//Use Mag+imu for heading or GPS heading if not set ( not used for tracker only osd relay )
   #define MAGHEADING 1
 
 // BEARING REFERENCE TO NORTH METHOD
 //#define BEARING_METHOD_1  // 1=calculation from home pos & uav pos heading 20m away straight to neutral pan servo pos.        
 //#define BEARING_METHOD_2   // 2=manually enter the heading reference from a compass        
-#define BEARING_METHOD_3   // 3=use compass from the uav. Point it to the neutral direction of your tracker.                
+  #define BEARING_METHOD_3   // 3=use compass from the uav. Point it to the neutral direction of your tracker.                
 //#define BEARING_METHOD_4  // 4=Use internal HMC5883 compass reading                          
                
  #define MAGDEC -600  // Your local Magnetic Declination in radian. Get it from here: http://magnetic-declination.com/  then convert it in milliradian: http://www.wolframalpha.com/input/?i=%280%C2%B0+5%27%29+in+radians 
@@ -33,7 +33,7 @@
 
 // Prevent Ghettostation to send packets to the flightcontroler
 // Usefull if you're using OSD or a GCS at the same time.
- #define PASSIVEMODE 1
+ #define PASSIVEMODE 0
 
 
 
@@ -43,13 +43,15 @@
  #define BANK3  "Bank 3"
  #define BANK4  "Bank 4"
 
-//########### LCD ##################################################################################################
+//########### GROUND OSD TELEMETRY OUTPUT #########################################################################
+// Activate Lighttelemetry output for OSD
+ #define LTM_OUTPUT
 
+//########### LCD ##################################################################################################
 
 //#define I2CADDRESS 0xc6 // LCD03 i2C from Robot Electronics 
  #define I2CADDRESS 0x27 // IIC/I2C/TWI Serial 2004 20x4 lcd ( Hobbyking )
 //#define I2CADDRESS 020 // Arduino-IIC-LCD GY-LCD-V1
-
 
 //#################################### SERVOS ENDPOINTS #############################################################
 //. Those are just default values when not configured yet. 
@@ -78,7 +80,8 @@
   #define LEFT_BUTTON_PIN 10    //Any Digital pin
   #define RIGHT_BUTTON_PIN 9    //Any Digital pin
   #define ENTER_BUTTON_PIN 8    //Any Digital pin
-  #define SOFTSERIAL_TX 14      //Digital pin used by SoftSerial for sending telemetry to ground osd.
+  #define SOFTSERIAL_TX 14      //Digital pin used by SoftSerial for sending data to ground osd.
+  #define SOFTSERIAL_RX 15      //Digital pin used by SoftSerial for receiving data from ground osd. ( unused yet )
 #endif
 
 //pinout for Arduino Mega 1280/2560

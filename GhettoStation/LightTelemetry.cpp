@@ -95,7 +95,7 @@ void ltm_read() {
 }
 
 // --------------------------------------------------------------------------------------
-// Here are decoded received commands 
+// Decoded received commands 
 void ltm_check() {
   LTMreadIndex = 0;
                     
@@ -107,8 +107,8 @@ void ltm_check() {
     uav_groundspeed = ltmread8()*3600/1000;
     uav_alt = (int32_t)ltmread32() / 10;
     uint8_t ltm_satsfix = ltmread8();
-    uav_satellites_visible         = (int)((ltm_satsfix >> 2) & 0xFF);
-    uav_fix_type                   = (int)(ltm_satsfix & 0b00000011);
+    uav_satellites_visible         = (ltm_satsfix >> 2) & 0xFF;
+    uav_fix_type                   = ltm_satsfix & 0b00000011;
     //memset(LTMserialBuffer, 0, LIGHTTELEMETRY_GFRAMELENGTH-4); //still wondering what's it doing here
 
   }
@@ -133,8 +133,112 @@ void ltm_check() {
 }
 
 
-// End of decoded received commands from MultiWii
-// --------------------------------------------------------------------------------------
+ 
 
+
+/* ########################################################################################
+/*                            LightTelemetry OSD output 
+/* ########################################################################################*/
+
+#define LTM_GFRAME_SIZE 18
+#define LTM_AFRAME_SIZE 10
+#define LTM_SFRAME_SIZE 11
+
+
+static void send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
+{
+    //calculate Checksum
+    uint8_t LTCrc = 0x00;
+    int i;
+    for (i = 3; i < LTPacket_size-1; i++) {
+        LTCrc ^= LTPacket[i];
+    }
+    LTPacket[LTPacket_size-1]=LTCrc;
+    for (i = 0; i<LTPacket_size; i++) {
+        SerialPort2.write(LTPacket[i]);
+    }
+}
+
+
+// GPS frame
+void send_LTM_Gframe()
+{
+
+    uint8_t LTBuff[LTM_GFRAME_SIZE];
+    //protocol: START(2 bytes)FRAMEID(1byte)LAT(cm,4 bytes)LON(cm,4bytes)SPEED(m/s,1bytes)ALT(cm,4bytes)SATS(6bits)FIX(2bits)CRC(xor,1byte)
+    //START
+    LTBuff[0]=0x24; //$
+    LTBuff[1]=0x54; //T
+    //FRAMEID
+    LTBuff[2]=0x47; // G ( gps frame at 5hz )
+    //PAYLOAD
+    int32_t uav_intlat = (int32_t) uav_lat * 10000000;
+    int32_t uav_intlon = (int32_t) uav_lon * 10000000;
+    LTBuff[3]=(uav_intlat >> 8*0) & 0xFF;
+    LTBuff[4]=(uav_intlat >> 8*1) & 0xFF;
+    LTBuff[5]=(uav_intlat >> 8*2) & 0xFF;
+    LTBuff[6]=(uav_intlat >> 8*3) & 0xFF;
+    LTBuff[7]=(uav_intlon >> 8*0) & 0xFF;
+    LTBuff[8]=(uav_intlon >> 8*1) & 0xFF;
+    LTBuff[9]=(uav_intlon >> 8*2) & 0xFF;
+    LTBuff[10]=(uav_intlon >> 8*3) & 0xFF;
+    LTBuff[11]=( (uint8_t) round( (uav_groundspeed * 1000) / 3600) >> 8*0) & 0xFF;
+    uint32_t uav_alt_cm = (uint32_t) uav_alt * 10;
+    LTBuff[12]=(uav_alt_cm >> 8*0) & 0xFF;
+    LTBuff[13]=(uav_alt_cm >> 8*1) & 0xFF;
+    LTBuff[14]=(uav_alt_cm >> 8*2) & 0xFF;
+    LTBuff[15]=(uav_alt_cm >> 8*3) & 0xFF;
+    LTBuff[16]= ((uav_satellites_visible << 2 )& 0xFF) | (uav_fix_type & 0b00000011) ; // last 6 bits: sats number, first 2:fix type (0,1,2,3)
+    send_LTM_Packet(LTBuff,LTM_GFRAME_SIZE);
+}
+
+//Sensors frame
+static void send_LTM_Sframe() 
+{
+    uint8_t LTBuff[LTM_SFRAME_SIZE];
+    
+    //START
+    LTBuff[0]=0x24; //$
+    LTBuff[1]=0x54; //T
+    //FRAMEID
+    LTBuff[2]=0x53; //S 
+    //PAYLOAD
+    LTBuff[3]=(uav_bat >> 8*0) & 0xFF;                                                                    //vbat converted in mv
+    LTBuff[4]=(uav_bat >> 8*1) & 0xFF;
+    LTBuff[5]=(uav_amp >> 8*0) & 0xFF;                                                                           //consumed current in ma.
+    LTBuff[6]=(uav_amp >> 8*1) & 0xFF;
+    LTBuff[7]=(uav_rssi >> 8*0) & 0xFF;                                                   // rouding RSSI to 1 byte resolution.
+    LTBuff[8]=(uav_airspeed >> 8*0) & 0xFF;                                                                          // no airspeed in multiwii/baseflight
+    LTBuff[9]= ((uav_flightmode << 2)& 0xFF ) | ((uav_failsafe << 1)& 0b00000010 ) | (uav_arm & 0b00000001) ; // last 6 bits: flight mode, 2nd bit: failsafe, 1st bit: Arm status.
+    send_LTM_Packet(LTBuff,LTM_SFRAME_SIZE);
+}
+
+// Attitude frame
+static void send_LTM_Aframe() 
+{
+    uint8_t LTBuff[LTM_AFRAME_SIZE];
+    
+    //A Frame: $T(2 bytes)A(1byte)PITCH(2 bytes)ROLL(2bytes)HEADING(2bytes)CRC(xor,1byte)
+    //START
+    LTBuff[0]=0x24; //$
+    LTBuff[1]=0x54; //T
+    //FRAMEID
+    LTBuff[2]=0x41; //A 
+    //PAYLOAD
+    LTBuff[3]=(uav_pitch >> 8*0) & 0xFF;
+    LTBuff[4]=(uav_pitch >> 8*1) & 0xFF;
+    LTBuff[5]=(uav_roll >> 8*0) & 0xFF;
+    LTBuff[6]=(uav_roll >> 8*1) & 0xFF;
+    LTBuff[7]=(uav_heading/10 >> 8*0) & 0xFF;
+    LTBuff[8]=(uav_heading/10 >> 8*1) & 0xFF;
+    send_LTM_Packet(LTBuff,LTM_AFRAME_SIZE);
+}
+
+void ltm_write() {
+        send_LTM_Aframe();
+        send_LTM_Sframe();
+        send_LTM_Gframe();
+
+}
 
 #endif

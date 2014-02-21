@@ -615,7 +615,7 @@ void init_serial() {
 
 //Preparing adding other protocol
 void get_telemetry() {
-// if (telemetryMetro.check() == 1) {
+
    if (millis() - lastpacketreceived > 2000) {
       telemetry_ok = false;
       
@@ -695,7 +695,11 @@ void get_telemetry() {
       read_mavlink(); 
     }
 #endif
-//  }
+
+ if (telemetryMetro.check() == 1) {
+     ltm_write(); // pack & send LTM packets to ground osd at 10hz.
+ }
+
 }
 
 void telemetry_off() {

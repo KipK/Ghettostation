@@ -7,10 +7,15 @@
 #ifdef TEENSYPLUS2
 // This line defines a "Uart" object to access the serial port
 HardwareSerial SerialPort1 = HardwareSerial();
-//HardwareSerial SerialPort1(Uart);
+ #ifdef LTM_OUTPUT
+ SoftwareSerial SerialPort2(SOFTSERIAL_TX,SOFTSERIAL_TX);
+ #endif
 #endif
 #ifdef MEGA
 HardwareSerial SerialPort1(Serial1);
+ #ifdef LTM_OUTPUT
+  HardwareSerial SerialPort2(Serial2);
+ #endif
 #endif
 /* ########################################  VARIABLES #####################################################*/
 
@@ -18,8 +23,8 @@ HardwareSerial SerialPort1(Serial1);
 //Telemetry variables
 float        uav_lat = 0;                    // latitude
 float        uav_lon = 0;                    // longitude
-int          uav_satellites_visible = 0;     // number of satelites
-int          uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
+uint8_t      uav_satellites_visible = 0;     // number of satelites
+uint8_t      uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
 int16_t      uav_alt = 0;                    // altitude (dm)
 int          uav_groundspeed = 0;            // ground speed
 int16_t      uav_pitch = 0;                  // attitude pitch

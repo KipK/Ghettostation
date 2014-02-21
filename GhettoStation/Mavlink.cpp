@@ -88,8 +88,8 @@ void read_mavlink(){
                    #ifndef BARO_ALT
                     uav_alt = (int)round(mavlink_msg_gps_raw_int_get_alt(&msg)/100.0f); // to decimeters
                    #endif
-                    uav_fix_type = mavlink_msg_gps_raw_int_get_fix_type(&msg);
-                    uav_satellites_visible = mavlink_msg_gps_raw_int_get_satellites_visible(&msg);
+                    uav_fix_type = (uint8_t) mavlink_msg_gps_raw_int_get_fix_type(&msg);
+                    uav_satellites_visible = (uint8_t) mavlink_msg_gps_raw_int_get_satellites_visible(&msg);
                     uav_gpsheading = (int16_t) mavlink_msg_gps_raw_int_get_cog(&msg);
                 }
                 break; 
