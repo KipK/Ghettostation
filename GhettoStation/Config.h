@@ -44,9 +44,10 @@
  #define BANK4  "Bank 4"
 
 //########### GROUND OSD TELEMETRY OUTPUT #########################################################################
-// Activate Lighttelemetry output for OSD
- #define LTM_OUTPUT
-
+// Activate osd output (comment if not needed)
+ #define OSD_OUTPUT 
+//OSD output baudrate
+ #define OSD_BAUD 19200
 //########### LCD ##################################################################################################
 
 //#define I2CADDRESS 0xc6 // LCD03 i2C from Robot Electronics 

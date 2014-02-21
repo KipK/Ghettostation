@@ -1,3 +1,19 @@
+/* #################################################################################################################
+ * LightTelemetry protocol (LTM)
+ *
+ * Ghettostation one way telemetry protocol for really low bitrates (1200/2400 bauds). 
+ *			   
+ * Protocol details: 3 different frames, little endian.
+ *   G Frame (GPS position) (2hz @ 1200 bauds , 5hz >= 2400 bauds): 18BYTES
+ *    0x24 0x54 0x47 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF  0xFF   0xC0   
+ *     $     T    G  --------LAT-------- -------LON---------  SPD --------ALT-------- SAT/FIX  CRC
+ *   A Frame (Attitude) (5hz @ 1200bauds , 10hz >= 2400bauds): 10BYTES
+ *     0x24 0x54 0x41 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xC0   
+ *      $     T   A   --PITCH-- --ROLL--- -HEADING-  CRC
+ *   S Frame (Sensors) (2hz @ 1200bauds, 5hz >= 2400bauds): 11BYTES
+ *     0x24 0x54 0x53 0xFF 0xFF  0xFF 0xFF    0xFF    0xFF      0xFF       0xC0     
+ *      $     T   S   VBAT(mv)  Current(ma)   RSSI  AIRSPEED  ARM/FS/FMOD   CRC
+ * ################################################################################################################# */
 
 #if defined(PROTOCOL_LIGHTTELEMETRY)
 #include "LightTelemetry.h"

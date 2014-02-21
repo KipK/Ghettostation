@@ -606,7 +606,9 @@ void screen_bank(MenuItem* p_menu_item) {
 void init_serial() {
     
     SerialPort1.begin(baudrates[configuration.baudrate]);
-
+    #ifdef OSD_OUTPUT
+    SerialPort2.begin(OSD_BAUD);
+    #endif
 #ifdef DEBUG
     Serial.println("Serial initialised"); 
 #endif
@@ -697,7 +699,9 @@ void get_telemetry() {
 #endif
 
  if (telemetryMetro.check() == 1) {
-     ltm_write(); // pack & send LTM packets to ground osd at 10hz.
+     #ifdef OSD_OUTPUT
+     ltm_write(); // pack & send LTM packets to SerialPort2 at 10hz.
+     #endif
  }
 
 }
