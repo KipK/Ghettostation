@@ -51,7 +51,9 @@ void read_mavlink(){
                     mavbeat = 1;
                     //apm_mav_system    = msg.sysid;
                     //apm_mav_component = msg.compid;
-
+   // TODO there's different flightmodes value depending of arducopter or arduplane. 
+   // Need to check first vehicle type, then we will apply correct flightmode map.
+   // for now only arducopter is supported.
                     uav_flightmode = (uint8_t)mavlink_msg_heartbeat_get_custom_mode(&msg);
                     if (uav_flightmode == 0) uav_flightmode = 2; //Stabilize 
                     if (uav_flightmode == 1) uav_flightmode = 1; //Acro 
@@ -107,6 +109,7 @@ void read_mavlink(){
                     uav_roll = (int16_t)round(toDeg(mavlink_msg_attitude_get_roll(&msg)));
                     uav_pitch = (int16_t)round(toDeg(mavlink_msg_attitude_get_pitch(&msg)));
                     uav_heading = (int16_t)round(toDeg(mavlink_msg_attitude_get_yaw(&msg)));
+                    //if (uav_heading >= 180 ) uav_heading = -360+uav_heading; //convert from 0-360 to -180/180°
                 }
                 break;
 

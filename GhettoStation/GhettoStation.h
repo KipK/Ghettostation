@@ -8,7 +8,7 @@
 // This line defines a "Uart" object to access the serial port
 HardwareSerial SerialPort1 = HardwareSerial();
  #ifdef OSD_OUTPUT
- SoftwareSerial SerialPort2(SOFTSERIAL_TX,SOFTSERIAL_TX);
+ SoftwareSerial SerialPort2(SOFTSERIAL_RX,SOFTSERIAL_TX);
  #endif
 #endif
 #ifdef MEGA

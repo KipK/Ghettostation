@@ -245,8 +245,8 @@ static void send_LTM_Aframe()
     LTBuff[4]=(uav_pitch >> 8*1) & 0xFF;
     LTBuff[5]=(uav_roll >> 8*0) & 0xFF;
     LTBuff[6]=(uav_roll >> 8*1) & 0xFF;
-    LTBuff[7]=(uav_heading/10 >> 8*0) & 0xFF;
-    LTBuff[8]=(uav_heading/10 >> 8*1) & 0xFF;
+    LTBuff[7]=(uav_heading >> 8*0) & 0xFF;
+    LTBuff[8]=(uav_heading >> 8*1) & 0xFF;
     send_LTM_Packet(LTBuff,LTM_AFRAME_SIZE);
 }
 

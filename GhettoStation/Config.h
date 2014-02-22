@@ -46,8 +46,8 @@
 //########### GROUND OSD TELEMETRY OUTPUT #########################################################################
 // Activate osd output (comment if not needed)
  #define OSD_OUTPUT 
-//OSD output baudrate
- #define OSD_BAUD 19200
+//OSD output baudrate ( send data as fast as possible to the osd, no need to have the same baudrate as input one. )
+ #define OSD_BAUD 38400
 //########### LCD ##################################################################################################
 
 //#define I2CADDRESS 0xc6 // LCD03 i2C from Robot Electronics 

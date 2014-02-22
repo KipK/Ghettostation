@@ -146,6 +146,7 @@ void msp_check() {
 //    MwVBat=read8();
 //    pMeterSum=read16();
 //    MwRssi = read16();
+//    uav_rssi = map(MwRssi,minrssi,maxrssi,0,100) // remap in %
   }
 }
 
