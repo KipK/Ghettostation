@@ -35,7 +35,8 @@
 // Usefull if you're using OSD or a GCS at the same time.
  #define PASSIVEMODE 0
 
-
+// Default tilt angle used when not tracking.
+ #define DEFAULTELEVATION  15
 
 //Memory bank name to display on LCD (18 char max)
  #define BANK1  "1.2 GHZ"

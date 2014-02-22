@@ -50,7 +50,6 @@ void store_lcdline( int i, char sbuffer[20] ) {
 
 void refresh_lcd() {
    // refreshing lcd at defined update.
-    if (lcdMetro.check() == 1) {
         // update lines
         //LCD.clear();
         LCD.setCursor(0,0);
@@ -61,7 +60,6 @@ void refresh_lcd() {
 	LCD.print(lcd_line3);
         LCD.setCursor(0,3);
     	LCD.print(lcd_line4);
-    }
 }
 
 void lcddisp_menu() {
