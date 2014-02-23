@@ -348,7 +348,7 @@ void check_activity() {
 }
 
 //######################################## BUTTONS #####################################################################
-// enter button
+
 void enterButtonReleaseEvents(Button &btn)
  {
      //Serial.println(current_activity);  
@@ -391,63 +391,47 @@ void enterButtonReleaseEvents(Button &btn)
  }
 
 
-// left button
+
 void leftButtonReleaseEvents(Button &btn)
 {
-  if ( left_button.holdTime() < 700 ) {
-
-    if (current_activity==0) {
-        displaymenu.prev();
-    }
-    
-    else if ( current_activity != 0 && current_activity != 1 && current_activity != 2 ) {
+    if ( left_button.holdTime() < 700 ) {
+        if (current_activity==0) {
+            displaymenu.prev();
+        }       
+        else if ( current_activity != 0 && current_activity != 1 && current_activity != 2 ) {
               //We're in a setting area: Left button decrase current value.
-          if (current_activity == 3) servoconf_tmp[0]--;		 
-          if (current_activity == 4) configuration.pan_minangle--;
-          if (current_activity == 5) servoconf_tmp[1]--;
-          if (current_activity == 6) configuration.pan_maxangle--;
-          if (current_activity == 7) servoconf_tmp[2]--;
-          if (current_activity == 8) configuration.tilt_minangle--;        
-          if (current_activity == 9) servoconf_tmp[3]--;
-          if (current_activity == 10) configuration.tilt_maxangle--;
-          if (current_activity == 12) {
-             if (configuration.telemetry > 0) {
-               configuration.telemetry -= 1;
-             }       
-          }
-          if (current_activity == 13) {
-             if (configuration.baudrate > 0) {
-               configuration.baudrate -= 1;
-             }
-          }
-          if (current_activity == 14) {
-             if (current_bank > 0) {
-               current_bank -= 1;
-             }
-             else current_bank = 3;
-          }
-    }
-    else if (current_activity==2) {
-#if defined(BEARING_METHOD_2) || defined(BEARING_METHOD_4)       
-               if (home_pos && !home_bear) {
-
-                  home_bearing--;
-                  if (home_bearing<0) home_bearing = 359;
-               }
-#endif     
-               if (gps_fix && home_pos && home_bear) {
-                  current_activity = 0;
+              switch (current_activity) {
+                  case 3:   servoconf_tmp[0]--;            break;
+                  case 4:   configuration.pan_minangle--;  break;
+                  case 5:   servoconf_tmp[1]--;            break;
+                  case 6:   configuration.pan_maxangle--;  break;
+                  case 7:   servoconf_tmp[2]--;            break;
+                  case 8:   configuration.tilt_minangle--; break;
+                  case 9:   servoconf_tmp[3]--;            break;
+                  case 10:  configuration.tilt_maxangle--; break;
+                  case 12:  if (configuration.telemetry > 0) configuration.telemetry -= 1;  break; 
+                  case 13:  if (configuration.baudrate > 0)  configuration.baudrate -= 1;   break;
+                  case 14:  if (current_bank > 0) current_bank -= 1; else current_bank = 3; break;
+             }                              
+        }
+        else if (current_activity==2) {
+                #if defined(BEARING_METHOD_2) || defined(BEARING_METHOD_4)       
+                if (home_pos && !home_bear) {
+                    home_bearing--;
+                    if (home_bearing<0) home_bearing = 359;
                 }
+                #endif     
+                if (gps_fix && home_pos && home_bear) {
+                    current_activity = 0;
+                }
+        }
+        else if (current_activity==1 && home_pos && home_bear) {
+              home_bearing--;
+        }   
     }
-   else if (current_activity==1 && home_pos && home_bear) {
-          home_bearing--;
-   }   
-   
-  }
 }
 
 
-//right button
 void rightButtonReleaseEvents(Button &btn)
 {
   if ( right_button.holdTime() < 700 ) {
@@ -457,29 +441,18 @@ void rightButtonReleaseEvents(Button &btn)
     }
     else if ( current_activity != 0 && current_activity != 1 && current_activity != 2 ) {
               //We're in a setting area: Right button decrase current value.
-          if (current_activity == 3) servoconf_tmp[0]++;		 
-          if (current_activity == 4) configuration.pan_minangle++;
-          if (current_activity == 5) servoconf_tmp[1]++;
-          if (current_activity == 6) configuration.pan_maxangle++;
-          if (current_activity == 7) servoconf_tmp[2]++;
-          if (current_activity == 8) configuration.tilt_minangle++;        
-          if (current_activity == 9) servoconf_tmp[3]++;
-          if (current_activity == 10) configuration.tilt_maxangle++;
-           if (current_activity == 12) {
-            if (configuration.telemetry < 3) {
-               configuration.telemetry += 1;
-            }
-          }
-          if (current_activity == 13) {
-             if (configuration.baudrate < 7) {
-               configuration.baudrate += 1;
-             }       
-          }
-          if (current_activity == 14) {
-             if (current_bank < 3) {
-               current_bank += 1;
-             }
-             else current_bank = 0;
+          switch (current_activity) {
+                  case 3:  servoconf_tmp[0]++;            break;
+                  case 4:  configuration.pan_minangle++;  break;
+                  case 5:  servoconf_tmp[1]++;            break;
+                  case 6:  configuration.pan_maxangle++;  break;
+                  case 7:  servoconf_tmp[2]++;            break;
+                  case 8:  configuration.tilt_minangle++; break;
+                  case 9:  servoconf_tmp[3]++;            break;
+                  case 10: configuration.tilt_maxangle++; break;
+                  case 12: if (configuration.telemetry < 3) configuration.telemetry += 1;  break; 
+                  case 13: if (configuration.baudrate < 7)  configuration.baudrate += 1;   break; 
+                  case 14: if (current_bank < 3) current_bank += 1; else current_bank = 0; break;  
           }
     }
     else if (current_activity==2) {
@@ -887,7 +860,7 @@ void calc_tracking(float lon1, float lat1, float lon2, float lat2, int alt) {
 // //calculating bearing in degree decimal
   Bearing = calc_bearing(lon1,lat1,lon2,lat2);
 //
-// 
+//
 ////calculating distance between uav & home
   Elevation = calc_elevation(lon1,lat1,lon2,lat2,alt);
  
@@ -912,14 +885,14 @@ int calc_elevation(float lon1, float lat1, float lon2, float lat2, int alt) {
 // feeded in radian, output in degrees
   float a, el, c, d, R, dLat, dLon;
   //calculating distance between uav & home
-  R=63710000.0;    //in decimeters. Earth radius 6371km
+  R=6371000.0;    //in meters. Earth radius 6371km
   dLat = (lat2-lat1);
   dLon = (lon2-lon1);
   a = sin(dLat/2) * sin(dLat/2) + sin(dLon/2) * sin(dLon/2) * cos(lat1) * cos(lat2);
   c = 2* asin(sqrt(a));  
   d =(R * c);
   home_dist = d/10;
-  el=atan((float)alt/d);// in radian
+  el=atan((float)alt/(10*d));// in radian
   el=toDeg(el); // in degree
   int b = (int)round(el);
   return b;
