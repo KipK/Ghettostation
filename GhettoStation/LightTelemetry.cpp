@@ -155,6 +155,7 @@ void ltm_check() {
 /* ########################################################################################
 /*                            LightTelemetry OSD output 
 /* ########################################################################################*/
+#ifdef OSD_OUTPUT
 
 #define LTM_GFRAME_SIZE 18
 #define LTM_AFRAME_SIZE 10
@@ -219,12 +220,12 @@ static void send_LTM_Sframe()
     //FRAMEID
     LTBuff[2]=0x53; //S 
     //PAYLOAD
-    LTBuff[3]=(uav_bat >> 8*0) & 0xFF;                                                                    //vbat converted in mv
+    LTBuff[3]=(uav_bat >> 8*0) & 0xFF;                                                    //vbat converted in mv
     LTBuff[4]=(uav_bat >> 8*1) & 0xFF;
-    LTBuff[5]=(uav_amp >> 8*0) & 0xFF;                                                                           //consumed current in ma.
+    LTBuff[5]=(uav_amp >> 8*0) & 0xFF;                                                    //consumed current in ma.
     LTBuff[6]=(uav_amp >> 8*1) & 0xFF;
     LTBuff[7]=(uav_rssi >> 8*0) & 0xFF;                                                   // rouding RSSI to 1 byte resolution.
-    LTBuff[8]=(uav_airspeed >> 8*0) & 0xFF;                                                                          // no airspeed in multiwii/baseflight
+    LTBuff[8]=(uav_airspeed >> 8*0) & 0xFF;                                               // no airspeed in multiwii/baseflight
     LTBuff[9]= ((uav_flightmode << 2)& 0xFF ) | ((uav_failsafe << 1)& 0b00000010 ) | (uav_arm & 0b00000001) ; // last 6 bits: flight mode, 2nd bit: failsafe, 1st bit: Arm status.
     send_LTM_Packet(LTBuff,LTM_SFRAME_SIZE);
 }
@@ -254,7 +255,6 @@ void ltm_write() {
         send_LTM_Aframe();
         send_LTM_Sframe();
         send_LTM_Gframe();
-
 }
-
+#endif
 #endif

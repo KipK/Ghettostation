@@ -83,13 +83,13 @@
   #define RIGHT_BUTTON_PIN 9    //Any Digital pin
   #define ENTER_BUTTON_PIN 8    //Any Digital pin
   #define SOFTSERIAL_TX 14      //Digital pin used by SoftSerial for sending data to ground osd.
-  #define SOFTSERIAL_RX 15      //Digital pin used by SoftSerial for receiving data from ground osd. ( unused yet )
+  #define SOFTSERIAL_RX 0      //Digital pin used by SoftSerial for receiving data from ground osd. ( unused yet )
 #endif
 
 //pinout for Arduino Mega 1280/2560
 #ifdef MEGA
-  #define PAN_SERVOPIN 3	//PWM Pin for pan servo
-  #define TILT_SERVOPIN 4       //PWM Pin for tilt ervo
+  #define PAN_SERVOPIN 11	//PWM Pin for pan servo
+  #define TILT_SERVOPIN 12       //PWM Pin for tilt ervo
   #define LEFT_BUTTON_PIN 32    //Any Digital pin
   #define RIGHT_BUTTON_PIN 34   //Any Digital pin
   #define ENTER_BUTTON_PIN 36   //Any Digital pin

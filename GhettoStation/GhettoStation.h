@@ -3,12 +3,12 @@
 #define PROTOCOL_MSP                            // MSP from Multiwii 
 #define PROTOCOL_LIGHTTELEMETRY                 // Ghettostation internal protocol. 
 #define PROTOCOL_MAVLINK                        // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
-/* ######################################## SERIAL HAL ####################################################*/
+/* ######################################## HAL ####################################################*/
 #ifdef TEENSYPLUS2
 // This line defines a "Uart" object to access the serial port
 HardwareSerial SerialPort1 = HardwareSerial();
  #ifdef OSD_OUTPUT
- SoftwareSerial SerialPort2(SOFTSERIAL_RX,SOFTSERIAL_TX);
+  SoftwareSerial SerialPort2(SOFTSERIAL_RX,SOFTSERIAL_TX);
  #endif
 #endif
 #ifdef MEGA
@@ -17,6 +17,11 @@ HardwareSerial SerialPort1(Serial1);
   HardwareSerial SerialPort2(Serial2);
  #endif
 #endif
+
+//pan/tilt servos 
+ PWMServo pan_servo;
+ PWMServo tilt_servo;
+ 
 /* ########################################  VARIABLES #####################################################*/
 
 
@@ -90,6 +95,7 @@ boolean home_bear    = false;
 
 //servo temp configuration before saving
 int servoconf_tmp[4];
+int servoconfprev_tmp[4];
 
 //baudrate selection
 long baudrates[8]= {1200, 2400, 4800, 9600, 19200, 38400, BAUDRATE56K, 115200};
@@ -185,6 +191,21 @@ float toDeg(float angle) {
         return angle;
 }
 
+void attach_servo(PWMServo &s, int p, int min, int max) {
+  
+  
+ // called at setup() or after a servo configuration change in the menu
+	if (!s.attached()) {
+            s.attach(p,min,max);
+        }
+}
+
+void detach_servo(PWMServo &s) {
+ // called at setup() or after a servo configuration change in the menu
+	if (s.attached()) {
+	    s.detach();
+	}
+}
 
 
 int config_bank[]= {1, 51, 101,151}; // 50 bytes reserved per bank. 

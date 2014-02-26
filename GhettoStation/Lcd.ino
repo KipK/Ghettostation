@@ -77,7 +77,7 @@ void lcddisp_menu() {
 	                        strcat(currentline," ");
 				}			  
       		  if (displaymenu_sel == displaymenu_comp) strcat(currentline,"<");
-                  else strcat(currentline,"<");
+                  else strcat(currentline," ");
             }
             else {
                //empty_line.toCharArray(string_buffer,21);
@@ -419,9 +419,10 @@ int config_servo(int servotype, int valuetype, int value ) {
 	}
 	else if (servotype==2) {
           string_servos2.copy(currentline);                              // Tilt servo
-          store_lcdline(2, currentline);
+          store_lcdline(1, currentline);
 	}
 	string_load2.copy(currentline);
+        store_lcdline(2, currentline);
 	switch (valuetype) 
        {	        
               case 1: sprintf(currentline, "min endpoint: <%4d>",  value); break;          //minpwm
