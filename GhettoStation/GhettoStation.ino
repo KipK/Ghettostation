@@ -139,6 +139,9 @@ init_lcdscreen();
 
 //######################################## MAIN LOOP #####################################################################
 void loop() {
+  
+ get_telemetry();   // read serial port buffer as fast as possible 
+ 
  if (loop1hz.check()) {
          #ifdef SIMUGPS
          simulate_gps();
@@ -172,7 +175,7 @@ void loop() {
     
   }
   
-get_telemetry();   // read serial port buffer as fast as possible 
+
 #endif
      
 }
