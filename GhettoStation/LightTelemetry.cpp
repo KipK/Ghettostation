@@ -142,9 +142,9 @@ void ltm_check() {
     uav_rssi = ltmread8();
     uav_airspeed = ltmread8();
     uint8_t ltm_armfsmode = ltmread8();
-    uav_flightmode = (ltm_armfsmode >> 2) & 0xFF; 
-    uav_failsafe = (ltm_armfsmode >> 1) & 0b00000001;
     uav_arm = ltm_armfsmode & 0b00000001;
+    uav_failsafe = (ltm_armfsmode >> 1) & 0b00000001;
+    uav_flightmode = (ltm_armfsmode >> 2) & 0b00111111;     
   }
 }
 
@@ -224,7 +224,7 @@ static void send_LTM_Sframe()
     LTBuff[4]=(uav_bat >> 8*1) & 0xFF;
     LTBuff[5]=(uav_amp >> 8*0) & 0xFF;                                                    //consumed current in ma.
     LTBuff[6]=(uav_amp >> 8*1) & 0xFF;
-    LTBuff[7]=(uav_rssi >> 8*0) & 0xFF;                                                   // rouding RSSI to 1 byte resolution.
+    LTBuff[7]=(uav_rssi >> 8*0) & 0xFF;                                                   
     LTBuff[8]=(uav_airspeed >> 8*0) & 0xFF;                                               // no airspeed in multiwii/baseflight
     LTBuff[9]= ((uav_flightmode << 2)& 0xFF ) | ((uav_failsafe << 1)& 0b00000010 ) | (uav_arm & 0b00000001) ; // last 6 bits: flight mode, 2nd bit: failsafe, 1st bit: Arm status.
     // Flight mode(0-19): 0: Manual, 1: Rate, 2: Attitude/Angle, 3: Horizon, 4: Acro, 5: Stabilized1, 6: Stabilized2, 7: Stabilized3,
