@@ -5,6 +5,7 @@ void init_lcdscreen() {
     Serial.println("starting lcd"); 
 #endif
 
+
   char extract[20];
 // init LCD
 	LCD.begin(20,4);

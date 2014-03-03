@@ -14,20 +14,21 @@
  *****************************************************************************/
 #include "Config.h"
 
+
 #include <avr/pgmspace.h>
 #include <arduino.h>
-//#include <Servo.h>
 #include <PWMServo.h>  
+
 #ifdef TEENSYPLUS2
 #include <SoftwareSerial.h>
 #endif
-#include <Wire.h> 
+//#include <Wire.h> 
 
 #ifdef BEARING_METHOD_4 //use additional hmc5883L mag breakout
 //HMC5883L i2c mag b
 #include <HMC5883L.h>
 #endif
-#include <LiquidCrystal_I2C.h>
+
 #include <Metro.h>
 #include <MenuSystem.h>
 #include <Button.h>
@@ -53,8 +54,18 @@
 //################################### SETTING OBJECTS ###############################################
 // Set the pins on the I2C chip used for LCD connections:
 // addr, en,rw,rs,d4,d5,d6,d7,bl,blpol
-LiquidCrystal_I2C LCD(I2CADDRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1" 
-//LiquidCrystal_I2C LCD(I2CADDRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  // Arduino-IIC-LCD GY-LCD-V1
+//#ifdef LCDLCM1602
+//  #include <LiquidCrystal_I2C.h>
+//  LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  //   HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
+//#endif
+//#ifdef LCDGYLCD
+//  #include <LiquidCrystal_I2C.h>
+//  LiquidCrystal_I2C lcd(0x20, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  //   Arduino-IIC-LCD GY-LCD-V1
+//#endif
+//#ifdef LCD03I2C
+  #include <LCD03_I2C.h>
+  LCD03_I2C LCD(0x63);
+//#endif
 
 //##### SERVOS 
 

@@ -46,14 +46,20 @@
 
 //########### GROUND OSD TELEMETRY OUTPUT #########################################################################
 // Activate osd output (comment if not needed)
- #define OSD_OUTPUT 
+ //#define OSD_OUTPUT 
 //OSD output baudrate ( send data as fast as possible to the osd, no need to have the same baudrate as input one. )
  #define OSD_BAUD 38400
 //########### LCD ##################################################################################################
+//#define LCDLCM1602 // HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
+//#define LCDGYLCD  // Arduino-IIC-LCD GY-LCD-V1
+#define LCD03I2C  // LCD03 
 
 //#define I2CADDRESS 0xc6 // LCD03 i2C from Robot Electronics 
- #define I2CADDRESS 0x27 // IIC/I2C/TWI Serial 2004 20x4 lcd ( Hobbyking )
-//#define I2CADDRESS 020 // Arduino-IIC-LCD GY-LCD-V1
+//#define I2CADDRESS 0x27 // HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
+//#define I2CADDRESS 0x20 // Arduino-IIC-LCD GY-LCD-V1
+
+#define LCDTYPE 3 // for LCD03 only. Green=3, Blue=4
+
 
 //#################################### SERVOS ENDPOINTS #############################################################
 //. Those are just default values when not configured yet. 
