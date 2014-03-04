@@ -39,19 +39,19 @@
 #include <EEPROM.h>
 #include "GhettoStation.h"
 
-//#ifdef PROTOCOL_UAVTALK
+#ifdef PROTOCOL_UAVTALK
 #include "UAVTalk.cpp"
-//#endif
-//#ifdef PROTOCOL_MSP
+#endif
+#ifdef PROTOCOL_MSP
 #include "MSP.cpp"
-//#endif
-//#ifdef PROTOCOL_LIGHTTELEMETRY
+#endif
+#ifdef PROTOCOL_LIGHTTELEMETRY
 #include "LightTelemetry.cpp"
-//#endif
-//#ifdef PROTOCOL_MAVLINK
+#endif
+#ifdef PROTOCOL_MAVLINK
 #include <mavlink.h>
 #include "Mavlink.cpp"
-//#endif
+#endif
 
 
 /*
@@ -254,8 +254,8 @@ void check_activity() {
                     detach_servo(pan_servo);
                     attach_servo(pan_servo, PAN_SERVOPIN, servoconf_tmp[0], configuration.pan_maxpwm);
                 } 
-                //pan_servo.writeMicroseconds(servoconf_tmp[0]);
-                pan_servo.write(0);
+                pan_servo.writeMicroseconds(servoconf_tmp[0]);
+                //pan_servo.write(0);
                 servoconfprev_tmp[0] = servoconf_tmp[0];
                 if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press 
                     configuration.pan_minpwm = servoconf_tmp[0];
@@ -268,8 +268,8 @@ void check_activity() {
                 break;
         case 4:             //PAN_MINANGLE
                 configuration.pan_minangle = config_servo(1, 2, configuration.pan_minangle);
-                //pan_servo.writeMicroseconds(configuration.pan_minpwm);
-                pan_servo.write(0);
+                pan_servo.writeMicroseconds(configuration.pan_minpwm);
+                //pan_servo.write(0);
                 if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press
                     EEPROM_write(config_bank[int(current_bank)], configuration);
                     move_servo(pan_servo, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
@@ -282,8 +282,8 @@ void check_activity() {
                 detach_servo(pan_servo);
                 attach_servo(pan_servo,PAN_SERVOPIN, configuration.pan_minpwm, servoconf_tmp[1]);
             } 
-            //pan_servo.writeMicroseconds(servoconf_tmp[1]);
-            pan_servo.write(180);
+            pan_servo.writeMicroseconds(servoconf_tmp[1]);
+            //pan_servo.write(180);
             servoconfprev_tmp[1] = servoconf_tmp[1];
             if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press
                 configuration.pan_maxpwm = servoconf_tmp[1];
@@ -297,8 +297,8 @@ void check_activity() {
             
         case 6:             //PAN_MAXANGLE
             configuration.pan_maxangle = config_servo(1, 4, configuration.pan_maxangle );
-            //pan_servo.writeMicroseconds(configuration.pan_maxpwm);
-            pan_servo.write(180);
+            pan_servo.writeMicroseconds(configuration.pan_maxpwm);
+            //pan_servo.write(180);
              if (enter_button.holdTime() >= 700 && enter_button.held()) {   //long press
                 EEPROM_write(config_bank[int(current_bank)], configuration);
                 move_servo(pan_servo, 1, 0, configuration.pan_minangle, configuration.pan_maxangle);
@@ -311,8 +311,8 @@ void check_activity() {
                 detach_servo(tilt_servo);
                 attach_servo(tilt_servo, TILT_SERVOPIN, servoconf_tmp[2], configuration.tilt_maxpwm); 
             }
-            //tilt_servo.writeMicroseconds(servoconf_tmp[2]); 
-            tilt_servo.write(0);
+            tilt_servo.writeMicroseconds(servoconf_tmp[2]); 
+            //tilt_servo.write(0);
             servoconfprev_tmp[2] = servoconf_tmp[2];
             if (enter_button.holdTime() >= 700 && enter_button.held()) {    //long press
                 configuration.tilt_minpwm = servoconf_tmp[2];
@@ -325,8 +325,8 @@ void check_activity() {
             break;
         case 8:             //TILT_MINANGLE
             configuration.tilt_minangle = config_servo(2, 2, configuration.tilt_minangle ); 
-            //tilt_servo.writeMicroseconds(configuration.tilt_minpwm);
-            tilt_servo.write(0);
+            tilt_servo.writeMicroseconds(configuration.tilt_minpwm);
+            //tilt_servo.write(0);
             if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press
                 EEPROM_write(config_bank[int(current_bank)], configuration);
                 move_servo(tilt_servo, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);
@@ -339,8 +339,8 @@ void check_activity() {
                 detach_servo(tilt_servo);
                 attach_servo(tilt_servo, TILT_SERVOPIN, configuration.tilt_minpwm, servoconf_tmp[3]); 
             }
-            //tilt_servo.writeMicroseconds(servoconf_tmp[3]);
-            tilt_servo.write(180);
+            tilt_servo.writeMicroseconds(servoconf_tmp[3]);
+            //tilt_servo.write(180);
             servoconfprev_tmp[3] = servoconf_tmp[3];
             if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press
                 configuration.tilt_maxpwm = servoconf_tmp[3];
@@ -353,8 +353,8 @@ void check_activity() {
             break;
         case 10:                //TILT_MAXANGLE
             configuration.tilt_maxangle = config_servo(2, 4, configuration.tilt_maxangle );
-            //tilt_servo.writeMicroseconds(configuration.tilt_maxpwm);
-            tilt_servo.write(180);
+            tilt_servo.writeMicroseconds(configuration.tilt_maxpwm);
+            //tilt_servo.write(180);
             if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press
                 EEPROM_write(config_bank[int(current_bank)], configuration);
                 move_servo(tilt_servo, 2, 0, configuration.tilt_minangle, configuration.tilt_maxangle);
@@ -740,18 +740,20 @@ void move_servo(PWMServo &s, int stype, int a, int mina, int maxa) {
                      
 		}
                 // map angle to microseconds
-                //int microsec = map(a, 0, mina+maxa, configuration.pan_minpwm, configuration.pan_maxpwm);
-                int newangle = map(a,0, mina+maxa, 0, 180);
+                int microsec = map(a, 0, mina+maxa, configuration.pan_minpwm, configuration.pan_maxpwm);
+                //int newangle = map(a,0, mina+maxa, 0, 180);
                 
-                s.write( newangle );
+                s.writeMicroseconds( microsec );
+                //s.write( newangle );
 	 }
   else if (stype == 2){
                 
                 //map angle to microseconds
-                //int microsec = map(a, mina, maxa, configuration.tilt_minpwm, configuration.tilt_maxpwm);
-                int newangle = map(a, mina, maxa, 0, 180);
+                int microsec = map(a, mina, maxa, configuration.tilt_minpwm, configuration.tilt_maxpwm);
+                //int newangle = map(a, mina, maxa, 0, 180);
 
-	        s.write( newangle );
+	        //s.write( newangle );
+                s.writeMicroseconds( microsec );
 
 	}
 	
