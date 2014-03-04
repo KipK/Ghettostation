@@ -112,7 +112,7 @@ FLASH_STRING(string_shome3,     "3D FIX! Alt:");
 FLASH_STRING(string_shome4,     "    Please Wait.    ");
 FLASH_STRING(string_shome5,     "(long press to quit)");
 FLASH_STRING(string_shome6,     " Save Home pos now? ");
-FLASH_STRING(string_shome7,     " Set Bearing:       ");
+FLASH_STRING(string_shome7,     " Set Heading:       ");
 FLASH_STRING(string_shome8,     " Move UAV 20m ahead ");
 FLASH_STRING(string_shome9,     " & press enter      ");
 FLASH_STRING(string_shome10,    "    HOME IS SET     ");

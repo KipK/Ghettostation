@@ -82,9 +82,6 @@ nop();
 
 
 
-//##### SERVOS 
-
-
 
 //#####	LOOP RATES
 Metro loop1hz = Metro(1000); // 1hz loop

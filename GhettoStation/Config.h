@@ -26,7 +26,7 @@
 //#define BEARING_METHOD_4  // 4=Use internal HMC5883 compass reading                          
                
  #define MAGDEC -600  // Your local Magnetic Declination in radian. Get it from here: http://magnetic-declination.com/  then convert it in milliradian: http://www.wolframalpha.com/input/?i=%280%C2%B0+5%27%29+in+radians 
-                     // only uncomment if using compass.
+                     // only needed if using internal compass.
 
 //Minimum distance in meters where it will stop moving servos.
  #define DONTTRACKUNDER  2
@@ -46,13 +46,13 @@
 
 //########### GROUND OSD TELEMETRY OUTPUT #########################################################################
 // Activate osd output (comment if not needed)
- //#define OSD_OUTPUT 
+ #define OSD_OUTPUT 
 //OSD output baudrate ( send data as fast as possible to the osd, no need to have the same baudrate as input one. )
  #define OSD_BAUD 38400
 //########### LCD ##################################################################################################
 //LCD model
 #define LCDLCM1602 // (adress: 0x27) HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
-//#define LCDGYLCD  // (adress: 0x20) Arduino-IIC-LCD GY-LCD-V1
+//#define LCDGYLCD  // (adress: 0x20) Arduino-IIC-LCD GY-LCD-V1Arduino-IIC-LCD GY-LCD-V1
 //#define LCD03I2C  // (adress: 0x63 or  0xc6) LCD03 / LCD05 
 
 // I2C LCD Adress
@@ -60,12 +60,13 @@
                         // LCM1602 uses 0x27 & GY-LCD use 0x20
 
 //#################################### SERVOS ENDPOINTS #############################################################
-//. Those are just default values when not configured yet. 
+// NO NEED TO EDIT THIS
+//. Those are just default values when not configured.
 // To prevent burning servo they boot starts at neutral for all values. Adjust them directly from the menu.
 
  #define PAN_MAXPWM 1500     //max pan servo pwm value
  #define PAN_MAXANGLE 90     //Max angle clockwise (on the right) relative to PAN_MAXPWM. 
- #define PAN_MINPWM 1500     //min pan servo pwm value
+ #define PAN_MINPWM 1500     //min pan servo pwm valuemin pan servo pwm value
  #define PAN_MINANGLE 90	    //Max angle counter clockwise (on the left) relative to PAN_MINPWM.
 
  #define TILT_MAXPWM 1500    //max tilt pwm value 
@@ -76,9 +77,7 @@
 
 
 //########################################### BOARDS PINOUTS #########################################################
-// Change them with other compatible pins according to your needs. 
-
-
+//DON'T EDIT THIS IF YOU DON'T KNOW WHAT YOU'RE DOINGG
 //pinout for TEENSY++ 2
 #ifdef TEENSYPLUS2
   #define PAN_SERVOPIN 26	//PWM Pin for pan servo ( Timer 1, do not use with altsoftserial )
