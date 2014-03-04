@@ -11,7 +11,9 @@
  *
  * @see        The GNU Public License (GPL) Version 3
  *
- *****************************************************************************/
+ *****************************************************************************
+*/
+
 #include "Config.h"
 
 
@@ -22,7 +24,7 @@
 #ifdef TEENSYPLUS2
 #include <SoftwareSerial.h>
 #endif
-//#include <Wire.h> 
+#include <Wire.h> 
 
 #ifdef BEARING_METHOD_4 //use additional hmc5883L mag breakout
 //HMC5883L i2c mag b
@@ -37,35 +39,48 @@
 #include <EEPROM.h>
 #include "GhettoStation.h"
 
-#ifdef PROTOCOL_UAVTALK
+//#ifdef PROTOCOL_UAVTALK
 #include "UAVTalk.cpp"
-#endif
-#ifdef PROTOCOL_MSP
+//#endif
+//#ifdef PROTOCOL_MSP
 #include "MSP.cpp"
-#endif
-#ifdef PROTOCOL_LIGHTTELEMETRY
+//#endif
+//#ifdef PROTOCOL_LIGHTTELEMETRY
 #include "LightTelemetry.cpp"
-#endif
-#ifdef PROTOCOL_MAVLINK
+//#endif
+//#ifdef PROTOCOL_MAVLINK
 #include <mavlink.h>
 #include "Mavlink.cpp"
+//#endif
+
+
+/*
+ * BOF preprocessor bug prevent
+ */
+#define nop() __asm volatile ("nop")
+#if 1
+nop();
 #endif
+/*
+ * EOF preprocessor bug prevent
+*/
 
 //################################### SETTING OBJECTS ###############################################
 // Set the pins on the I2C chip used for LCD connections:
 // addr, en,rw,rs,d4,d5,d6,d7,bl,blpol
-//#ifdef LCDLCM1602
-//  #include <LiquidCrystal_I2C.h>
-//  LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  //   HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
-//#endif
-//#ifdef LCDGYLCD
-//  #include <LiquidCrystal_I2C.h>
-//  LiquidCrystal_I2C lcd(0x20, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  //   Arduino-IIC-LCD GY-LCD-V1
-//#endif
-//#ifdef LCD03I2C
+#ifdef LCD03I2C
   #include <LCD03_I2C.h>
-  LCD03_I2C LCD(0x63);
-//#endif
+  LCD03_I2C LCD(I2CADRESS);
+#else
+  #include <LiquidCrystal_I2C.h>
+  #ifdef LCDLCM1602
+  LiquidCrystal_I2C LCD(I2CADRESS, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  //   HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
+  #else
+  LiquidCrystal_I2C LCD(I2CADRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  //   Arduino-IIC-LCD GY-LCD-V1
+  #endif
+#endif
+
+
 
 //##### SERVOS 
 

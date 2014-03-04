@@ -13,7 +13,7 @@
    Successfull com between Teensy & arduino requires 58824 bauds for Teensy.*/
 //#define BAUDRATE56K 57600
   #define BAUDRATE56K 58824 
-  
+
   #define BARO_ALT // Use Baro for Altitude. Comment for using GPS altitude instead.
  
 //Use Mag+imu for heading or GPS heading if not set ( not used for tracker only osd relay )
@@ -50,16 +50,14 @@
 //OSD output baudrate ( send data as fast as possible to the osd, no need to have the same baudrate as input one. )
  #define OSD_BAUD 38400
 //########### LCD ##################################################################################################
-//#define LCDLCM1602 // HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
-//#define LCDGYLCD  // Arduino-IIC-LCD GY-LCD-V1
-#define LCD03I2C  // LCD03 
+//LCD model
+#define LCDLCM1602 // (adress: 0x27) HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
+//#define LCDGYLCD  // (adress: 0x20) Arduino-IIC-LCD GY-LCD-V1
+//#define LCD03I2C  // (adress: 0x63 or  0xc6) LCD03 / LCD05 
 
-//#define I2CADDRESS 0xc6 // LCD03 i2C from Robot Electronics 
-//#define I2CADDRESS 0x27 // HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
-//#define I2CADDRESS 0x20 // Arduino-IIC-LCD GY-LCD-V1
-
-#define LCDTYPE 3 // for LCD03 only. Green=3, Blue=4
-
+// I2C LCD Adress
+#define I2CADRESS 0x27 // LCD03/05 have 0x63 or 0xc6 ( even if it's written 0xc6 when powering the lcd03, in fact it uses 0x63 so try booth)
+                        // LCM1602 uses 0x27 & GY-LCD use 0x20
 
 //#################################### SERVOS ENDPOINTS #############################################################
 //. Those are just default values when not configured yet. 
