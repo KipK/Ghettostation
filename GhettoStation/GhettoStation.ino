@@ -121,6 +121,7 @@ init_lcdscreen();
         servoconf_tmp[1] = configuration.pan_maxpwm;
         servoconf_tmp[2] = configuration.tilt_minpwm;
         servoconf_tmp[3] = configuration.tilt_maxpwm;
+        home_bearing = configuration.bearing; // use last bearing position of previous session.
         delay(20);
 	//clear eeprom & write default parameters if config is empty or wrong
 	if (configuration.config_crc != CONFIG_VERSION) {
@@ -233,11 +234,7 @@ void check_activity() {
                 if (!home_pos) lcddisp_sethome();
                 else if (home_pos) {
                     if (!home_bear) { 
-                    #ifndef BEARING_METHOD_3
                     lcddisp_setbearing();   
-                    #else
-                    home_bearing = 0;
-                    #endif
                     }
                     else lcddisp_homeok();
                 }
