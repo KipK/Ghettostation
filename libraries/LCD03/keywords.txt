@@ -1,0 +1,60 @@
+/*
+  keywords.txt - Arduino library for I2C LCD03 display from Robot Electronics
+  see http://www.robot-electronics.co.uk/htm/Lcd03tech.htm
+  Copyright (c) 2013 Ben Arblaster.  All right reserved.
+
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
+
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+# Datatypes (KEYWORD1)
+LCD03	KEYWORD1
+
+# Methods and Functions (KEYWORD2)
+begin	KEYWORD2
+clear	KEYWORD2
+home	KEYWORD2
+setCursor	KEYWORD2
+write	KEYWORD2
+cursor	KEYWORD2
+noCursor	KEYWORD2
+blink	KEYWORD2
+noBlink	KEYWORD2
+display	KEYWORD2
+noDisplay	KEYWORD2
+createChar	KEYWORD2
+newLine	KEYWORD2
+cursorDown	KEYWORD2
+cursorUp	KEYWORD2
+clearColumn	KEYWORD2
+backspace	KEYWORD2
+tab	KEYWORD2
+tabSet	KEYWORD2
+backlight	KEYWORD2
+noBacklight	KEYWORD2
+bufferFreeBytes	KEYWORD2
+readKeypad	KEYWORD2
+
+# Constants (LITERAL1)
+KEYPAD_1	LITERAL1
+KEYPAD_2	LITERAL1
+KEYPAD_3	LITERAL1
+KEYPAD_4	LITERAL1
+KEYPAD_5	LITERAL1
+KEYPAD_6	LITERAL1
+KEYPAD_7	LITERAL1
+KEYPAD_8	LITERAL1
+KEYPAD_9	LITERAL1
+KEYPAD_STAR	LITERAL1
+KEYPAD_0	LITERAL1
+KEYPAD_HASH	LITERAL1
