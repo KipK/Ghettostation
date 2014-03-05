@@ -264,7 +264,7 @@ void lcddisp_tracking(){
                 sprintf(currentline, "Alt:%dm Spd:%dkmh", round((uav_alt - home_alt)/10), uav_groundspeed);
                 break;
            case 3:
-                sprintf(currentline, "Dist:%dm", home_dist);
+                sprintf(currentline, "Dist:%dm Hdg:%d°", home_dist, uav_heading);
                 break;
            case 4:   
                 char bufferl[10];
