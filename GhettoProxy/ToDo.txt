@@ -1,0 +1,13 @@
+- battery gs display (adc)
+- video rssi display (adc)
+- buzzer alert
+- manual tilt
+- telemetry display: add screens
+- protocol: FrSky Hub
+- protocol: FrSky Smartport
+- protocol: raw NMEA & Ublox binary support
+- internal GPS support ( auto home config, & mobile tracker )
+- deadband margin before inverting pan/tilt servo on 180/180 config.
+- telemetry proxy (ie. forward serial uart1 to other uart in booth ways )
+
+
