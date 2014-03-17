@@ -31,7 +31,8 @@ float        uav_lon = 0;                    // longitude
 uint8_t      uav_satellites_visible = 0;     // number of satelites
 uint8_t      uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
 int16_t      uav_alt = 0;                    // altitude (dm)
-int          uav_groundspeed = 0;            // ground speed
+int16_t      rel_alt = 0;                    // relative altitude to home
+uint16_t     uav_groundspeed = 0;            // ground speed
 int16_t      uav_pitch = 0;                  // attitude pitch
 int16_t      uav_roll = 0;                   // attitude roll
 int16_t      uav_heading = 0;                // attitude heading
@@ -67,8 +68,8 @@ static uint8_t      apm_mav_component;
 //home 
 float home_lon;
 float home_lat;
-int home_alt;
-int home_bearing = 0;
+int16_t home_alt;
+int16_t home_bearing = 0;
 int home_dist;
 
 //tracking 

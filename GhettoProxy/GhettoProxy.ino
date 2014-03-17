@@ -16,13 +16,25 @@
 
 #include "Config.h"
 
-
-#include <avr/pgmspace.h>
-#include <arduino.h>
 #include <SoftwareSerial.h>
 #include <Metro.h>
 #include "GhettoStation.h"
 #include "LightTelemetry.cpp"
+
+#include <avr/pgmspace.h>
+#include <arduino.h>
+#ifdef PROTOCOL_NMEA
+#include <GPS_NMEA.h>
+#define GPSTELEMETRY
+#endif
+#ifdef PROTOCOL_UBLOX
+#include <GPS_UBLOX.h>
+#define GPSTELEMETRY
+#endif
+#ifdef PROTOCOL_MTK
+#include <GPS_MTK.h>
+#define GPSTELEMETRY
+#endif
 #ifdef PROTOCOL_UAVTALK
 #include "UAVTalk.cpp"
 #endif
@@ -34,17 +46,16 @@
 #include "Mavlink.cpp"
 #endif
 
-
-/*
- * BOF preprocessor bug prevent
- */
-#define nop() __asm volatile ("nop")
-#if 1
-nop();
-#endif
-/*
- * EOF preprocessor bug prevent
-*/
+///*
+// * BOF preprocessor bug prevent
+// */
+//#define nop() __asm volatile ("nop")
+//#if 1
+//nop();
+//#endif
+///*
+// * EOF preprocessor bug prevent
+//*/
 
 //################################### SETTING OBJECTS ###############################################
 
@@ -59,6 +70,9 @@ Metro loop10hz = Metro(100); //10hz loop
 void setup() {
     //start serial com  
     init_serial();
+    #ifdef GPSTELEMETRY
+    GPS.Init();
+    #endif
     if (OUTPUT_BAUD < 2400)
       slowrate = 1;
 }

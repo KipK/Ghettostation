@@ -395,7 +395,7 @@ int uavtalk_read(void) {
                                         #ifndef BARO_ALT
 					uav_alt			= uavtalk_get_float(&msg, GPSPOSITION_OBJ_ALTITUDE);
                                         #endif
-					uav_groundspeed		= uavtalk_get_float(&msg, GPSPOSITION_OBJ_GROUNDSPEED);
+					uav_groundspeed		= (uint16_t)uavtalk_get_float(&msg, GPSPOSITION_OBJ_GROUNDSPEED);
 				break;
 
 				case FLIGHTBATTERYSTATE_OBJID:

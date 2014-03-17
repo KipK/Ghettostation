@@ -13,7 +13,7 @@
  *
  *****************************************************************************
 */
-
+ 
 #include "Config.h"
 
 
@@ -457,7 +457,7 @@ void leftButtonReleaseEvents(Button &btn)
              }                              
         }
         else if (current_activity==2) {
-                #if defined(BEARING_METHOD_2) || defined(BEARING_METHOD_4)       
+                #if defined(BEARING_METHOD_2) || defined(BEARING_METHOD_3) || defined(BEARING_METHOD_4)       
                 if (home_pos && !home_bear) {
                     home_bearing--;
                     if (home_bearing<0) home_bearing = 359;
@@ -499,7 +499,7 @@ void rightButtonReleaseEvents(Button &btn)
     }
     else if (current_activity==2) {
 
-#if defined(BEARING_METHOD_2)  || defined(BEARING_METHOD_4) 
+#if defined(BEARING_METHOD_2)  || defined(BEARING_METHOD_3) || defined(BEARING_METHOD_4) 
            if (home_pos && !home_bear) {
                   home_bearing++;
                           if (home_bearing>359) home_bearing = 0;
@@ -859,7 +859,7 @@ void antenna_tracking() {
     //only move servo if gps has a 3D fix, or standby to last known position.
     if (gps_fix && telemetry_ok) {
 	
-		int rel_alt = uav_alt - home_alt; // relative altitude to ground in decimeters
+		rel_alt = uav_alt - home_alt; // relative altitude to ground in decimeters
 		calc_tracking( home_lon, home_lat, uav_lon, uav_lat, rel_alt); //calculate tracking bearing/azimuth
 		//set current GPS bearing relative to home_bearing
 		
@@ -927,8 +927,8 @@ int calc_elevation(float lon1, float lat1, float lon2, float lat2, int alt) {
   a = sin(dLat/2) * sin(dLat/2) + sin(dLon/2) * sin(dLon/2) * cos(lat1) * cos(lat2);
   c = 2* asin(sqrt(a));  
   d =(R * c);
-  home_dist = d/10;
-  el=atan((float)alt/(10*d));// in radian
+  home_dist = d;
+  el=atan((float)alt/(10.0f*d));// in radian
   el=toDeg(el); // in degree
   int b = (int)round(el);
   return b;

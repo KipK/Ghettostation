@@ -97,10 +97,10 @@ void read_mavlink(){
                 break; 
             case MAVLINK_MSG_ID_VFR_HUD:
                 {
-                    uav_groundspeed = (int)round(mavlink_msg_vfr_hud_get_groundspeed(&msg));
+                    uav_groundspeed = (uint16_t)round(mavlink_msg_vfr_hud_get_groundspeed(&msg));
                     uav_airspeed = (uint8_t)round(mavlink_msg_vfr_hud_get_airspeed(&msg));
                   #ifdef BARO_ALT
-                    uav_alt = (int)round(mavlink_msg_vfr_hud_get_alt(&msg) * 10);  // to decimeters
+                    uav_alt = (int16_t)round(mavlink_msg_vfr_hud_get_alt(&msg) * 10);  // to decimeters
                   #endif
                 }
                 break;

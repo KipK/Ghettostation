@@ -162,18 +162,26 @@ void lcddisp_setbearing() {
     }
 }
 #endif
-#if defined (BEARING_METHOD_2)
+
+#if defined (BEARING_METHOD_2) || defined (BEARING_METHOD_3) || defined (BEARING_METHOD_4)
 void lcddisp_setbearing() {
-     if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
-    home_bearing+=10;
-    if (home_bearing>360) home_bearing = 360;
-    else if (home_bearing<0) home_bearing = 0;
-    delay(500);
+    #if defined (BEARING_METHOD_4)
+    retrieve_mag();
+    #else
+    home_bearing = uav_heading;  // use compass data from the uav.
+    #endif
+    #if defined (BEARING_METHOD_2)
+    if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
+        home_bearing+=10;
+        if (home_bearing > 359) home_bearing = 0;
+        delay(500);
     }
     else if ( left_button.holdTime() >= 700 && left_button.isPressed() ) {
-    home_bearing-=10;
-    delay(500);
+        home_bearing-=10;
+        if (home_bearing < 0) home_bearing = 359;
+        delay(500);
     }
+    #endif
     for ( int i = 1 ; i<5; i++ ) {
        char currentline[21] = "";
        switch (i) {
@@ -200,35 +208,6 @@ void lcddisp_setbearing() {
 }
 #endif
 
-#if defined (BEARING_METHOD_3) || defined (BEARING_METHOD_4)
-void lcddisp_setbearing() {
-    #if defined (BEARING_METHOD_4)
-    retrieve_mag();
-    #else
-    home_bearing = uav_heading;  // use compass data from the uav.
-    #endif
-    for ( int i = 1 ; i<5; i++ ) {
-       char currentline[21]="";
-       switch (i) {
-           case 1: 
-                if (!telemetry_ok) { strcpy(currentline, "P:NO TELEMETRY"); }
-                else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type);
-                break;
-           case 2:
-                string_shome7.copy(currentline);  break;
-           case 3:
-                sprintf(currentline, "        %3d", home_bearing); break;
-           case 4:      
-                string_load2.copy(currentline); break;
-
-       }
-       for ( int l = strlen(currentline); l<20 ; l++ ) {
-	 strcat(currentline," ");
-	 }
-       store_lcdline(i,currentline);
- }
-}
-#endif
 
 void lcddisp_homeok() {
     for ( int i = 1 ; i<5; i++ ) {
@@ -261,10 +240,10 @@ void lcddisp_tracking(){
                 else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type);
                 break;
            case 2:
-                sprintf(currentline, "Alt:%dm Spd:%dkmh", round((uav_alt - home_alt)/10), uav_groundspeed);
+                sprintf(currentline, "Alt:%dm Spd:%d", (int)round((float)rel_alt/10.0f), uav_groundspeed);
                 break;
            case 3:
-                sprintf(currentline, "Dist:%dm Hdg:%d°", home_dist, uav_heading);
+                sprintf(currentline, "Dist:%dm Hdg:%d", home_dist, uav_heading);
                 break;
            case 4:   
                 char bufferl[10];

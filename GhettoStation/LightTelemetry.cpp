@@ -120,12 +120,12 @@ void ltm_check() {
     
     uav_lat = ltmread32() / 10000000.0;
     uav_lon = ltmread32() / 10000000.0;
-    uav_groundspeed = ltmread8()*3600/1000;
-    uav_alt = (int32_t)ltmread32() / 10;
+    uav_groundspeed = (uint16_t) round(((float)(ltmread8()))  * 3.6f); // convert to kmh
+    uav_alt = (int16_t)ltmread32() / 10;
     uint8_t ltm_satsfix = ltmread8();
     uav_satellites_visible         = (ltm_satsfix >> 2) & 0xFF;
     uav_fix_type                   = ltm_satsfix & 0b00000011;
-    //memset(LTMserialBuffer, 0, LIGHTTELEMETRY_GFRAMELENGTH-4); //still wondering what's it doing here
+    memset(LTMserialBuffer, 0, LIGHTTELEMETRY_GFRAMELENGTH-4); 
 
   }
   
@@ -134,6 +134,8 @@ void ltm_check() {
     uav_pitch = ltmread16();
     uav_roll = ltmread16();
     uav_heading = ltmread16();
+    if (uav_heading < 0 ) uav_heading = uav_heading + 360; //convert from -180/180 to 0/360°
+    memset(LTMserialBuffer, 0, LIGHTTELEMETRY_AFRAMELENGTH-4); 
   }
   if (LTMcmd==LIGHTTELEMETRY_SFRAME)
   {
@@ -144,7 +146,8 @@ void ltm_check() {
     uint8_t ltm_armfsmode = ltmread8();
     uav_arm = ltm_armfsmode & 0b00000001;
     uav_failsafe = (ltm_armfsmode >> 1) & 0b00000001;
-    uav_flightmode = (ltm_armfsmode >> 2) & 0b00111111;     
+    uav_flightmode = (ltm_armfsmode >> 2) & 0b00111111;
+    memset(LTMserialBuffer, 0, LIGHTTELEMETRY_SFRAMELENGTH-4);     
   }
 }
 

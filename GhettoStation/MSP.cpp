@@ -135,7 +135,7 @@ void msp_check() {
   if (MSPcmd==MSP_ALTITUDE)
   {
     #ifdef BARO_ALT
-    uav_alt = read32() / 10;
+    uav_alt = (int16_t) (read32() / 10) ;
     #endif
     //uav_vario = read16();
   }
