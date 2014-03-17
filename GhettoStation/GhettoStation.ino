@@ -995,8 +995,9 @@ void debug() {
        Serial.print("lon=");
        Serial.println(uav_lon,7);
        Serial.print("alt=");
-       Serial.print(uav_alt);
-       Serial.println("");
+       Serial.println(uav_alt);
+       Serial.print("gspeed");
+       Serial.println(uav_groundspeed);
        Serial.print("dst=");
        Serial.println(home_dist);
        Serial.print("El:");
@@ -1025,6 +1026,8 @@ void debug() {
        Serial.println(uav_failsafe);
        Serial.print("fmode:");
        Serial.println(uav_flightmode);
+       Serial.print("armfsmode");
+       Serial.println(ltm_armfsmode);
 }
 #endif
 

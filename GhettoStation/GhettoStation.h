@@ -32,7 +32,8 @@ uint8_t      uav_satellites_visible = 0;     // number of satelites
 uint8_t      uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
 int16_t      uav_alt = 0;                    // altitude (dm)
 int16_t      rel_alt = 0;                    // relative altitude to home
-uint16_t     uav_groundspeed = 0;            // ground speed
+uint16_t     uav_groundspeed = 0;            // ground speed in km/h
+uint8_t      uav_groundspeedms = 0;          // ground speed in m/s
 int16_t      uav_pitch = 0;                  // attitude pitch
 int16_t      uav_roll = 0;                   // attitude roll
 int16_t      uav_heading = 0;                // attitude heading
@@ -43,6 +44,7 @@ uint16_t     uav_current = 0;                // actual current
 uint8_t      uav_rssi = 0;                   // radio RSSI (%)
 uint8_t      uav_linkquality = 0;            // radio link quality
 uint8_t      uav_airspeed = 0;               // Airspeed sensor (m/s)
+uint8_t      ltm_armfsmode = 0;
 uint8_t      uav_arm = 0;                    // 0: disarmed, 1: armed
 uint8_t      uav_failsafe = 0;               // 0: normal,   1: failsafe 
 uint8_t      uav_flightmode = 16;            // Flight mode(0-19): 0: Manual, 1: Rate, 2: Attitude/Angle, 3: Horizon, 4: Acro, 5: Stabilized1, 6: Stabilized2, 7: Stabilized3,

@@ -48,7 +48,7 @@
 // Activate osd output (comment if not needed)
  #define OSD_OUTPUT 
 //OSD output baudrate ( send data as fast as possible to the osd, no need to have the same baudrate as input one. )
- #define OSD_BAUD 38400
+ #define OSD_BAUD 57600
 //########### LCD ##################################################################################################
 //LCD model
 #define LCDLCM1602 // (adress: 0x27) HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
