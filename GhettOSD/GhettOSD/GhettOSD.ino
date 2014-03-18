@@ -58,11 +58,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 //#define membug 
 //#define FORCEINIT  // You should never use this unless you know what you are doing 
 
-
 // AVR Includes
 #include <FastSerial.h>
-#include <AP_Common.h>
-#include <AP_Math.h>
 #include <math.h>
 #include <inttypes.h>
 #include <avr/pgmspace.h>
@@ -74,7 +71,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 #endif
 #include <EEPROM.h>
 #include <Metro.h>
-#include <GCS_MAVLink.h>
 
 #ifdef membug
 #include <MemoryFree.h>
