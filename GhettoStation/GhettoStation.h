@@ -30,8 +30,8 @@ float        uav_lat = 0;                    // latitude
 float        uav_lon = 0;                    // longitude
 uint8_t      uav_satellites_visible = 0;     // number of satelites
 uint8_t      uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
-int16_t      uav_alt = 0;                    // altitude (dm)
-int16_t      rel_alt = 0;                    // relative altitude to home
+int32_t      uav_alt = 0;                    // altitude (dm)
+int32_t      rel_alt = 0;                     // relative altitude to home
 uint16_t     uav_groundspeed = 0;            // ground speed in km/h
 uint8_t      uav_groundspeedms = 0;          // ground speed in m/s
 int16_t      uav_pitch = 0;                  // attitude pitch

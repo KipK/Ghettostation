@@ -107,6 +107,8 @@ void msp_check() {
   if (MSPcmd==MSP_RAW_GPS)
   {
     uav_fix_type=read8();
+    if (uav_fix_type == 1)
+        uav_fix_type = 3;  //multiwii only have to fix status, 0 (no fix) or 1 ( 3D fix )
     uav_satellites_visible=read8();
     uav_lat = read32() / 10000000.0;
     uav_lon = read32() / 10000000.0;

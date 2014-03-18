@@ -47,15 +47,15 @@ int8_t ltmread_8()  {
 }
 
 int16_t ltmread_16() {
-  int16_t t = ltmread_8();
-  t |= (int16_t)ltmread_8()<<8;
-  return t;
+  uint16_t t = ltmread_u8();
+  t |= (uint16_t)ltmread_u8()<<8;
+  return (int16_t)t;
 }
 
 int32_t ltmread_32() {
-  int32_t t = ltmread_16();
-  t |= (int32_t)ltmread_16()<<16;
-  return t;
+  uint32_t t = ltmread_u16();
+  t |= (uint32_t)ltmread_u16()<<16;
+  return (int32_t)t;
 }
 
 void ltm_read() {
@@ -134,11 +134,11 @@ void ltm_check() {
   if (LTMcmd==LIGHTTELEMETRY_GFRAME)
   {
     
-    uav_lat = ltmread_u32() / 10000000.0;
-    uav_lon = ltmread_u32() / 10000000.0;
+    uav_lat = ltmread_32() / 10000000.0;
+    uav_lon = ltmread_32() / 10000000.0;
     uav_groundspeedms = ltmread_u8();
     uav_groundspeed = (uint16_t) round((float)(uav_groundspeedms * 3.6f)); // convert to kmh
-    uav_alt = (int16_t)(ltmread_32() / 10);
+    uav_alt = round(((float)ltmread_32()) / 10.0f);
     uint8_t ltm_satsfix = ltmread_u8();
     uav_satellites_visible         = (ltm_satsfix >> 2) & 0xFF;
     uav_fix_type                   = ltm_satsfix & 0b00000011;
@@ -280,7 +280,7 @@ static void send_LTM_Oframe()  // this farme is only dedicated to OSD.
   }
   else {
       DirectionToHome = 180 - (uav_heading - Bearing);
-      if (DirectionToHome < 0) DirectionToHome +=360;
+      if (DirectionToHome < 0) DirectionToHome += 360;
   }
     LTBuff[0]=0x24; //$
     LTBuff[1]=0x54; //T
@@ -299,7 +299,7 @@ static void send_LTM_Oframe()  // this farme is only dedicated to OSD.
     LTBuff[10]= (home_intlon >> 8*1) & 0xFF;
     LTBuff[11]= (home_intlon >> 8*2) & 0xFF;
     LTBuff[12]= (home_intlon >> 8*3) & 0xFF;
-    int32_t home_alt_cm = (((int32_t)home_alt) * 10);
+    int32_t home_alt_cm = (int32_t)(home_alt * 10);
     LTBuff[13]=(home_alt_cm >> 8*0) & 0xFF;
     LTBuff[14]=(home_alt_cm >> 8*1) & 0xFF;
     LTBuff[15]=(home_alt_cm >> 8*2) & 0xFF;
@@ -313,7 +313,8 @@ void ltm_write() {
         send_LTM_Aframe();
         send_LTM_Sframe();
         send_LTM_Gframe();
-        send_LTM_Oframe();
+        if (home_bear)
+            send_LTM_Oframe();
 }
 #endif
 #endif
