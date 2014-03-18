@@ -97,7 +97,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 FastSerialPort0(Serial);
 OSD osd; //OSD object 
 
-Metro osdMetro = Metro(100);  //( 10hz )
+Metro osdMetro = Metro(20);  //( 50hz )
+
 
 
 /* **********************************************/
@@ -173,10 +174,12 @@ void setup()
 void loop() 
 {
     ltm_read();
-//    if (osdMetro.check() == 1) {
-    if (LTMpassed = 1) {  // refresh osd since we've received a new data packet.
+    
+//    if (LTMpassed = 1) {  
+//       LTMpassed = 0;
+//     }
+     if (osdMetro.check() == 1) {
        osd_refresh(); 
-       LTMpassed = 0;
      }
 }
 

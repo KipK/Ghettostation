@@ -4,7 +4,7 @@
 
 // Version number, incrementing this will erase/upload factory settings.
 // Only devs should increment this
-#define VER 01
+#define VER 10
 
 //protocol used
 #define PROTOCOL_LIGHTTELEMETRY

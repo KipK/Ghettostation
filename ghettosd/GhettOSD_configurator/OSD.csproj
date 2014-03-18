@@ -25,7 +25,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>6</ApplicationRevision>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>7</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -135,14 +136,14 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="ArduCam_logo.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="GhettOSD.mcm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="GhettOSD.osd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GhettOSD_1.0.0.0-largehorizonbar.mcm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GhettOSD_1.0.0.0.mcm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="key.snk" />
     <None Include="OSD_CléTemporaire.pfx" />
@@ -164,6 +165,7 @@
     <Content Include="gsosdlogo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="MAX7456Charwizard.jar" />
     <Content Include="osd.ico" />
     <None Include="Resources\saveHS.png" />
     <None Include="Resources\openHS.png" />

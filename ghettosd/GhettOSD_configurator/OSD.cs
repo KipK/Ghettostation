@@ -96,8 +96,8 @@ namespace OSD
             InitializeComponent();
 
             // load default font
-            chars = mcm.readMCM("GhettOSD.mcm");
-            lblPresentedCharset.Text = "Presented Charset: " + "MinimOSD_" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ".mcm";
+            chars = mcm.readMCM("GhettOSD_" +  System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ".mcm");
+            lblPresentedCharset.Text = "Presented Charset: " + "GhettOSD_" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ".mcm";
             // load default bg picture
             try
             {
@@ -201,7 +201,7 @@ namespace OSD
 
             panelItems[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Velocity", pan.panVel, 1, 1, panVel_en_ADDR, panVel_x_ADDR, panVel_y_ADDR);
             panelItems[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Air Speed", pan.panAirSpeed, 1, 2, panAirSpeed_en_ADDR, panAirSpeed_x_ADDR, panAirSpeed_y_ADDR);
-            panelItems[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Throttle", pan.panThr, 1, 3, panThr_en_ADDR, panThr_x_ADDR, panThr_y_ADDR);
+            //panelItems[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Throttle", pan.panThr, 1, 3, panThr_en_ADDR, panThr_x_ADDR, panThr_y_ADDR);
             panelItems[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Flight Mode", pan.panFlightMode, 25, 14, panFMod_en_ADDR, panFMod_x_ADDR, panFMod_y_ADDR);
             panelItems[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Horizon", pan.panHorizon, 8, 6, panHorizon_en_ADDR, panHorizon_x_ADDR, panHorizon_y_ADDR);
 
@@ -379,7 +379,7 @@ namespace OSD
 
             panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Velocity", pan.panVel, 1, 1, panVel_en_ADDR, panVel_x_ADDR, panVel_y_ADDR);
             panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Air Speed", pan.panAirSpeed, 1, 2, panAirSpeed_en_ADDR, panAirSpeed_x_ADDR, panAirSpeed_y_ADDR);
-            panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Throttle", pan.panThr, 1, 3, panThr_en_ADDR, panThr_x_ADDR, panThr_y_ADDR);
+            //panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Throttle", pan.panThr, 1, 3, panThr_en_ADDR, panThr_x_ADDR, panThr_y_ADDR);
             panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Flight Mode", pan.panFlightMode, 25, 14, panFMod_en_ADDR, panFMod_x_ADDR, panFMod_y_ADDR);
             panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Horizon", pan.panHorizon, 8, 6, panHorizon_en_ADDR, panHorizon_x_ADDR, panHorizon_y_ADDR);
 
@@ -955,7 +955,7 @@ namespace OSD
                 cbxWarningsAutoPanelSwitch.DataSource = Enum.GetValues(typeof(PanelsAutoSwitch));
 
             string strVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            this.Text = this.Text + " " + strVersion + " - Pre-Release r749";
+            this.Text = this.Text + " " + strVersion;
 
             CMB_ComPort.Items.AddRange(GetPortNames());
 
@@ -1525,7 +1525,7 @@ namespace OSD
         /* *********************************************** */
         // Version number, incrementing this will erase/upload factory settings.
         // Only devs should increment this
-        const int VER = 01;
+        const int VER = 10;
         // EEPROM Storage addresses
         const int OffsetBITpanel = 250;
         // First of 8 panels
@@ -2515,7 +2515,6 @@ namespace OSD
                 try
                 {
                     toolStripStatusLabel1.Text = "Reading Hex File";
-
                     statusStrip1.Refresh();
 
                     FLASH = readIntelHEXv2(new StreamReader(ofd.FileName));
@@ -2829,7 +2828,7 @@ namespace OSD
             //Get file version
             string fileVersion = "000";
             string tempFileName = ofd.SafeFileName.ToUpper();
-            if(tempFileName.StartsWith("MINIMOSD_"))
+            if(tempFileName.StartsWith("GHETTOSD_"))
             {
                 tempFileName = tempFileName.Remove(0, 9);
                 if(tempFileName.EndsWith(".MCM"))
@@ -3716,7 +3715,7 @@ namespace OSD
             //Get file version
             string fileVersion = "000";
             string tempFileName = ofd.SafeFileName.ToUpper();
-            if (tempFileName.StartsWith("MINIMOSD_"))
+            if (tempFileName.StartsWith("GHETTOSD_"))
             {
                 tempFileName = tempFileName.Remove(0, 9);
                 if (tempFileName.EndsWith(".MCM"))
