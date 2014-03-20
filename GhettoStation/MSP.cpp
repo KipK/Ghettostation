@@ -110,10 +110,10 @@ void msp_check() {
     if (uav_fix_type == 1)
         uav_fix_type = 3;  //multiwii only have to fix status, 0 (no fix) or 1 ( 3D fix )
     uav_satellites_visible=read8();
-    uav_lat = read32() / 10000000.0;
-    uav_lon = read32() / 10000000.0;
+    uav_lat = read32();
+    uav_lon = read32();
     #ifndef BARO_ALT
-    uav_alt = read16() * 10;
+    uav_alt = read16()*100;
     #endif
 
     uav_groundspeed = read16();
@@ -137,7 +137,7 @@ void msp_check() {
   if (MSPcmd==MSP_ALTITUDE)
   {
     #ifdef BARO_ALT
-    uav_alt = (int16_t) (read32() / 10) ;
+    uav_alt = read32()  ;
     #endif
     //uav_vario = read16();
   }

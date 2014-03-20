@@ -353,7 +353,7 @@ void panWarn(int first_col, int first_line){
         }
         //Check for low battery
         else if(check_warning == 4){
-          if (osd_vbat_A < float(battv)/10.0)){
+          if (osd_vbat_A < float(battv)/10.0){
             warning_type = 4;
             warning_string = "\x42\x61\x74\x74\x65\x72\x79\x20\x4c\x6f\x77\x21";
           }

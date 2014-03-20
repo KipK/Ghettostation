@@ -26,8 +26,9 @@ HardwareSerial SerialPort1(Serial1);
 
 
 //Telemetry variables
-float        uav_lat = 0;                    // latitude
-float        uav_lon = 0;                    // longitude
+int32_t      uav_lat = 0;                    // latitude
+int32_t      uav_lon = 0;                    // longitude
+float        lonScaleDown=0.0;               // longitude scaling
 uint8_t      uav_satellites_visible = 0;     // number of satelites
 uint8_t      uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
 int32_t      uav_alt = 0;                    // altitude (dm)
@@ -47,7 +48,7 @@ uint8_t      uav_airspeed = 0;               // Airspeed sensor (m/s)
 uint8_t      ltm_armfsmode = 0;
 uint8_t      uav_arm = 0;                    // 0: disarmed, 1: armed
 uint8_t      uav_failsafe = 0;               // 0: normal,   1: failsafe 
-uint8_t      uav_flightmode = 16;            // Flight mode(0-19): 0: Manual, 1: Rate, 2: Attitude/Angle, 3: Horizon, 4: Acro, 5: Stabilized1, 6: Stabilized2, 7: Stabilized3,
+uint8_t      uav_flightmode = 19;            // Flight mode(0-19): 0: Manual, 1: Rate, 2: Attitude/Angle, 3: Horizon, 4: Acro, 5: Stabilized1, 6: Stabilized2, 7: Stabilized3,
                                              // 8: Altitude Hold, 9: Loiter/GPS Hold, 10: Auto/Waypoints, 11: Heading Hold / headFree, 12: Circle, 13: RTH, 14: FollowMe, 15: LAND, 
                                              // 16:FlybyWireA, 17: FlybywireB, 18: Cruise, 19: Unknown
 int16_t      uav_chan5_raw;      
@@ -58,13 +59,6 @@ int16_t      uav_chan8_raw;
 char* protocol = "";
 long lastpacketreceived;
 static boolean      enable_frame_request = 0;
-//MAVLink session control
-static boolean      mavbeat = 0;
-//static boolean      landing = 0;
-static float        lastMAVBeat = 0;
-static boolean      waitingMAVBeats = 1;
-static uint8_t      apm_mav_system; 
-static uint8_t      apm_mav_component;
 
 
 //home 

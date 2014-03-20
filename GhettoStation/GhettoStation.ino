@@ -162,8 +162,10 @@ init_lcdscreen();
 //######################################## MAIN LOOP #####################################################################
 void loop() {
   
- get_telemetry();   // read serial port buffer as fast as possible 
- 
+ get_telemetry();
+ enter_button.isPressed();
+ left_button.isPressed();
+ right_button.isPressed();
  if (loop1hz.check()) {
         //todo
         // readGSvbat();
@@ -172,9 +174,7 @@ void loop() {
   
   if (loop10hz.check() == 1) {
         // update buttons internal states
-        enter_button.isPressed();
-        left_button.isPressed();
-        right_button.isPressed();
+
         #ifdef OSD_OUTPUT
         ltm_write(); // pack & send LTM packets to SerialPort2 at 10hz.
         #endif
@@ -190,7 +190,9 @@ void loop() {
   if (loop50hz.check() == 1) {
         // update servos
          if (current_activity == 1 || current_activity == 0) {
-             servoPathfinder(Bearing,Elevation); // refresh servo 
+             if(home_dist>DONTTRACKUNDER) {
+               servoPathfinder(Bearing,Elevation); // refresh servo 
+             }
          }
 
          
@@ -401,6 +403,7 @@ void enterButtonReleaseEvents(Button &btn)
               home_lon = uav_lon;
               home_alt = uav_alt;
               home_pos = true;
+             calc_longitude_scaling(home_lat);  // calc lonScaleDown
             }
             
             else if ((gps_fix) && (home_pos) && (!home_bear)) {
@@ -718,13 +721,13 @@ void move_servo(PWMServo &s, int stype, int a, int mina, int maxa) {
 
  if (stype == 1) {
 		//convert angle for pan to pan servo reference point: 0° is pan_minangle
-		if (a<=180) {
+		if (a <= 180) {
 			a = mina + a;
-		} else if ((a>180) && (a<360-mina)) {
+		} else if ((a > 180) && (a < (360-mina))) {
                         //relevant only for 360° configs
 			a = a - mina;
                 }
-                else if ((a>180) && (a>360-mina)) {
+                else if ((a > 180) && (a > (360-mina))) {
                           a = mina - (360-a);
                      
 		}
@@ -753,7 +756,7 @@ void move_servo(PWMServo &s, int stype, int a, int mina, int maxa) {
 
 void servoPathfinder(int angle_b, int angle_a){   // ( bearing, elevation )
 //find the best way to move pan servo considering 0° reference face toward
-	if (angle_b<=180) {
+	if (angle_b <= 180) {
 			if ( configuration.pan_maxangle >= angle_b ) {
 			//works for all config
                                         //define limits
@@ -770,7 +773,7 @@ void servoPathfinder(int angle_b, int angle_a){   // ( bearing, elevation )
 			 else if ( configuration.pan_maxangle < angle_b ) {
                          //relevant for 180° tilt config only, in case bearing is superior to pan_maxangle
 				
-				angle_b = 360-(180-angle_b);
+				angle_b = 180+angle_b;
                                 if (angle_b >= 360) {
                                    angle_b = angle_b - 360;
                                 }
@@ -865,10 +868,6 @@ void antenna_tracking() {
 		{
 			Bearing+=360-home_bearing;
 		}
-
-		if(home_dist>DONTTRACKUNDER) { //don't track when <10m 
-			
-		}
    } 
 }
 
@@ -882,55 +881,43 @@ void calc_tracking(float lon1, float lat1, float lon2, float lat2, int alt) {
 //  float a, tc1, R, c, d, dLat, dLon;
 // 
 // // converting to radian
-  lon1=toRad(lon1);
-  lat1=toRad(lat1);
-  lon2=toRad(lon2);
-  lat2=toRad(lat2);
-// 
-// 
-// //calculating bearing in degree decimal
+//  lon1=toRad(lon1);
+//  lat1=toRad(lat1);
+//  lon2=toRad(lon2);
+//  lat2=toRad(lat2);
+
+// //calculating bearing & distance to home in degree decimal
   Bearing = calc_bearing(lon1,lat1,lon2,lat2);
 //
 //
 ////calculating distance between uav & home
-  Elevation = calc_elevation(lon1,lat1,lon2,lat2,alt);
+  Elevation = calc_elevation(alt);
  
 }
 
 
-int calc_bearing(float lon1, float lat1, float lon2, float lat2) {
+int calc_bearing(int32_t lon1, int32_t lat1, int32_t lon2, int32_t lat2) {
 
-
-// bearing calc, feeded in radian, output degrees
-	float a;
-	//calculating bearing 
-	a=atan2(sin(lon2-lon1)*cos(lat2), cos(lat1)*sin(lat2)-sin(lat1)*cos(lat2)*cos(lon2-lon1));
-	a=toDeg(a);
-	if (a<0) a=360+a;
-        int b = (int)round(a);
-	return b;
+ float dLat = lat2 - lat1;
+ float dLon = (float)(lon2 - lon1) * lonScaleDown;
+ home_dist = sqrt(sq(dLat) + sq(dLon)) * 1.113195; // home dist in cm.
+ int b = (int)round(atan2(-dLon, dLat) * 180.0f / PI);
+ if(b < 0) b += 360;	
+ return b;
+ 
 }
 
-int calc_elevation(float lon1, float lat1, float lon2, float lat2, int alt) {
+int calc_elevation(int alt) {
   
-// feeded in radian, output in degrees
-  float a, el, c, d, R, dLat, dLon;
-  //calculating distance between uav & home
-  R=6371000.0;    //in meters. Earth radius 6371km
-  dLat = (lat2-lat1);
-  dLon = (lon2-lon1);
-  a = sin(dLat/2) * sin(dLat/2) + sin(dLon/2) * sin(dLon/2) * cos(lat1) * cos(lat2);
-  c = 2* asin(sqrt(a));  
-  d =(R * c);
-  home_dist = d;
-  el=atan((float)alt/(10.0f*d));// in radian
-  el=toDeg(el); // in degree
-  int b = (int)round(el);
-  return b;
+  int e = atan2(alt, home_dist) * 180.0f / PI;
+  return e;
 }
 
+void calc_longitude_scaling(int32_t lat) {
+  float rads       = (abs((float)lat) / 10000000.0) * 0.0174532925;
+  lonScaleDown = cos(rads);
+}
 
-	
 
 
 //######################################## COMPASS #############################################

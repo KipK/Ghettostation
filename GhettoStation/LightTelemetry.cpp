@@ -134,11 +134,11 @@ void ltm_check() {
   if (LTMcmd==LIGHTTELEMETRY_GFRAME)
   {
     
-    uav_lat = ltmread_32() / 10000000.0;
-    uav_lon = ltmread_32() / 10000000.0;
+    uav_lat = ltmread_32();
+    uav_lon = ltmread_32();
     uav_groundspeedms = ltmread_u8();
     uav_groundspeed = (uint16_t) round((float)(uav_groundspeedms * 3.6f)); // convert to kmh
-    uav_alt = round(((float)ltmread_32()) / 10.0f);
+    uav_alt = ltmread_32();
     uint8_t ltm_satsfix = ltmread_u8();
     uav_satellites_visible         = (ltm_satsfix >> 2) & 0xFF;
     uav_fix_type                   = ltm_satsfix & 0b00000011;
@@ -205,22 +205,19 @@ void send_LTM_Gframe()
     //FRAMEID
     LTBuff[2]=0x47; // G ( gps frame at 5hz )
     //PAYLOAD
-    int32_t uav_intlat = (int32_t) (uav_lat * 10000000);
-    int32_t uav_intlon = (int32_t) (uav_lon * 10000000);
-    LTBuff[3]=(uav_intlat >> 8*0) & 0xFF;
-    LTBuff[4]=(uav_intlat >> 8*1) & 0xFF;
-    LTBuff[5]=(uav_intlat >> 8*2) & 0xFF;
-    LTBuff[6]=(uav_intlat >> 8*3) & 0xFF;
-    LTBuff[7]=(uav_intlon >> 8*0) & 0xFF;
-    LTBuff[8]=(uav_intlon >> 8*1) & 0xFF;
-    LTBuff[9]=(uav_intlon >> 8*2) & 0xFF;
-    LTBuff[10]=(uav_intlon >> 8*3) & 0xFF;
-    LTBuff[11]=( uav_groundspeedms >> 8*0) & 0xFF;
-    int32_t uav_alt_cm = (((int32_t)uav_alt) * 10);
-    LTBuff[12]=(uav_alt_cm >> 8*0) & 0xFF;
-    LTBuff[13]=(uav_alt_cm >> 8*1) & 0xFF;
-    LTBuff[14]=(uav_alt_cm >> 8*2) & 0xFF;
-    LTBuff[15]=(uav_alt_cm >> 8*3) & 0xFF;
+    LTBuff[3]=(uav_lat >> 8*0) & 0xFF;
+    LTBuff[4]=(uav_lat >> 8*1) & 0xFF;
+    LTBuff[5]=(uav_lat >> 8*2) & 0xFF;
+    LTBuff[6]=(uav_lat >> 8*3) & 0xFF;
+    LTBuff[7]=(uav_lon >> 8*0) & 0xFF;
+    LTBuff[8]=(uav_lon >> 8*1) & 0xFF;
+    LTBuff[9]=(uav_lon >> 8*2) & 0xFF;
+    LTBuff[10]=(uav_lon >> 8*3) & 0xFF;
+    LTBuff[11]=(uav_groundspeedms >> 8*0) & 0xFF;
+    LTBuff[12]=(uav_alt >> 8*0) & 0xFF;
+    LTBuff[13]=(uav_alt >> 8*1) & 0xFF;
+    LTBuff[14]=(uav_alt >> 8*2) & 0xFF;
+    LTBuff[15]=(uav_alt >> 8*3) & 0xFF;
     LTBuff[16]= ((uav_satellites_visible << 2 )& 0xFF) | (uav_fix_type & 0b00000011) ; // last 6 bits: sats number, first 2:fix type (0,1,2,3)
     send_LTM_Packet(LTBuff,LIGHTTELEMETRY_GFRAMELENGTH);
 }
