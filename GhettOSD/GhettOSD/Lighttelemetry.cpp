@@ -83,7 +83,7 @@ void ltm_check() {
     
     osd_lat = ltmread_32() / 10000000.0;
     osd_lon = ltmread_32() / 10000000.0;
-    osd_groundspeed = (float)(ltmread_u8() * 3.6f); // convert to kmh
+    osd_groundspeed = (float)(ltmread_u8()); 
     osd_alt = round (ltmread_32() / 100.0f);      // altitude from cm to m.
     uint8_t ltm_satsfix = ltmread_u8();
     osd_satellites_visible         = (ltm_satsfix >> 2) & 0xFF;

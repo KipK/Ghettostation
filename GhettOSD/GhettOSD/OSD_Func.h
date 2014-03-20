@@ -61,14 +61,11 @@ void updateVars() {
     osd_home_direction = round((float)(bearing/360.0f) * 16.0f) + 1;	// array of arrows
     if (osd_home_direction > 16) osd_home_direction = 0;
 
-    mah_used += (osd_curr_A * 10.0 * (millis() - dt) / 3600000.0);
-
     dt = millis();
     if (osd_home_distance > max_home_distance) max_home_distance = osd_home_distance;
     if (osd_airspeed > max_osd_airspeed) max_osd_airspeed = osd_airspeed;
     if (osd_groundspeed > max_osd_groundspeed) max_osd_groundspeed = osd_groundspeed;
     if (osd_alt_to_home > max_osd_home_alt) max_osd_home_alt = osd_alt_to_home;
-    if (osd_windspeed > max_osd_windspeed) max_osd_windspeed = osd_windspeed;
    
 }
 
@@ -104,6 +101,8 @@ void setVars(OSD &osd)
      //armed, was armed before ==>> in flight, update vars
      start_Time = (millis()/1000) - FTime - disarmed_time;
      flight_status = 1; //in flight
+     if (osd_groundspeed > 1.0) tdistance += (osd_groundspeed * (millis() - dt) / 1000.0);
+     dt = millis();
   }
   else if((motor_armed == 0) && (last_armed == 1)) {
        //disarmed , was armed before ==>> if distance > 20m do nothing not back to home yet continue update var

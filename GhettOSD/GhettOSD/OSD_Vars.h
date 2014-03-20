@@ -136,7 +136,7 @@ static int8_t       osd_COG_arrow_rotate_int;
 static uint8_t      osd_alt_cnt = 0;              // counter for stable osd_alt
 static int          osd_alt_prev = 0;             // previous altitude
 
-static float        osd_groundspeed = 0;            // ground speed
+static float         = 0;            // ground speed
 static uint8_t      osd_throttle = 0;               // throtle
 static uint16_t     temperature = 0;
 static uint8_t      tempconv = 1;

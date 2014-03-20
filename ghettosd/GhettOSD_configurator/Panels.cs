@@ -59,8 +59,8 @@ namespace OSD
         public uint8_t sign_home_altitude = 0;
         public uint8_t sign_msl_altitude = 0; 
 
-        public uint8_t overspeed = 40;
-        public uint8_t stall = 5;
+        public uint8_t overspeed = 130;
+        public uint8_t stall = 0;
         public uint8_t battv = 101;                //Batery warning voltage - units Volt *10 
         public uint8_t converts = 0;                //1- Imperial; 0- Metric
 
@@ -114,7 +114,7 @@ namespace OSD
 
         static float osd_vbat = 11.61f;                   // voltage in milivolt
         static uint16_t osd_battery_remaining = 10;      // 0 to 100 <=> 0 to 1000
-        public byte osd_battery_show_percentage = 1;      // use remaining % or used mAh
+        public byte osd_battery_show_percentage = 0;      // use remaining % or used mAh
         static uint8_t osd_battery_pic = 0xb4;         // picture to show battery remaining
 
         static uint16_t osd_mode = 100;                   // Navigation mode from RC AC2 = CH5, APM = CH8
@@ -172,16 +172,16 @@ namespace OSD
         public uint8_t rssiraw_on = 0;
         static uint8_t osd_rssi = 2;
         public uint8_t radio_setup_flag = 0;
-        public uint8_t ch_toggle = 8; //CH8
+        public uint8_t ch_toggle = 3; //CH8
         public boolean switch_mode = 0;
         public boolean auto_screen_switch = 1;
         public boolean pal_ntsc = 1; //PAL 1 - NTSC 0
-        public uint8_t osd_brightness = 0; // low bright
+        public uint8_t osd_brightness = 1; // low bright
         
-        public uint8_t rssi_warn_level = 5;
+        public uint8_t rssi_warn_level = 10;
         public uint8_t batt_warn_level = 10;
 
-        public string callsign_str = "a1b2c3d4";
+        public string callsign_str = "GhettOSD";
         //public uint8_t[] call_sign_parse = new uint8_t[6];
 
         public uint8_t chan1_raw = 0;

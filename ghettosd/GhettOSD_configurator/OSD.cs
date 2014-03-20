@@ -178,7 +178,7 @@ namespace OSD
             panelItems[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Battery A", pan.panBatt_A, 1, 14, panBatt_A_en_ADDR, panBatt_A_x_ADDR, panBatt_A_y_ADDR);
             //items[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Battery B", pan.panBatt_B, 21, 3, panBatt_B_en_ADDR, panBatt_B_x_ADDR, panBatt_B_y_ADDR);
             panelItems[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Visible Sats", pan.panGPSats, 26, 0, panGPSats_en_ADDR, panGPSats_x_ADDR, panGPSats_y_ADDR);
-            panelItems[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Real heading", pan.panCOG, 22, 14, panCOG_en_ADDR, panCOG_x_ADDR, panCOG_y_ADDR);
+            //panelItems[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Real heading", pan.panCOG, 22, 14, panCOG_en_ADDR, panCOG_x_ADDR, panCOG_y_ADDR);
             panelItems[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("GPS Coord", pan.panGPS, 3, 2, panGPS_en_ADDR, panGPS_x_ADDR, panGPS_y_ADDR);
 
             //second 8
@@ -356,7 +356,7 @@ namespace OSD
             panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Battery A", pan.panBatt_A, 1, 14, panBatt_A_en_ADDR, panBatt_A_x_ADDR, panBatt_A_y_ADDR);
             //items[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Battery B", pan.panBatt_B, 21, 3, panBatt_B_en_ADDR, panBatt_B_x_ADDR, panBatt_B_y_ADDR);
             panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Visible Sats", pan.panGPSats, 26, 0, panGPSats_en_ADDR, panGPSats_x_ADDR, panGPSats_y_ADDR);
-            panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Real heading", pan.panCOG, 22, 14, panCOG_en_ADDR, panCOG_x_ADDR, panCOG_y_ADDR);
+            //panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Real heading", pan.panCOG, 22, 14, panCOG_en_ADDR, panCOG_x_ADDR, panCOG_y_ADDR);
             panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("GPS Coord", pan.panGPS, 3, 2, panGPS_en_ADDR, panGPS_x_ADDR, panGPS_y_ADDR);
 
             //second 8
@@ -385,7 +385,7 @@ namespace OSD
 
             //panelItems[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Wind Speed", pan.panWindSpeed, 24, 7, panWindSpeed_en_ADDR, panWindSpeed_x_ADDR, panWindSpeed_y_ADDR);
 
-            panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Warnings", pan.panWarn, 9, 0, panWarn_en_ADDR, panWarn_x_ADDR, panWarn_y_ADDR);
+            panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Warnings", pan.panWarn, 9, 10, panWarn_en_ADDR, panWarn_x_ADDR, panWarn_y_ADDR);
             panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Time", pan.panTime, 0, 0, panTime_en_ADDR, panTime_x_ADDR, panTime_y_ADDR);
             panelItems2[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("RSSI", pan.panRSSI, 12, 1, panRSSI_en_ADDR, panRSSI_x_ADDR, panRSSI_y_ADDR);
             //            panelItems[a++] = new Tuple<string, Func<int, int, int>, int, int, int, int, int>("Tune", pan.panTune, 1, 1, panTune_en_ADDR, panTune_x_ADDR, panTune_y_ADDR);
@@ -1636,9 +1636,9 @@ namespace OSD
         const int panCALLSIGN_en_ADDR = 200;
         const int panCALLSIGN_x_ADDR = 202;
         const int panCALLSIGN_y_ADDR = 204;
-        const int panCh_en_ADDR = 206;
-        const int panCh_x_ADDR = 208;
-        const int panCh_y_ADDR = 210;
+        // const int panCh_en_ADDR = 206;
+        // const int panCh_x_ADDR = 208;
+        // const int panCh_y_ADDR = 210;
         const int panTemp_en_ADDR = 212;
         const int panTemp_x_ADDR = 214;
         const int panTemp_y_ADDR = 216;

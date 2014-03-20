@@ -274,14 +274,16 @@ static void send_LTM_Oframe()  // this farme is only dedicated to OSD.
 {
   uint8_t LTBuff[LIGHTTELEMETRY_OFRAMELENGTH];
   uint16_t DirectionToHome;
-  if (uav_heading <= 180) {
-      DirectionToHome = uav_heading + (uint16_t)Bearing;
-      if (DirectionToHome >= 360) DirectionToHome -= 360;
+  if (Bearing <= 180) {
+      DirectionToHome = 180 - (uav_heading - Bearing);
   }
   else {
-      DirectionToHome = 180 - (uav_heading - Bearing);
-      if (DirectionToHome < 0) DirectionToHome += 360;
+      DirectionToHome = 180 + (Bearing - uav_heading);
   }
+  //normalisation
+  if (DirectionToHome >= 360) DirectionToHome -= 360;
+  else if (DirectionToHome < 0) DirectionToHome += 360;
+  
     LTBuff[0]=0x24; //$
     LTBuff[1]=0x54; //T
     //FRAMEID

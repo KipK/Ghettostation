@@ -344,13 +344,6 @@ void panWarn(int first_col, int first_line){
             warning_string = "\x20\x4E\x6F\x20\x47\x50\x53\x20\x66\x69\x78\x21";
           }
         }
-        //Check for low airspeed
-        else if(check_warning == 2){
-          if (abs(vs) > stall * 10){
-            warning_type = 2;
-            warning_string = "\x48\x69\x67\x68\x20\x56\x53\x70\x65\x65\x64\x21";
-          }
-        }
         //Check for over speed
         else if(check_warning == 3){
           if ((osd_airspeed * converts) > (float)overspeed){
@@ -360,7 +353,7 @@ void panWarn(int first_col, int first_line){
         }
         //Check for low battery
         else if(check_warning == 4){
-          if (osd_vbat_A < float(battv)/10.0 || (osd_battery_remaining_A < batt_warn_level && batt_warn_level != 0)){
+          if (osd_vbat_A < float(battv)/10.0)){
             warning_type = 4;
             warning_string = "\x42\x61\x74\x74\x65\x72\x79\x20\x4c\x6f\x77\x21";
           }
