@@ -111,9 +111,9 @@ void lcddisp_sethome() {
                  {
                    if (!gps_fix) string_shome2.copy(currentline);  // waiting for gps fix
                    else {
-                         sprintf(currentline, "%s%dm",string_shome3.copy(extract),round((uav_alt)/10));    
+                         sprintf(currentline, "%s%dm",string_shome3.copy(extract),(int)round(uav_alt/100.0f));    
                         }
-                    }
+                 }
                  break;
       
              case 3:
@@ -121,7 +121,7 @@ void lcddisp_sethome() {
                     else {
                          char bufferl[10];
                          char bufferL[10];
-                         sprintf(currentline,"%s %s", dtostrf(uav_lat, 5, 5, bufferl),dtostrf(uav_lon, 5, 5, bufferL));
+                         sprintf(currentline,"%s %s", dtostrf(uav_lat/10000000.0, 5, 5, bufferl),dtostrf(uav_lon/10000000.0, 5, 5, bufferL));
                     }
                     break;
       
@@ -240,7 +240,7 @@ void lcddisp_tracking(){
                 else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type);
                 break;
            case 2:
-                sprintf(currentline, "Alt:%dm Spd:%d", (int)round((float)rel_alt/10.0f), uav_groundspeed);
+                sprintf(currentline, "Alt:%dm Spd:%d", (int)round(rel_alt/100.0f), uav_groundspeed);
                 break;
            case 3:
                 sprintf(currentline, "Dist:%dm Hdg:%d", (int)round(home_dist/100.0f), uav_heading);
@@ -248,7 +248,7 @@ void lcddisp_tracking(){
            case 4:   
                 char bufferl[10];
                 char bufferL[10];   
-                sprintf(currentline, "%s %s", dtostrf(uav_lat, 5, 6,bufferl), dtostrf(uav_lon, 5, 6,bufferL));
+                sprintf(currentline, "%s %s", dtostrf(uav_lat/10000000.0, 5, 6,bufferl), dtostrf(uav_lon/10000000.0, 5, 6,bufferL));
                 break;
        }
        for ( int l = strlen(currentline); l<20 ; l++ ) {

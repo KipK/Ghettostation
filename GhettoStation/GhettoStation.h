@@ -62,9 +62,9 @@ static boolean      enable_frame_request = 0;
 
 
 //home 
-float home_lon;
-float home_lat;
-int16_t home_alt;
+int32_t home_lon;
+int32_t home_lat;
+int32_t home_alt;
 int16_t home_bearing = 0;
 int home_dist;
 uint8_t home_sent = 0;

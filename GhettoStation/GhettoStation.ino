@@ -163,9 +163,7 @@ init_lcdscreen();
 void loop() {
   
  get_telemetry();
- enter_button.isPressed();
- left_button.isPressed();
- right_button.isPressed();
+
  if (loop1hz.check()) {
         //todo
         // readGSvbat();
@@ -174,7 +172,9 @@ void loop() {
   
   if (loop10hz.check() == 1) {
         // update buttons internal states
-
+       enter_button.isPressed();
+       left_button.isPressed();
+       right_button.isPressed();
         #ifdef OSD_OUTPUT
         ltm_write(); // pack & send LTM packets to SerialPort2 at 10hz.
         #endif
@@ -205,10 +205,14 @@ void loop() {
 //######################################## ACTIVITIES #####################################################################
 
 void check_activity() {
-    if (uav_satellites_visible >= 5) { gps_fix = true; } else gps_fix = false;
+    if (uav_satellites_visible >= 5) { 
+        gps_fix = true; 
+      } 
+    else 
+        gps_fix = false;
     switch (current_activity) {
         case 0:             //MENU
-                Bearing = 0; Elevation = DEFAULTELEVATION;   // point to 15° tilt 0°pan
+                Bearing = 0; Elevation = DEFAULTELEVATION;   
                 lcddisp_menu();
                 if (enter_button.holdTime() >= 1000 && enter_button.held()) { //long press 
                     displaymenu.back();
@@ -975,9 +979,9 @@ void debug() {
        Serial.print("baud");
        Serial.println(configuration.baudrate);
        Serial.print("lat=");
-       Serial.println(uav_lat,7);
+       Serial.println(uav_lat/10000000.0,7);
        Serial.print("lon=");
-       Serial.println(uav_lon,7);
+       Serial.println(uav_lon/10000000.0,7);
        Serial.print("alt=");
        Serial.println(uav_alt);
        Serial.print("rel_alt=");
