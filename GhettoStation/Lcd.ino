@@ -167,10 +167,9 @@ void lcddisp_setbearing() {
 void lcddisp_setbearing() {
     #if defined (BEARING_METHOD_4)
     retrieve_mag();
-    #else
-    home_bearing = uav_heading;  // use compass data from the uav.
-    #endif
-    #if defined (BEARING_METHOD_2)
+    #elseif defined ((BEARING_METHOD_3)
+    home_bearing = uav_heading;  // use compass data from the uav. 
+    #elseif defined (BEARING_METHOD_2)
     if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
         home_bearing+=10;
         if (home_bearing > 359) home_bearing = 0;
