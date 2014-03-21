@@ -106,10 +106,10 @@ void msp_check() {
   {
     uav_fix_type=read8();
     uav_satellites_visible=read8();
-    uav_lat = read32() / 10000000.0;
-    uav_lon = read32() / 10000000.0;
+    uav_lat = (int32_t)read32();
+    uav_lon = (int32_t)read32();
     #ifndef BARO_ALT
-    uav_alt = read16() * 10;
+    uav_alt = (int32_t)(read16()*100);
     #endif
 
     uav_groundspeed = read16();
@@ -133,7 +133,7 @@ void msp_check() {
   if (MSPcmd==MSP_ALTITUDE)
   {
     #ifdef BARO_ALT
-    uav_alt = read32() / 10;
+    (int32_t)uav_alt = read32();
     #endif
     //uav_vario = read16();
   }

@@ -49,22 +49,19 @@ void send_LTM_Gframe()
     //FRAMEID
     LTBuff[2]=0x47; // G ( gps frame at 5hz )
     //PAYLOAD
-    int32_t uav_intlat = (int32_t) uav_lat * 10000000;
-    int32_t uav_intlon = (int32_t) uav_lon * 10000000;
-    LTBuff[3]=(uav_intlat >> 8*0) & 0xFF;
-    LTBuff[4]=(uav_intlat >> 8*1) & 0xFF;
-    LTBuff[5]=(uav_intlat >> 8*2) & 0xFF;
-    LTBuff[6]=(uav_intlat >> 8*3) & 0xFF;
-    LTBuff[7]=(uav_intlon >> 8*0) & 0xFF;
-    LTBuff[8]=(uav_intlon >> 8*1) & 0xFF;
-    LTBuff[9]=(uav_intlon >> 8*2) & 0xFF;
-    LTBuff[10]=(uav_intlon >> 8*3) & 0xFF;
+    LTBuff[3]=(uav_lat >> 8*0) & 0xFF;
+    LTBuff[4]=(uav_lat >> 8*1) & 0xFF;
+    LTBuff[5]=(uav_lat >> 8*2) & 0xFF;
+    LTBuff[6]=(uav_lat >> 8*3) & 0xFF;
+    LTBuff[7]=(uav_lon >> 8*0) & 0xFF;
+    LTBuff[8]=(uav_lon >> 8*1) & 0xFF;
+    LTBuff[9]=(uav_lon >> 8*2) & 0xFF;
+    LTBuff[10]=(uav_lon >> 8*3) & 0xFF;
     LTBuff[11]=( (uint8_t) round( (uav_groundspeed * 1000) / 3600) >> 8*0) & 0xFF;
-    uint32_t uav_alt_cm = (uint32_t) uav_alt * 10;
-    LTBuff[12]=(uav_alt_cm >> 8*0) & 0xFF;
-    LTBuff[13]=(uav_alt_cm >> 8*1) & 0xFF;
-    LTBuff[14]=(uav_alt_cm >> 8*2) & 0xFF;
-    LTBuff[15]=(uav_alt_cm >> 8*3) & 0xFF;
+    LTBuff[12]=(uav_alt >> 8*0) & 0xFF;
+    LTBuff[13]=(uav_alt >> 8*1) & 0xFF;
+    LTBuff[14]=(uav_alt >> 8*2) & 0xFF;
+    LTBuff[15]=(uav_alt >> 8*3) & 0xFF;
     LTBuff[16]= ((uav_satellites_visible << 2 )& 0xFF) | (uav_fix_type & 0b00000011) ; // last 6 bits: sats number, first 2:fix type (0,1,2,3)
     send_LTM_Packet(LTBuff,LTM_GFRAME_SIZE);
 }

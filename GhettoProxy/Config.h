@@ -4,13 +4,17 @@
 
 //########## OPTIONS ###############################################################################################
 //INPUT PROTOCOL
+// Choose only one.
+
 //#define PROTOCOL_UAVTALK                      // OpenPilot / Taulabs protocol
 //#define PROTOCOL_MSP                          // MSP from Multiwii 
 #define PROTOCOL_MAVLINK                        // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
+
+/*  Not done yet
 //#define PROTOCOL_NMEA                              // GPS NMEA 
 //#define PROTOCOL_UBLOX                             // GPS UBLOX binary protocol
 //#define PROTOCOL_MTK                               // GPS MTK binary protocol
-
+*/
 
 //INPUT BAUDRATE
  #define INPUT_BAUD 57600

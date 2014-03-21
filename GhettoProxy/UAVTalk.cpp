@@ -386,13 +386,13 @@ int uavtalk_read(void) {
 				break;
 				case GPSPOSITION_OBJID:
 				case GPSPOSITIONSENSOR_OBJID:
-					uav_lat			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LAT) / 10000000.0;
-					uav_lon			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LON) / 10000000.0;
+					uav_lat			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LAT);
+					uav_lon			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LON);
 					uav_satellites_visible	= (uint8_t) uavtalk_get_int8(&msg, GPSPOSITION_OBJ_SATELLITES);
 					uav_fix_type		= (uint8_t) uavtalk_get_int8(&msg, GPSPOSITION_OBJ_STATUS);
 					uav_gpsheading		= (int16_t) uavtalk_get_float(&msg, GPSPOSITION_OBJ_HEADING);
                                         #ifndef BARO_ALT
-					uav_alt			= uavtalk_get_float(&msg, GPSPOSITION_OBJ_ALTITUDE);
+					uav_alt			= (int32_t) round (uavtalk_get_float(&msg, GPSPOSITION_OBJ_ALTITUDE) * 100.0f);
                                         #endif
 					uav_groundspeed		= uavtalk_get_float(&msg, GPSPOSITION_OBJ_GROUNDSPEED);
 				break;
@@ -406,7 +406,7 @@ int uavtalk_read(void) {
 				case BAROALTITUDE_OBJID:
 				case BAROSENSOR_OBJID:
                                         #ifdef BARO_ALT
-					uav_alt		= (int16_t) (uavtalk_get_float(&msg, BAROALTITUDE_OBJ_ALTITUDE) * 10);
+					uav_alt		= (int32_t) (uavtalk_get_float(&msg, BAROALTITUDE_OBJ_ALTITUDE) * 100.0);
                                         #endif
 				break;
 				case OPLINKSTATUS_OBJID:

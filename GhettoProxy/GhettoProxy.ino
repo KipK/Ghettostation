@@ -13,6 +13,8 @@
  *
  *****************************************************************************
 */
+#include <avr/pgmspace.h>
+#include <arduino.h>
 
 #include "Config.h"
 
@@ -21,8 +23,7 @@
 #include "GhettoStation.h"
 #include "LightTelemetry.cpp"
 
-#include <avr/pgmspace.h>
-#include <arduino.h>
+
 #ifdef PROTOCOL_NMEA
 #include <GPS_NMEA.h>
 #define GPSTELEMETRY

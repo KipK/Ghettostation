@@ -3,11 +3,11 @@ SoftwareSerial SerialPort2(SOFTSERIAL_RX,SOFTSERIAL_TX);
 
 uint8_t      slowrate = 0;
 uint8_t      ltm_counter = 0;
-float        uav_lat = 0;                    // latitude
-float        uav_lon = 0;                    // longitude
+int32_t       uav_lat = 0;                    // latitude
+int32_t        uav_lon = 0;                    // longitude
 uint8_t      uav_satellites_visible = 0;     // number of satelites
 uint8_t      uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
-int16_t      uav_alt = 0;                    // altitude (dm)
+int32_t      uav_alt = 0;                    // altitude (cm)
 int          uav_groundspeed = 0;            // ground speed
 int16_t      uav_pitch = 0;                  // attitude pitch
 int16_t      uav_roll = 0;                   // attitude roll
