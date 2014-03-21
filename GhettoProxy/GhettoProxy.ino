@@ -18,7 +18,7 @@
 
 #include "Config.h"
 
-#include <SoftwareSerial.h>
+#include <AltSoftSerial.h>
 #include <Metro.h>
 #include "GhettoStation.h"
 #include "LightTelemetry.cpp"
@@ -61,9 +61,9 @@
 //################################### SETTING OBJECTS ###############################################
 
 //##### LOOP RATES
-Metro loop4hz = Metro(250);  // 4hz loop
-Metro loop5hz = Metro(200);  // 5hz loop
+
 Metro loop10hz = Metro(100); //10hz loop  
+Metro loop30hz = Metro(33); //30hz loop  
 
 
 //#################################### SETUP LOOP ####################################################
@@ -74,8 +74,6 @@ void setup() {
     #ifdef GPSTELEMETRY
     GPS.Init();
     #endif
-    if (OUTPUT_BAUD < 2400)
-      slowrate = 1;
 }
 
 //######################################## MAIN LOOP #####################################################################
@@ -83,28 +81,15 @@ void loop() {
   
  get_telemetry();  
  
- if (loop4hz.check()) {
-   if (ltm_counter == 0) {
-       send_LTM_Gframe();
-       ltm_counter = 1;
-   }
-       
-   else {
-       send_LTM_Sframe();
-       ltm_counter = 0;
-   }
+ if (loop10hz.check()) {
+   
+   send_LTM();
+        
  }
- if (loop5hz.check()) {
-   if (slowrate == 1)
-        send_LTM_Aframe();
+ if (loop30hz.check()) {
+   //get_telemetry();
  }
-  
-  if (loop10hz.check() == 1) {
-    if (slowrate == 0)
-        send_LTM_Aframe();
-  }  
 }
-
 
 //######################################## TELEMETRY FUNCTIONS #############################################
 void init_serial() {

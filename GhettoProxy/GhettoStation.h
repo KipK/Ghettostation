@@ -1,10 +1,11 @@
 HardwareSerial SerialPort1(Serial);
-SoftwareSerial SerialPort2(SOFTSERIAL_RX,SOFTSERIAL_TX);
+AltSoftSerial SerialPort2;
 
-uint8_t      slowrate = 0;
-uint8_t      ltm_counter = 0;
-int32_t       uav_lat = 0;                    // latitude
-int32_t        uav_lon = 0;                    // longitude
+int          softserial_delay = (int)round(10000000.0f/(OUTPUT_BAUD)); // time to wait between each byte sent.
+//boolean      ltm_counter = false;
+uint8_t      ltm_scheduler = 0;
+int32_t      uav_lat = 0;                    // latitude
+int32_t      uav_lon = 0;                    // longitude
 uint8_t      uav_satellites_visible = 0;     // number of satelites
 uint8_t      uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
 int32_t      uav_alt = 0;                    // altitude (cm)

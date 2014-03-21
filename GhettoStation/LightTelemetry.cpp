@@ -189,6 +189,9 @@ static void send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
     LTPacket[LTPacket_size-1]=LTCrc;
     for (i = 0; i<LTPacket_size; i++) {
         SerialPort2.write(LTPacket[i]);
+        #ifdef TEENSYPLUS2
+        delayMicroseconds(softserial_delay); // wait at least one byte
+        #endif
     }
 }
 

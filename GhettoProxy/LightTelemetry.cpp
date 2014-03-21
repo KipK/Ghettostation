@@ -33,6 +33,7 @@ static void send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
     LTPacket[LTPacket_size-1]=LTCrc;
     for (i = 0; i<LTPacket_size; i++) {
         SerialPort2.write(LTPacket[i]);
+        delayMicroseconds(softserial_delay); // wait at least one byte
     }
 }
 
@@ -109,6 +110,20 @@ static void send_LTM_Aframe()
     LTBuff[7]=(uav_heading >> 8*0) & 0xFF;
     LTBuff[8]=(uav_heading >> 8*1) & 0xFF;
     send_LTM_Packet(LTBuff,LTM_AFRAME_SIZE);
+}
+
+static void send_LTM() {
+        if (ltm_scheduler & 1) {    // is odd
+            send_LTM_Aframe();
+        }
+        else                        // is even
+        {
+                if (ltm_scheduler % 4 == 0) send_LTM_Sframe();
+                else send_LTM_Gframe();
+        }
+        ltm_scheduler++; 
+        if (ltm_scheduler > 10)
+        ltm_scheduler = 1;
 }
 
 #endif

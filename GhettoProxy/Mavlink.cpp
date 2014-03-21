@@ -39,7 +39,8 @@ void read_mavlink(){
         //Serial.print(c,HEX);Serial.print(" ");
 
         //trying to grab msg  
-        if(mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
+        //if(mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
+        if(mavlink_parse_char(SerialPort1, c, &msg, &status)) {
             mavlink_active = 1;
             lastpacketreceived = millis();
             //handle msg

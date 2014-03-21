@@ -1,3 +1,14 @@
+/*########################################### BOARD PINOUTS #########################################################
+ Pins for Arduino Mini
+ *SERIAL INPUT PINOUT:
+ 
+     Use TX/RX pads
+     
+ *SERIAL OUTPUT PINOUT:
+ 
+     TX to D9 (PIN 12)( arduino nano )
+     RX to D8 (PIN 11) ( arduino nano ) 
+*/
 /*############################################## CONFIGURATION ####################################################
  # Comment/uncomment/edit according to your needs.
  ##################################################################################################################*/
@@ -25,11 +36,5 @@
 //OUTOPUT BAUDRATE
 #define OUTPUT_BAUD 2400
 
-//########################################### BOARD PINOUTS #########################################################
-//DON'T EDIT THIS IF YOU DON'T KNOW WHAT YOU'RE DOINGG
- #define SOFTSERIAL_TX 5      //Digital pin used by SoftSerial for sending data to ground.
- #define SOFTSERIAL_RX 6      //Digital pin used by SoftSerial for receiving data from ground ( unused yet )
 
-
-//###############################################END OF CONFIG#######################################################
 

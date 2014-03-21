@@ -18,6 +18,8 @@ HardwareSerial SerialPort1(Serial1);
  #endif
 #endif
 
+int       softserial_delay = (int)round(10000000.0f/(OSD_BAUD)); // time to wait between each byte sent.
+
 //pan/tilt servos 
  PWMServo pan_servo;
  PWMServo tilt_servo;
