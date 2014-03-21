@@ -1,13 +1,13 @@
 /*########################################### BOARD PINOUTS #########################################################
  Pins for Arduino Mini
- *SERIAL INPUT PINOUT:
+ *SERIAL TELEMETRY INPUT PINOUT:
  
      Use TX/RX pads
      
- *SERIAL OUTPUT PINOUT:
+ *SERIAL LTM OUTPUT PINOUT:
  
-     TX to D9 (PIN 12)( arduino nano )
-     RX to D8 (PIN 11) ( arduino nano ) 
+     TX: D9 on arduino mini/nano 
+
 */
 /*############################################## CONFIGURATION ####################################################
  # Comment/uncomment/edit according to your needs.
