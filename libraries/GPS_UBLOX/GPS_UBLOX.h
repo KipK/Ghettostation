@@ -1,7 +1,7 @@
 #ifndef GPS_UBLOX_h
 #define GPS_UBLOX_h
-
-#include <inttypes.h>
+#include <arduino.h>
+//#include <inttypes.h>
 
 #define UBX_MAXPAYLOAD 60
 

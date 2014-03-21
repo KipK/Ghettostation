@@ -19,13 +19,14 @@
 
 //#define PROTOCOL_UAVTALK                      // OpenPilot / Taulabs protocol
 //#define PROTOCOL_MSP                          // MSP from Multiwii 
-#define PROTOCOL_MAVLINK                        // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
+//#define PROTOCOL_MAVLINK                        // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
 
-/*  Not done yet
-//#define PROTOCOL_NMEA                              // GPS NMEA 
-//#define PROTOCOL_UBLOX                             // GPS UBLOX binary protocol
-//#define PROTOCOL_MTK                               // GPS MTK binary protocol
-*/
+// Telemetry from GPS only ( NMEA / UBLOX / MTK ).
+// Uncomment appropriate #include in GhettoPRoxy.ino
+#define PROTOCOL_GPS
+
+
+
 
 //INPUT BAUDRATE
  #define INPUT_BAUD 57600

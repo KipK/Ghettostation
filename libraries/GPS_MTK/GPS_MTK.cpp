@@ -29,7 +29,8 @@
 
 #include "GPS_MTK.h"
 #include <avr/interrupt.h>
-#include "WProgram.h"
+#include <arduino.h>
+//#include "WProgram.h"
 
 
 // Constructors ////////////////////////////////////////////////////////////////

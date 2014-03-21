@@ -1,7 +1,7 @@
 #ifndef GPS_MTK_h
 #define GPS_MTK_h
-
-#include <inttypes.h>
+#include <arduino.h>
+//#include <inttypes.h>
 
 #define UBX_MAXPAYLOAD 60
 

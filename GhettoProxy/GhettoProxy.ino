@@ -21,21 +21,29 @@
 #include <AltSoftSerial.h>
 #include <Metro.h>
 #include "GhettoStation.h"
+
 #include "LightTelemetry.cpp"
 
+/*
+ * BOF preprocessor bug prevent
+ */
+#define nop() __asm volatile ("nop")
+#if 1
+nop();
+#endif
+/*
+ * EOF preprocessor bug prevent
+*/
 
-#ifdef PROTOCOL_NMEA
+
+#ifdef PROTOCOL_GPS
+/* Uncomment the gps protocol you use */
 #include <GPS_NMEA.h>
-#define GPSTELEMETRY
+//#include <GPS_UBLOX.h>
+//#include <GPS_MTK.h>
 #endif
-#ifdef PROTOCOL_UBLOX
-#include <GPS_UBLOX.h>
-#define GPSTELEMETRY
-#endif
-#ifdef PROTOCOL_MTK
-#include <GPS_MTK.h>
-#define GPSTELEMETRY
-#endif
+
+
 #ifdef PROTOCOL_UAVTALK
 #include "UAVTalk.cpp"
 #endif
@@ -47,16 +55,7 @@
 #include "Mavlink.cpp"
 #endif
 
-///*
-// * BOF preprocessor bug prevent
-// */
-//#define nop() __asm volatile ("nop")
-//#if 1
-//nop();
-//#endif
-///*
-// * EOF preprocessor bug prevent
-//*/
+
 
 //################################### SETTING OBJECTS ###############################################
 
@@ -71,8 +70,8 @@ Metro loop30hz = Metro(33); //30hz loop
 void setup() {
     //start serial com  
     init_serial();
-    #ifdef GPSTELEMETRY
-    GPS.Init();
+    #ifdef PROTOCOL_GPS 
+     GPS.Init();
     #endif
 }
 
@@ -160,6 +159,10 @@ void get_telemetry() {
         }
       }
       read_mavlink(); 
+#endif
+
+#if defined(PROTOCOL_GPS )
+ gps_read();
 #endif
 }
 

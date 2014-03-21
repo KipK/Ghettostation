@@ -1,7 +1,7 @@
 #ifndef GPS_NMEA_h
 #define GPS_NMEA_h
-
-#include <inttypes.h>
+#include <arduino.h>
+//#include <inttypes.h>
 
 #define GPS_BUFFERSIZE 120 
 

@@ -40,7 +40,7 @@
 #include "GPS_NMEA.h"
 
 #include <avr/interrupt.h>
-#include "WProgram.h"
+#include <arduino.h>
 
 
 // Constructors ////////////////////////////////////////////////////////////////
