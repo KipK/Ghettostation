@@ -78,7 +78,7 @@ void setup() {
 //######################################## MAIN LOOP #####################################################################
 void loop() {
   
- get_telemetry();  
+ //get_telemetry();  
  
  if (loop10hz.check()) {
    
@@ -86,7 +86,7 @@ void loop() {
         
  }
  if (loop30hz.check()) {
-   //get_telemetry();
+   get_telemetry();
  }
 }
 
