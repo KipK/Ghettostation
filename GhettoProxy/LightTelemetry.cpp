@@ -122,7 +122,7 @@ static void send_LTM() {
                 else send_LTM_Gframe();
         }
         ltm_scheduler++; 
-        if (ltm_scheduler > 10)
+        if (ltm_scheduler > 9 )
         ltm_scheduler = 1;
 }
 
