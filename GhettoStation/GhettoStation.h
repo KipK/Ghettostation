@@ -66,7 +66,7 @@ int32_t home_lon;
 int32_t home_lat;
 int32_t home_alt;
 int16_t home_bearing = 0;
-int home_dist;
+uint32_t home_dist;
 uint8_t home_sent = 0;
 
 //tracking 

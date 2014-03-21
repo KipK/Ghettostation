@@ -904,10 +904,10 @@ void calc_tracking(float lon1, float lat1, float lon2, float lat2, int alt) {
 
 int calc_bearing(int32_t lon1, int32_t lat1, int32_t lon2, int32_t lat2) {
 
- float dLat = lat2 - lat1;
+ float dLat = (lat2 - lat1);
  float dLon = (float)(lon2 - lon1) * lonScaleDown;
- home_dist = sqrt(sq(dLat) + sq(dLon)) * 1.113195; // home dist in cm.
- int b = (int)round( 90.0 + (atan2(-dLon, dLat) * 57.295775));
+ home_dist = sqrt(sq(fabs(dLat)) + sq(fabs(dLon))) * 1.113195; // home dist in cm.
+ int b = (int)round( -90 + (atan2(dLat, -dLon) * 57.295775));
  if(b < 0) b += 360;	
  return b;
  
