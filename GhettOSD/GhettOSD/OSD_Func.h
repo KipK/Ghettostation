@@ -41,6 +41,7 @@ char setBatteryPic(uint16_t bat_level)
   else return 0xb9;
 }
 
+
 //------------------ Vars Calculation ----------------------------------
 void updateVars() { 
     float dstlon, dstlat;
@@ -49,17 +50,26 @@ void updateVars() {
     float rads = fabs(osd_home_lat) * 0.0174532925;
     double scaleLongDown = cos(rads);
     double scaleLongUp   = 1.0f/cos(rads);
+    
     if (osd_got_home == 1) {
-    //DST to Home
-    dstlat = fabs(osd_home_lat - osd_lat) * 111319.5;
-    dstlon = fabs(osd_home_lon - osd_lon) * 111319.5 * scaleLongDown;
-    osd_home_distance = sqrt(sq(dstlat) + sq(dstlon));
-    }
+        //DST to Home
+        dstlat = fabs(osd_home_lat - osd_lat) * 111319.5;
+        dstlon = fabs(osd_home_lon - osd_lon) * 111319.5 * scaleLongDown;
+        osd_home_distance = sqrt(sq(dstlat) + sq(dstlon));
+        //DIR to Home
+        dstlon = (osd_home_lon - osd_lon); //OffSet_X
+        dstlat = (osd_home_lat - osd_lat) * scaleLongUp; //OffSet Y
+        bearing = 90 + (atan2(dstlat, -dstlon) * 57.295775); //absolut home direction
+        if(bearing < 0) bearing += 360;//normalization
+        bearing = bearing - 180;//absolut return direction
+        if(bearing < 0) bearing += 360;//normalization
+        bearing = bearing - osd_heading;//relative home direction
+        if(bearing < 0) bearing += 360; //normalization
+        osd_home_direction = ((int)round((float)(bearing/360.0f) * 16.0f) % 16) + 1;//array of arrows =)
+        if(osd_home_direction > 16) osd_home_direction = 1;
+        }
     else 
         osd_home_distance = 0;
-
-    osd_home_direction = round((float)(bearing/360.0f) * 16.0f) + 1;	// array of arrows
-    if (osd_home_direction > 16) osd_home_direction = 0;
 
     dt = millis();
     if (osd_home_distance > max_home_distance) max_home_distance = osd_home_distance;
@@ -101,10 +111,16 @@ void setVars(OSD &osd)
      //armed, was armed before ==>> in flight, update vars
      start_Time = (millis()/1000) - FTime - disarmed_time;
      flight_status = 1; //in flight
-     if (osd_groundspeed > 1.0) tdistance += (osd_groundspeed * (millis() - dt) / 1000.0);
-     dt = millis();
+     if (dt != 0) {
+       tdistance += (osd_groundspeed * (millis() - dt) / 1000.0);
+       dt = millis();
+     }
+     else {
+       dt = millis();
+     }
   }
   else if((motor_armed == 0) && (last_armed == 1)) {
+       dt = 0;
        //disarmed , was armed before ==>> if distance > 20m do nothing not back to home yet continue update var
        //                                  else show flight resume panel, unset home_pos.
        if (osd_home_distance < 20)

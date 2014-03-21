@@ -503,10 +503,11 @@ void rightButtonReleaseEvents(Button &btn)
                           if (home_bearing>359) home_bearing = 0;
                }
 #endif    
-           if (gps_fix && home_pos && home_bear) {
+           if (home_pos && home_bear) {
               // reset home pos
               home_pos = false;
-              home_bear = false; 
+              home_bear = false;
+              home_sent = 0;
            }
     }
      else if (current_activity==1 && home_pos && home_bear) {
@@ -710,6 +711,7 @@ void telemetry_off() {
   uav_groundspeed = 0;
   protocol = "";
   telemetry_ok = false;
+  home_sent = 0;
   }
   
 //######################################## SERVOS #####################################################################
@@ -901,7 +903,7 @@ int calc_bearing(int32_t lon1, int32_t lat1, int32_t lon2, int32_t lat2) {
  float dLat = lat2 - lat1;
  float dLon = (float)(lon2 - lon1) * lonScaleDown;
  home_dist = sqrt(sq(dLat) + sq(dLon)) * 1.113195; // home dist in cm.
- int b = (int)round(atan2(-dLon, dLat) * 180.0f / PI);
+ int b = (int)round( 90.0 + (atan2(-dLon, dLat) * 57.295775));
  if(b < 0) b += 360;	
  return b;
  

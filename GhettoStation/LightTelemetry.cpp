@@ -286,23 +286,23 @@ static void send_LTM_Oframe()  // this farme is only dedicated to OSD.
     //FRAMEID
     LTBuff[2]=0x4F; //O
     //PAYLOAD
-    LTBuff[3]=(DirectionToHome >> 8*0) & 0xFF;
-    LTBuff[4]=(DirectionToHome >> 8*1) & 0xFF;
+//    LTBuff[3]=(DirectionToHome >> 8*0) & 0xFF;
+//    LTBuff[4]=(DirectionToHome >> 8*1) & 0xFF;
     int32_t home_intlat = (int32_t) (home_lat * 10000000.0);
     int32_t home_intlon = (int32_t) (home_lon * 10000000.0);
-    LTBuff[5]= (home_intlat >> 8*0) & 0xFF;
-    LTBuff[6]= (home_intlat >> 8*1) & 0xFF;
-    LTBuff[7]= (home_intlat >> 8*2) & 0xFF;
-    LTBuff[8]= (home_intlat >> 8*3) & 0xFF;
-    LTBuff[9]= (home_intlon >> 8*0) & 0xFF;
-    LTBuff[10]= (home_intlon >> 8*1) & 0xFF;
-    LTBuff[11]= (home_intlon >> 8*2) & 0xFF;
-    LTBuff[12]= (home_intlon >> 8*3) & 0xFF;
+    LTBuff[3]= (home_intlat >> 8*0) & 0xFF;
+    LTBuff[4]= (home_intlat >> 8*1) & 0xFF;
+    LTBuff[5]= (home_intlat >> 8*2) & 0xFF;
+    LTBuff[6]= (home_intlat >> 8*3) & 0xFF;
+    LTBuff[7]= (home_intlon >> 8*0) & 0xFF;
+    LTBuff[8]= (home_intlon >> 8*1) & 0xFF;
+    LTBuff[9]= (home_intlon >> 8*2) & 0xFF;
+    LTBuff[10]= (home_intlon >> 8*3) & 0xFF;
     int32_t home_alt_cm = (int32_t)(home_alt * 10);
-    LTBuff[13]=(home_alt_cm >> 8*0) & 0xFF;
-    LTBuff[14]=(home_alt_cm >> 8*1) & 0xFF;
-    LTBuff[15]=(home_alt_cm >> 8*2) & 0xFF;
-    LTBuff[16]=(home_alt_cm >> 8*3) & 0xFF;
+    LTBuff[11]=(home_alt_cm >> 8*0) & 0xFF;
+    LTBuff[12]=(home_alt_cm >> 8*1) & 0xFF;
+    LTBuff[13]=(home_alt_cm >> 8*2) & 0xFF;
+    LTBuff[14]=(home_alt_cm >> 8*3) & 0xFF;
    
     send_LTM_Packet(LTBuff,LIGHTTELEMETRY_OFRAMELENGTH);
     
@@ -312,8 +312,14 @@ void ltm_write() {
         send_LTM_Aframe();
         send_LTM_Sframe();
         send_LTM_Gframe();
-        if (home_bear)
+        if (home_bear && (home_sent == 0))
+            // send 3 times home position data to OSD
             send_LTM_Oframe();
+            delay(20);
+            send_LTM_Oframe();
+            delay (20);
+            send_LTM_Oframe();
+            home_sent = 1;
 }
 #endif
 #endif
