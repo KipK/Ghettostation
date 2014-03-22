@@ -879,26 +879,12 @@ void antenna_tracking() {
 
 
 
-void calc_tracking(float lon1, float lat1, float lon2, float lat2, int alt) {
+void calc_tracking(int32_t lon1, int32_t lat1, int32_t lon2, int32_t lat2, int32_t alt) {
   
-  
-//// (homelon, homelat, uavlon, uavlat, uavalt ) 
-//// Return Bearing & Elevation angles in degree
-//  float a, tc1, R, c, d, dLat, dLon;
-// 
-// // converting to radian
-//  lon1=toRad(lon1);
-//  lat1=toRad(lat1);
-//  lon2=toRad(lon2);
-//  lat2=toRad(lat2);
 
-// //calculating bearing & distance to home in degree decimal
+// //calculating Bearing & Elevation  in degree decimal
   Bearing = calc_bearing(lon1,lat1,lon2,lat2);
-//
-//
-////calculating distance between uav & home
   Elevation = calc_elevation(alt);
- 
 }
 
 
