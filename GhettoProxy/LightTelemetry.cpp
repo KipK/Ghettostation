@@ -22,7 +22,7 @@
 #define LTM_SFRAME_SIZE 11
 
 
-static void send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
+static boolean send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
 {
     //calculate Checksum
     uint8_t LTCrc = 0x00;
@@ -31,10 +31,28 @@ static void send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
         LTCrc ^= LTPacket[i];
     }
     LTPacket[LTPacket_size-1]=LTCrc;
+    boolean byte_dropped = false;
+    boolean packet_dropped = false;
+    uint32_t frame_timer = millis();
     for (i = 0; i<LTPacket_size; i++) {
-        SerialPort2.write(LTPacket[i]);
-        delayMicroseconds(softserial_delay); // wait at least one byte
+        if(SerialPort2.write(LTPacket[i]) == 0 {
+         //buffer is full, flush & retry.
+            SerialPort2.flush(); 
+            byte_dropped = true;
+            //break;   //abort until the buffer is empty will resend a new frame in 100ms.
+            if (millis() - frame_timer >= 100) {
+            // drop the whole frame, it's too old. Will resend a fresh one.
+               packet_dropped = true;
+               break;
+            }
+        }
+        if (packet_dropped)
+            i--; //resend dropped byte   
     }
+    if (packet_dropped)
+        return false;
+    else
+        return true;
 }
 
 
@@ -64,7 +82,9 @@ void send_LTM_Gframe()
     LTBuff[14]=(uav_alt >> 8*2) & 0xFF;
     LTBuff[15]=(uav_alt >> 8*3) & 0xFF;
     LTBuff[16]= ((uav_satellites_visible << 2 )& 0xFF) | (uav_fix_type & 0b00000011) ; // last 6 bits: sats number, first 2:fix type (0,1,2,3)
-    send_LTM_Packet(LTBuff,LTM_GFRAME_SIZE);
+    if (send_LTM_Packet(LTBuff,LTM_GFRAME_SIZE) == true) {
+    ltm_scheduler++;
+    }
 }
 
 //Sensors frame
@@ -88,7 +108,9 @@ static void send_LTM_Sframe()
     // Flight mode(0-19): 0: Manual, 1: Rate, 2: Attitude/Angle, 3: Horizon, 4: Acro, 5: Stabilized1, 6: Stabilized2, 7: Stabilized3,
     // 8: Altitude Hold, 9: Loiter/GPS Hold, 10: Auto/Waypoints, 11: Heading Hold / headFree, 
     // 12: Circle, 13: RTH, 14: FollowMe, 15: LAND, 16:FlybyWireA, 17: FlybywireB, 18: Cruise, 19: Unknown
-    send_LTM_Packet(LTBuff,LTM_SFRAME_SIZE);
+    if (send_LTM_Packet(LTBuff,LTM_SFRAME_SIZE) == true) {
+    ltm_scheduler++;
+    }
 }
 
 // Attitude frame
@@ -109,7 +131,9 @@ static void send_LTM_Aframe()
     LTBuff[6]=(uav_roll >> 8*1) & 0xFF;
     LTBuff[7]=(uav_heading >> 8*0) & 0xFF;
     LTBuff[8]=(uav_heading >> 8*1) & 0xFF;
-    send_LTM_Packet(LTBuff,LTM_AFRAME_SIZE);
+    if (send_LTM_Packet(LTBuff,LTM_AFRAME_SIZE) == true) {
+    ltm_scheduler++;
+    }
 }
 
 static void send_LTM() {
@@ -121,7 +145,7 @@ static void send_LTM() {
                 if (ltm_scheduler % 4 == 0) send_LTM_Sframe();
                 else send_LTM_Gframe();
         }
-        ltm_scheduler++; 
+        //ltm_scheduler++; 
         if (ltm_scheduler > 9 )
         ltm_scheduler = 1;
 }
