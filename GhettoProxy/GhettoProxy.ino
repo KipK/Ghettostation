@@ -19,6 +19,7 @@
 #include "Config.h"
 
 #include <AltSoftSerial.h>
+//#include <SoftwareSerial.h>
 #include <Metro.h>
 #include "GhettoStation.h"
 
@@ -38,7 +39,7 @@ nop();
 
 #ifdef PROTOCOL_GPS
 /* Uncomment the gps protocol you use */
-#include <GPS_NMEA.h>
+//#include <GPS_NMEA.h>
 //#include <GPS_UBLOX.h>
 //#include <GPS_MTK.h>
 #endif
@@ -62,7 +63,7 @@ nop();
 //##### LOOP RATES
 
 Metro loop10hz = Metro(100); //10hz loop  
-Metro loop30hz = Metro(33); //30hz loop  
+Metro loopTelemetry = Metro(1);  
 
 
 //#################################### SETUP LOOP ####################################################
@@ -85,7 +86,7 @@ void loop() {
    send_LTM();
         
  }
- if (loop30hz.check()) {
+ if (loopTelemetry.check()) {
    get_telemetry();
  }
 }

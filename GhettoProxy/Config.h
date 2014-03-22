@@ -9,6 +9,9 @@
      TX: D9 on arduino mini/nano 
 
 */
+//#define SOFTSERIAL_TX 9      //Digital pin used by SoftSerial for sending data to ground.
+
+//#define SOFTSERIAL_RX 8      //Digital pin used by SoftSerial for receiving data from ground ( unused yet )
 /*############################################## CONFIGURATION ####################################################
  # Comment/uncomment/edit according to your needs.
  ##################################################################################################################*/

@@ -1,4 +1,5 @@
 HardwareSerial SerialPort1(Serial);
+//SoftwareSerial SerialPort2(SOFTSERIAL_RX,SOFTSERIAL_TX);
 AltSoftSerial SerialPort2;
 
 int          softserial_delay = (int)round(10000000.0f/(OUTPUT_BAUD)); // time to wait between each byte sent.
