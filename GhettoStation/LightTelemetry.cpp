@@ -178,7 +178,7 @@ void ltm_check() {
 #ifdef OSD_OUTPUT
 
 
-static void send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
+static boolean send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
 {
     //calculate Checksum
     uint8_t LTCrc = 0x00;
@@ -187,12 +187,28 @@ static void send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
         LTCrc ^= LTPacket[i];
     }
     LTPacket[LTPacket_size-1]=LTCrc;
+    boolean byte_dropped = false;
+    boolean packet_dropped = false;
+    uint32_t frame_timer = millis();
     for (i = 0; i<LTPacket_size; i++) {
-        SerialPort2.write(LTPacket[i]);
-        #ifdef TEENSYPLUS2
-        delayMicroseconds(softserial_delay); // wait at least one byte
-        #endif
+        if(SerialPort2.write(LTPacket[i]) == 0 ){
+         //buffer is full, flush & retry.
+            SerialPort2.flush(); 
+            byte_dropped = true;
+            //break;   //abort until the buffer is empty will resend a new frame.
+            if (millis() - frame_timer >= 100) {
+            // drop the whole frame, it's too old. Will resend a fresh one.
+               packet_dropped = true;
+               break;
+            }
+        }
+        if (packet_dropped)
+            i--; //resend dropped byte   
     }
+    if (packet_dropped)
+        return false;
+    else
+        return true;
 }
 
 
@@ -273,16 +289,6 @@ static void send_LTM_Aframe()
 static void send_LTM_Oframe()  // this farme is only dedicated to OSD.
 {
   uint8_t LTBuff[LIGHTTELEMETRY_OFRAMELENGTH];
-  uint16_t DirectionToHome;
-  if (Bearing <= 180) {
-      DirectionToHome = 180 - (uav_heading - Bearing);
-  }
-  else {
-      DirectionToHome = 180 + (Bearing - uav_heading);
-  }
-  //normalisation
-  if (DirectionToHome >= 360) DirectionToHome -= 360;
-  else if (DirectionToHome < 0) DirectionToHome += 360;
   
     LTBuff[0]=0x24; //$
     LTBuff[1]=0x54; //T
