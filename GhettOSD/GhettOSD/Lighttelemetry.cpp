@@ -54,21 +54,6 @@ uint32_t ltmread_u32() {
   return t;
 }
 
-int8_t ltmread_8()  {
-  return LTMserialBuffer[LTMreadIndex++];
-}
-
-int16_t ltmread_16() {
-  uint16_t t = ltmread_u8();
-  t |= (uint16_t)ltmread_u8()<<8;
-  return (int16_t)t;
-}
-
-int32_t ltmread_32() {
-  uint32_t t = ltmread_u16();
-  t |= (uint32_t)ltmread_u16()<<16;
-  return (int32_t)t;
-}
 
 // --------------------------------------------------------------------------------------
 // Decoded received commands 
@@ -81,10 +66,10 @@ void ltm_check() {
   if (LTMcmd==LIGHTTELEMETRY_GFRAME)
   {
     
-    osd_lat = ltmread_32() / 10000000.0;
-    osd_lon = ltmread_32() / 10000000.0;
+    osd_lat = (int32_t)ltmread_u32() / 10000000.0;
+    osd_lon = (int32_t)ltmread_u32() / 10000000.0;
     osd_groundspeed = (float)(ltmread_u8()); 
-    osd_alt = round (ltmread_32() / 100.0f);      // altitude from cm to m.
+    osd_alt = (int32_t)round (ltmread_u32() / 100.0f);      // altitude from cm to m.
     uint8_t ltm_satsfix = ltmread_u8();
     osd_satellites_visible         = (ltm_satsfix >> 2) & 0xFF;
     osd_fix_type                   = ltm_satsfix & 0b00000011;
@@ -95,9 +80,9 @@ void ltm_check() {
   
   if (LTMcmd==LIGHTTELEMETRY_AFRAME)
   {
-    osd_pitch = ltmread_16();
-    osd_roll = ltmread_16();
-    osd_heading = (float) ltmread_16();
+    osd_pitch = (int16_t)ltmread_u16();
+    osd_roll = (int16_t)ltmread_u16();
+    osd_heading = (float)(int16_t)ltmread_u16();
     if (osd_heading < 0 ) osd_heading = osd_heading + 360.0f; //convert from -180/180 to 0/360°
     LTMpassed = 1;
   }
@@ -127,9 +112,9 @@ void ltm_check() {
   
     if (LTMcmd==LIGHTTELEMETRY_OFRAME)
   {
-    osd_home_lat = ltmread_32() / 10000000.0;
-    osd_home_lon = ltmread_32() / 10000000.0;
-    osd_home_alt = ((float)(ltmread_32()) / 100.0f);      // altitude from cm to m.
+    osd_home_lat = (int32_t)ltmread_u32() / 10000000.0;
+    osd_home_lon = (int32_t)ltmread_u32() / 10000000.0;
+    osd_home_alt = (int32_t)round (ltmread_u32() / 100.0f); // altitude from cm to m.
     LTMpassed = 1;
     osd_got_home = 1;
   }

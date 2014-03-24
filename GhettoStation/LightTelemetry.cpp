@@ -42,21 +42,6 @@ uint32_t ltmread_u32() {
   return t;
 }
 
-int8_t ltmread_8()  {
-  return LTMserialBuffer[LTMreadIndex++];
-}
-
-int16_t ltmread_16() {
-  int16_t t = ltmread_8();
-  t |= (int16_t)ltmread_8()<<8;
-  return (int16_t)t;
-}
-
-int32_t ltmread_32() {
-  int32_t t = ltmread_16();
-  t |= (int32_t)ltmread_16()<<16;
-  return (int32_t)t;
-}
 
 void ltm_read() {
   uint8_t c;
