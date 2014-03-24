@@ -3,8 +3,8 @@
  ##################################################################################################################*/
  #define CONFIG_VERSION 2011 // Edit only if you want to reset eeprom
 //########## BOARD ################################################################################################
- //#define TEENSYPLUS2 // Teensy++2 support. 
-#define MEGA // Arduino Mega board
+ #define TEENSYPLUS2 // Teensy++2 support. 
+//#define MEGA // Arduino Mega board
 
 //########## OPTIONS ###############################################################################################
 

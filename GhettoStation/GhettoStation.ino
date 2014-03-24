@@ -87,6 +87,7 @@ nop();
 Metro loop1hz = Metro(1000); // 1hz loop
 Metro loop10hz = Metro(100); //10hz loop  
 Metro loop50hz = Metro(20); // 50hz loop
+Metro loopTelemetry = Metro(1); // 1000hz loop
 //##### BUTTONS 
 Button right_button = Button(RIGHT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 Button left_button = Button(LEFT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
@@ -161,9 +162,10 @@ init_lcdscreen();
 
 //######################################## MAIN LOOP #####################################################################
 void loop() {
-  
- get_telemetry();
-
+ if (loopTelemetry.check()) {
+     get_telemetry();
+ }
+ 
  if (loop1hz.check()) {
         //todo
         // readGSvbat();
@@ -235,9 +237,10 @@ void check_activity() {
                 if (!home_pos) lcddisp_sethome();
                 else if (home_pos) {
                     if (!home_bear) { 
-                    lcddisp_setbearing();   
+                        lcddisp_setbearing();   
                     }
-                    else lcddisp_homeok();
+                    else 
+                        lcddisp_homeok();
                 }
                 if (enter_button.holdTime() >= 700 && enter_button.held()) { //long press
                     current_activity = 0;
@@ -459,7 +462,7 @@ void leftButtonReleaseEvents(Button &btn)
              }                              
         }
         else if (current_activity==2) {
-                #if defined(BEARING_METHOD_2) || defined(BEARING_METHOD_3) || defined(BEARING_METHOD_4)       
+                #if defined(BEARING_METHOD_2)      
                 if (home_pos && !home_bear) {
                     home_bearing--;
                     if (home_bearing<0) home_bearing = 359;
@@ -495,13 +498,13 @@ void rightButtonReleaseEvents(Button &btn)
                   case 9:  servoconf_tmp[3]++;            break;
                   case 10: configuration.tilt_maxangle++; break;
                   case 12: if (configuration.telemetry < 3) configuration.telemetry += 1;  break; 
-                  case 13: if (configuration.baudrate < 7)  configuration.baudrate += 1;   break; 
+                  case 13: if (configuration.baudrate  < 7) configuration.baudrate += 1;   break; 
                   case 14: if (current_bank < 3) current_bank += 1; else current_bank = 0; break;  
           }
     }
     else if (current_activity==2) {
 
-#if defined(BEARING_METHOD_2)  || defined(BEARING_METHOD_3) || defined(BEARING_METHOD_4) 
+#if defined(BEARING_METHOD_2) 
            if (home_pos && !home_bear) {
                   home_bearing++;
                           if (home_bearing>359) home_bearing = 0;

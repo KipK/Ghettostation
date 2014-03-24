@@ -47,14 +47,14 @@ int8_t ltmread_8()  {
 }
 
 int16_t ltmread_16() {
-  uint16_t t = ltmread_u8();
-  t |= (uint16_t)ltmread_u8()<<8;
+  int16_t t = ltmread_8();
+  t |= (int16_t)ltmread_8()<<8;
   return (int16_t)t;
 }
 
 int32_t ltmread_32() {
-  uint32_t t = ltmread_u16();
-  t |= (uint32_t)ltmread_u16()<<16;
+  int32_t t = ltmread_16();
+  t |= (int32_t)ltmread_16()<<16;
   return (int32_t)t;
 }
 
@@ -134,11 +134,11 @@ void ltm_check() {
   if (LTMcmd==LIGHTTELEMETRY_GFRAME)
   {
     
-    uav_lat = ltmread_32();
-    uav_lon = ltmread_32();
+    uav_lat = (int32_t)ltmread_u32();
+    uav_lon = (int32_t)ltmread_u32();
     uav_groundspeedms = ltmread_u8();
     uav_groundspeed = (uint16_t) round((float)(uav_groundspeedms * 3.6f)); // convert to kmh
-    uav_alt = ltmread_32();
+    uav_alt = (int32_t)ltmread_u32();
     uint8_t ltm_satsfix = ltmread_u8();
     uav_satellites_visible         = (ltm_satsfix >> 2) & 0xFF;
     uav_fix_type                   = ltm_satsfix & 0b00000011;
@@ -148,9 +148,9 @@ void ltm_check() {
   
   if (LTMcmd==LIGHTTELEMETRY_AFRAME)
   {
-    uav_pitch = ltmread_16();
-    uav_roll = ltmread_16();
-    uav_heading = ltmread_16();
+    uav_pitch = (int16_t)ltmread_u16();
+    uav_roll =  (int16_t)ltmread_u16();
+    uav_heading = (int16_t)ltmread_u16();
     if (uav_heading < 0 ) uav_heading = uav_heading + 360; //convert from -180/180 to 0/360°
     memset(LTMserialBuffer, 0, LIGHTTELEMETRY_AFRAMELENGTH-4); 
   }
