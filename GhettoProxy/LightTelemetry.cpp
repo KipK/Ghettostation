@@ -46,8 +46,10 @@ static boolean send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
                break;
             }
         }
-        if (packet_dropped)
-            i--; //resend dropped byte   
+        if (byte_dropped) {
+            i--; //resend dropped byte  
+           byte_dropped == false;
+        } 
     }
     if (packet_dropped)
         return false;
