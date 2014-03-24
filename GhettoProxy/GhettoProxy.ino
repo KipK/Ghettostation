@@ -167,3 +167,30 @@ void get_telemetry() {
 #endif
 }
 
+#ifdef DEBUG
+Serial.print();
+Serial.println();
+Serial.print();
+Serial.println();
+Serial.print();
+Serial.println();
+Serial.print();
+Serial.println();
+Serial.print();
+Serial.println();
+Serial.print();
+Serial.println();
+Serial.print();
+Serial.println();
+Serial.print();
+Serial.println();
+Serial.print();
+Serial.println();
+Serial.print();
+Serial.println();
+Serial.print();
+Serial.println();
+Serial.print();
+Serial.println();
+
+#endif
