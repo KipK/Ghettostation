@@ -43,13 +43,16 @@ static boolean send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
             if (millis() - frame_timer >= 100) {
             // drop the whole frame, it's too old. Will resend a fresh one.
                packet_dropped = true;
+               
                break;
             }
         }
         if (byte_dropped) {
             i--; //resend dropped byte  
-           byte_dropped = false;
-        } 
+            byte_dropped = false;
+        if (packet_dropped) 
+            break;
+        }
     }
     if (packet_dropped)
         return false;
