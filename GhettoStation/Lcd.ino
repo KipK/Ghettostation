@@ -248,8 +248,8 @@ void lcddisp_tracking(){
                 break;
            case 4:   
                 char bufferl[10];
-                char bufferL[10];   
-                sprintf(currentline, "%s %s", dtostrf(uav_lat/10000000.0, 5, 6,bufferl), dtostrf(uav_lon/10000000.0, 5, 6,bufferL));
+                char bufferL[10];
+                sprintf(currentline,"%s %s", dtostrf(uav_lat/10000000.0, 5, 5, bufferl),dtostrf(uav_lon/10000000.0, 5, 5, bufferL));
                 break;
        }
        for ( int l = strlen(currentline); l<20 ; l++ ) {

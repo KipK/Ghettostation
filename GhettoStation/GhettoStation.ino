@@ -242,9 +242,6 @@ void check_activity() {
                     else 
                         lcddisp_homeok();
                 }
-                if (enter_button.holdTime() >= 700 && enter_button.held()) { //long press
-                    current_activity = 0;
-                }
                 break;
         case 3:             //PAN_MINPWM
                 servoconf_tmp[0] = config_servo(1, 1, servoconf_tmp[0] );                
@@ -410,7 +407,7 @@ void enterButtonReleaseEvents(Button &btn)
               home_lon = uav_lon;
               home_alt = uav_alt;
               home_pos = true;
-             calc_longitude_scaling(home_lat);  // calc lonScaleDown
+              calc_longitude_scaling(home_lat);  // calc lonScaleDown
             }
             
             else if ((gps_fix) && (home_pos) && (!home_bear)) {
@@ -871,11 +868,11 @@ void antenna_tracking() {
 		//set current GPS bearing relative to home_bearing
 		
 		if(Bearing >= home_bearing){
-			Bearing-=home_bearing;
+			Bearing -= home_bearing;
 		}
 		else
 		{
-			Bearing+=360-home_bearing;
+			Bearing += 360 - home_bearing;
 		}
    } 
 }
@@ -904,7 +901,7 @@ int calc_bearing(int32_t lon1, int32_t lat1, int32_t lon2, int32_t lat2) {
 
 int calc_elevation(int alt) {
   
-  int e = atan2(alt, home_dist) * 180.0f / PI;
+  int e = (int)round(atan2(alt, home_dist) * 57,2957795);
   return e;
 }
 
@@ -983,8 +980,14 @@ void debug() {
        Serial.println(Elevation);
        Serial.print("Be:");
        Serial.println(Bearing);
-       Serial.print("Be:");
+       Serial.print("H Be:");
        Serial.println(home_bearing);
+       Serial.print("H lat=");
+       Serial.println(home_lat/10000000.0,7);
+       Serial.print("H lon=");
+       Serial.println(home_lon/10000000.0,7);
+       Serial.print("lonscaledown=");
+       Serial.println(lonScaleDown);
        Serial.print("pitch:");
        Serial.println(uav_pitch);
        Serial.print("roll:");

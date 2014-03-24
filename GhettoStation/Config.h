@@ -29,7 +29,7 @@
                      // only needed if using internal compass.
 
 //Minimum distance in meters where it will stop moving servos.
- #define DONTTRACKUNDER  4
+ #define DONTTRACKUNDER  6
 
 // Prevent Ghettostation to send packets to the flightcontroler
 // Usefull if you're using OSD or a GCS at the same time.
