@@ -19,6 +19,9 @@
 
 #include <avr/pgmspace.h>
 #include <arduino.h>
+#ifdef DEBUG
+#include <MemoryFree.h>
+#endif
 #include <PWMServo.h>  
 
 #ifdef TEENSYPLUS2
@@ -49,7 +52,7 @@
 #include "LightTelemetry.cpp"
 #endif
 #ifdef PROTOCOL_MAVLINK
-#include <mavlink.h>
+
 #include "Mavlink.cpp"
 #endif
 
@@ -610,7 +613,7 @@ void screen_bank(MenuItem* p_menu_item) {
 
 //######################################## TELEMETRY FUNCTIONS #############################################
 void init_serial() {
-    
+    Serial.begin(57600);
     SerialPort1.begin(baudrates[configuration.baudrate]);
     #ifdef OSD_OUTPUT
     SerialPort2.begin(OSD_BAUD);
@@ -959,6 +962,9 @@ home_bearing = (int)round(heading * 180/M_PI);
 
 #if defined(DEBUG)
 void debug() {
+       Serial.print("mem ");
+       int freememory = freeMem();
+       Serial.println(freememory);
        Serial.print("activ:");
        Serial.println(current_activity);
        Serial.print("conftelem:");
@@ -973,7 +979,7 @@ void debug() {
        Serial.println(uav_alt);
        Serial.print("rel_alt=");
        Serial.println(rel_alt);
-       Serial.print("gspeed");
+       Serial.print(uav_groundspeed);
        Serial.println(uav_groundspeed);
        Serial.print("dst=");
        Serial.println(home_dist);
@@ -985,7 +991,6 @@ void debug() {
        Serial.println(home_bearing);
        Serial.print("H lat=");
        Serial.println(home_lat/10000000.0,7);
-       Serial.print("H lon=");
        Serial.println(home_lon/10000000.0,7);
        Serial.print("lonscaledown=");
        Serial.println(lonScaleDown);

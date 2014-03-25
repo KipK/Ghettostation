@@ -7,6 +7,7 @@
 #ifdef TEENSYPLUS2
 // This line defines a "Uart" object to access the serial port
 HardwareSerial SerialPort1 = HardwareSerial();
+HardwareSerial SerialDebug = HardwareSerial();
  #ifdef OSD_OUTPUT
   SoftwareSerial SerialPort2(SOFTSERIAL_RX,SOFTSERIAL_TX);
  #endif

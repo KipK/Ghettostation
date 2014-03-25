@@ -1,6 +1,7 @@
 #ifdef PROTOCOL_MAVLINK
-
-#include "../mavlink/include/mavlink.h"
+#include "../GCS_MAVLink/include/mavlink/v1.0/mavlink_types.h"
+#include "../GCS_MAVLink/include/mavlink/v1.0/ardupilotmega/mavlink.h"
+//#include "../mavlink/include/mavlink.h"
 
 // true when we have received at least 1 MAVLink packet
 static bool mavlink_active;
