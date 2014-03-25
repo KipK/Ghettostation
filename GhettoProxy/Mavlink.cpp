@@ -1,7 +1,7 @@
 #ifdef PROTOCOL_MAVLINK
-
-#include "../mavlink/include/mavlink.h"
-
+//#include "../mavlink/include/mavlink.h"
+#include "../GCS_MAVLink/include/mavlink/v1.0/mavlink_types.h"
+#include "../GCS_MAVLink/include/mavlink/v1.0/ardupilotmega/mavlink.h"
 
 // true when we have received at least 1 MAVLink packet
 static bool mavlink_active;
@@ -26,7 +26,7 @@ void request_mavlink_rates()
         mavlink_msg_request_data_stream_pack(127, 0, &msg, 7, 1, MAVStreams[i], MAVRates[i], 1);
         uint8_t buf[MAVLINK_MAX_PACKET_LEN];
         uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
-        SerialPort1.write(buf, len);
+        Serial.write(buf, len);
     }
 }
 
@@ -35,13 +35,13 @@ void read_mavlink(){
     mavlink_status_t status;
 
     //grabing data 
-    while(SerialPort1.available() > 0) { 
-        uint8_t c = SerialPort1.read();
+    while(Serial.available() > 0) { 
+        uint8_t c = Serial.read();
         //Serial.print(c,HEX);Serial.print(" ");
 
         //trying to grab msg  
         //if(mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
-        if(mavlink_parse_char(SerialPort1, c, &msg, &status)) {
+        if(mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
             mavlink_active = 1;
             lastpacketreceived = millis();
             //handle msg

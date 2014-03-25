@@ -1,5 +1,6 @@
-//FastSerialPort0(Serial);
-HardwareSerial SerialPort1(Serial);
+//HardwareSerial SerialPort1(Serial);
+FastSerialPort0(Serial);
+//FastSerialPort(SerialPort1, 0);
 //SoftwareSerial SerialPort2(SOFTSERIAL_RX,SOFTSERIAL_TX);
 AltSoftSerial SerialPort2;
 

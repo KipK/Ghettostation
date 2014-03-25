@@ -44,8 +44,8 @@ void msp_read() {
   }
   c_state = IDLE;
 
-  while (SerialPort1.available()) {
-    c = SerialPort1.read();
+  while (Serial.available()) {
+    c = Serial.read();
 
     if (c_state == IDLE) {
       c_state = (c=='$') ? HEADER_START : IDLE;
@@ -133,7 +133,7 @@ void msp_check() {
   if (MSPcmd==MSP_ALTITUDE)
   {
     #ifdef BARO_ALT
-    (int32_t)uav_alt = read32();
+    uav_alt = (int32_t)read32();
     #endif
     //uav_vario = read16();
   }

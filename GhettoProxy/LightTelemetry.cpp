@@ -48,9 +48,6 @@ static boolean send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
             byte_dropped = false;
         }
         if (packet_dropped) {
-            #ifdef DEBUG
-            //SerialPort1.println(" LTM PACKET Dropped");
-            #endif
             break;
         }
         int32_t currentmicros = micros();

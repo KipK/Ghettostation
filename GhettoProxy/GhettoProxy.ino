@@ -14,7 +14,7 @@
  *****************************************************************************
 */
 
-//#include <FastSerial.h>
+#include <FastSerial.h>
 #include <avr/pgmspace.h>
 #include <arduino.h>
 
@@ -56,6 +56,9 @@ nop();
 #include "MSP.cpp"
 #endif
 #ifdef PROTOCOL_MAVLINK
+#include <AP_Common.h>
+//#include <AP_Math.h>
+#include <GCS_MAVLink.h>
 #include "Mavlink.cpp"
 #endif
 
@@ -65,8 +68,8 @@ nop();
 
 //##### LOOP RATES
 
-Metro loop10hz = Metro(100); //10hz loop  
-Metro loopTelemetry = Metro(11);  
+Metro loop10hz = Metro(100); //10hz loop
+Metro loopTelemetry = Metro(1);   // Dirty fix for mavlink memory issue with 328P.
 #ifdef DEBUG
 Metro loopDebug = Metro(500);
 #endif
@@ -78,8 +81,9 @@ void setup() {
     #ifdef PROTOCOL_GPS 
      GPS.Init();
     #endif
-    
-   // mavlink_comm_0_port = &Serial;
+    #ifdef PROTOCOL_MAVLINK
+    mavlink_comm_0_port = &Serial;
+    #endif
 }
 
 //######################################## MAIN LOOP #####################################################################
@@ -107,7 +111,7 @@ void loop() {
 //######################################## TELEMETRY FUNCTIONS #############################################
 void init_serial() {
     
-    SerialPort1.begin(INPUT_BAUD);
+    Serial.begin(INPUT_BAUD);
     SerialPort2.begin(OUTPUT_BAUD);
 }
 
@@ -166,12 +170,12 @@ void get_telemetry() {
 
 
 #if defined(PROTOCOL_MAVLINK) // Ardupilot / PixHawk / Taulabs ( mavlink output ) / Other
-//      if(enable_frame_request == 1){//Request rate control
-//    enable_frame_request = 0;
-//        if (!PASSIVEMODE) {
-//           request_mavlink_rates();
-//        }
-//      }
+      if(enable_frame_request == 1){//Request rate control
+    enable_frame_request = 0;
+        if (!PASSIVEMODE) {
+           request_mavlink_rates();
+        }
+      }
       read_mavlink(); 
 #endif
 
@@ -189,17 +193,17 @@ void debug_proxy() {
 //SerialPort1.print("timer ");
 //int currenttime = millis();
 //SerialPort1.println(currenttime);
-SerialPort1.print("mem ");
+Serial.print("mem ");
 int freememory = freeMem();
-SerialPort1.println(freememory);
-//SerialPort1.print("uav_alt = ");
-//SerialPort1.println(uav_alt);
-//SerialPort1.print("uav_pitch = ");
-//SerialPort1.println(uav_pitch);
-//SerialPort1.print("uav_roll = ");
-//SerialPort1.println(uav_roll);
-//SerialPort1.print("uav_heading = ");
-//SerialPort1.println(uav_heading);
+Serial.println(freememory);
+Serial.print("uav_alt = ");
+Serial.println(uav_alt);
+Serial.print("uav_pitch = ");
+Serial.println(uav_pitch);
+Serial.print("uav_roll = ");
+Serial.println(uav_roll);
+Serial.print("uav_heading = ");
+Serial.println(uav_heading);
 //SerialPort1.print("softserial_delay = ");
 //SerialPort1.println(softserial_delay);
 //SerialPort1.print("packet_drops = ");
