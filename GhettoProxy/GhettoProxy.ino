@@ -69,7 +69,6 @@ nop();
 //##### LOOP RATES
 
 Metro loop10hz = Metro(100); //10hz loop
-Metro loopTelemetry = Metro(1);   // Dirty fix for mavlink memory issue with 328P.
 #ifdef DEBUG
 Metro loopDebug = Metro(500);
 #endif
@@ -88,12 +87,7 @@ void setup() {
 
 //######################################## MAIN LOOP #####################################################################
 void loop() {
-  
-
-    if (loopTelemetry.check()) {
-        get_telemetry();
-    } 
- 
+    get_telemetry(); 
  
  #ifdef DEBUG
     if (loopDebug.check()) {

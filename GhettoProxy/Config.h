@@ -41,4 +41,4 @@
 #define OUTPUT_BAUD 2400
 
 
-//#define DEBUG
+#define DEBUG

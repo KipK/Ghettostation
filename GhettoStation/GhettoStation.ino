@@ -90,7 +90,6 @@ nop();
 Metro loop1hz = Metro(1000); // 1hz loop
 Metro loop10hz = Metro(100); //10hz loop  
 Metro loop50hz = Metro(20); // 50hz loop
-Metro loopTelemetry = Metro(1); // 1000hz loop
 //##### BUTTONS 
 Button right_button = Button(RIGHT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 Button left_button = Button(LEFT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
@@ -165,9 +164,7 @@ init_lcdscreen();
 
 //######################################## MAIN LOOP #####################################################################
 void loop() {
- if (loopTelemetry.check()) {
-     get_telemetry();
- }
+ get_telemetry(); 
  
  if (loop1hz.check()) {
         //todo

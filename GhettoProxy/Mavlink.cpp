@@ -104,7 +104,7 @@ void read_mavlink(){
                     uav_groundspeed = (int)round(mavlink_msg_vfr_hud_get_groundspeed(&msg));
                     uav_airspeed = (uint8_t)round(mavlink_msg_vfr_hud_get_airspeed(&msg));
                   #ifdef BARO_ALT
-                    uav_alt = (int)round(mavlink_msg_vfr_hud_get_alt(&msg));  // to cm
+                    uav_alt = (int)round(mavlink_msg_vfr_hud_get_alt(&msg) * 100.0f);  // to cm
                   #endif
                 }
                 break;
@@ -129,7 +129,7 @@ void read_mavlink(){
                 break;           
             }
         }
-        delayMicroseconds(138);
+        //delayMicroseconds(138);
     }
     // Update global packet drops counter
     packet_drops += status.packet_rx_drop_count;
