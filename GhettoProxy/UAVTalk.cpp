@@ -378,10 +378,10 @@ int uavtalk_read(void) {
 				case MANUALCONTROLCOMMAND_OBJID_001: //Taulabs
                                         uav_rssi            = (uint8_t) uavtalk_get_int16( &msg, MANUALCONTROLCOMMAND_OBJ_001_RSSI);
                                         if ((uav_rssi < 0 ) || uav_rssi > 100 ) uav_rssi = 0; // rssi > 100 means it entered taulabs failsafe mode
-                                        uav_chan5_raw		= uavtalk_get_int16(&msg, MANUALCONTROLCOMMAND_OBJ_001_CHANNEL_4);
-					uav_chan6_raw		= uavtalk_get_int16(&msg, MANUALCONTROLCOMMAND_OBJ_001_CHANNEL_6);
-					uav_chan7_raw		= uavtalk_get_int16(&msg, MANUALCONTROLCOMMAND_OBJ_001_CHANNEL_7);
-					uav_chan8_raw		= uavtalk_get_int16(&msg, MANUALCONTROLCOMMAND_OBJ_001_CHANNEL_8);
+//                                        uav_chan5_raw		= uavtalk_get_int16(&msg, MANUALCONTROLCOMMAND_OBJ_001_CHANNEL_4);
+//					uav_chan6_raw		= uavtalk_get_int16(&msg, MANUALCONTROLCOMMAND_OBJ_001_CHANNEL_6);
+//					uav_chan7_raw		= uavtalk_get_int16(&msg, MANUALCONTROLCOMMAND_OBJ_001_CHANNEL_7);
+//					uav_chan8_raw		= uavtalk_get_int16(&msg, MANUALCONTROLCOMMAND_OBJ_001_CHANNEL_8);
 
 				break;
 				case GPSPOSITION_OBJID:

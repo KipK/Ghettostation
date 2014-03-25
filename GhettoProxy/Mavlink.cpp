@@ -2,6 +2,7 @@
 
 #include "../mavlink/include/mavlink.h"
 
+
 // true when we have received at least 1 MAVLink packet
 static bool mavlink_active;
 static uint8_t crlf_count = 0;
@@ -54,24 +55,28 @@ void read_mavlink(){
    // Need to check first vehicle type, then we will apply correct flightmode map.
    // for now only arducopter is supported.
                     uav_flightmode = (uint8_t)mavlink_msg_heartbeat_get_custom_mode(&msg);
-                    if (uav_flightmode == 0) uav_flightmode = 2; //Stabilize 
-                    if (uav_flightmode == 1) uav_flightmode = 1; //Acro 
-                    if (uav_flightmode == 2) uav_flightmode = 8; //Alt Hold
-                    if (uav_flightmode == 3) uav_flightmode = 10; //Auto
-                    if (uav_flightmode == 4) uav_flightmode = 10; //Guided -> Auto
-                    if (uav_flightmode == 5) uav_flightmode = 9; //Loiter
-                    if (uav_flightmode == 6) uav_flightmode = 13; //RTL 
-                    if (uav_flightmode == 7) uav_flightmode = 12; //Circle
-                    if (uav_flightmode == 8) uav_flightmode = 9; //Position -> Loiter
-                    if (uav_flightmode == 9) uav_flightmode = 15; //Land 
-                    if (uav_flightmode == 10) uav_flightmode = 9; //OF Loiter
-                    if (uav_flightmode == 11) uav_flightmode = 5; //Drift -> Stabilize1
-                    if (uav_flightmode == 12) uav_flightmode = 6; //Sport -> Stabilize2
-                    
+                    switch (uav_flightmode) {
+                        case 0: uav_flightmode = 2; break;       //Stabilize 
+                        case 1: uav_flightmode = 1; break;       //Acro 
+                        case 2: uav_flightmode = 8; break;       //Alt Hold
+                        case 3: uav_flightmode = 10; break;      //Auto
+                        case 4: uav_flightmode = 10; break;      //Guided -> Auto
+                        case 5: uav_flightmode = 9; break;       //Loiter
+                        case 6: uav_flightmode = 13; break;      //RTL
+                        case 7: uav_flightmode = 12; break;      //Circle
+                        case 8: uav_flightmode = 9 ; break;      //Position -> Loiter
+                        case 9: uav_flightmode = 15; break;      //Land
+                        case 10: uav_flightmode = 9; break;      //OF LOiter
+                        case 11: uav_flightmode = 5; break;      //Drift -> Stabilize1
+                        case 12: uav_flightmode = 6; break;      //Sport -> Stabilize2
+                        default: uav_flightmode = 19; break;     //Unknown                      
+                    }
                     //Mode (arducoper armed/disarmed)
                     uav_arm = mavlink_msg_heartbeat_get_base_mode(&msg);
-                    if(getBit(uav_arm,7)) uav_arm = 1;
-                    else uav_arm = 0;
+                    if (getBit(uav_arm,7)) 
+                        uav_arm = 1;
+                    else 
+                        uav_arm = 0;
                 }
                 break;
             case MAVLINK_MSG_ID_SYS_STATUS:
@@ -116,15 +121,15 @@ void read_mavlink(){
                 {
 
                    uav_rssi      = mavlink_msg_rc_channels_raw_get_rssi(&msg);
-                   uav_chan5_raw = mavlink_msg_rc_channels_raw_get_chan5_raw(&msg);
-                   uav_chan6_raw = mavlink_msg_rc_channels_raw_get_chan6_raw(&msg);
-                   uav_chan7_raw = mavlink_msg_rc_channels_raw_get_chan7_raw(&msg);
-                   uav_chan8_raw = mavlink_msg_rc_channels_raw_get_chan8_raw(&msg);
+//                   uav_chan5_raw = mavlink_msg_rc_channels_raw_get_chan5_raw(&msg);
+//                   uav_chan6_raw = mavlink_msg_rc_channels_raw_get_chan6_raw(&msg);
+//                   uav_chan7_raw = mavlink_msg_rc_channels_raw_get_chan7_raw(&msg);
+//                   uav_chan8_raw = mavlink_msg_rc_channels_raw_get_chan8_raw(&msg);
                 }
                 break;           
             }
         }
-        //delayMicroseconds(138);
+        delayMicroseconds(138);
     }
     // Update global packet drops counter
     packet_drops += status.packet_rx_drop_count;

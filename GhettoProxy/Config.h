@@ -4,7 +4,7 @@
  
      Use TX/RX pads
      
- *SERIAL LTM OUTPUT PINOUT:
+ *SERIAL LTM OUTPUT PINOUT ( AltSoftSerial):
  
      TX: D9 on arduino mini/nano 
 
@@ -25,11 +25,11 @@
 #define PROTOCOL_MAVLINK                        // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
 
 // Telemetry from GPS only ( NMEA / UBLOX / MTK ).
-// Uncomment appropriate #include in GhettoPRoxy.ino
+// Uncomment appropriate #include in GhettoProxy.ino
 //#define PROTOCOL_GPS
 
-
-
+//!uncomment to use altitude from Baro. Use GPs alt if commented.
+#define BARO_ALT
 
 //INPUT BAUDRATE
  #define INPUT_BAUD 57600
@@ -41,4 +41,4 @@
 #define OUTPUT_BAUD 2400
 
 
-
+//#define DEBUG

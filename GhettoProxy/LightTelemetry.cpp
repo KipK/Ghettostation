@@ -16,10 +16,6 @@
  * ################################################################################################################# */
 #if defined(PROTOCOL_LIGHTTELEMETRY)
 #include "LightTelemetry.h"
- 
-#define LTM_GFRAME_SIZE 18
-#define LTM_AFRAME_SIZE 10
-#define LTM_SFRAME_SIZE 11
 
 
 static boolean send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
@@ -35,14 +31,14 @@ static boolean send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
     boolean packet_dropped = false;
     uint32_t frame_timer = millis();
     for (i = 0; i<LTPacket_size; i++) {
-        if(SerialPort2.write(LTPacket[i]) == 0 ){
+        if(SerialPort2.write(LTPacket[i]) == 0 ) {
          //buffer is full, flush & retry.
             SerialPort2.flush(); 
             byte_dropped = true;
-            //break;   //abort until the buffer is empty will resend a new frame.
             if (millis() - frame_timer >= 100) {
             // drop the whole frame, it's too old. Will resend a fresh one.
                packet_dropped = true;
+               
                break;
             }
         
@@ -51,8 +47,12 @@ static boolean send_LTM_Packet(uint8_t *LTPacket, uint8_t LTPacket_size)
             i--; //resend dropped byte  
             byte_dropped = false;
         }
-        if (packet_dropped) 
+        if (packet_dropped) {
+            #ifdef DEBUG
+            //SerialPort1.println(" LTM PACKET Dropped");
+            #endif
             break;
+        }
         int32_t currentmicros = micros();
         while ( (micros() - currentmicros) < softserial_delay ){
             ;// wait at least 1 byte is sent
