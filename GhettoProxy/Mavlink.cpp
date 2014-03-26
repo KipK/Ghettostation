@@ -6,6 +6,7 @@
 // true when we have received at least 1 MAVLink packet
 static bool mavlink_active;
 static uint8_t crlf_count = 0;
+static boolean      mavbeat = 0;
 
 static int packet_drops = 0;
 static int parse_error = 0;
@@ -92,7 +93,7 @@ void read_mavlink(){
                     uav_lat =  mavlink_msg_gps_raw_int_get_lat(&msg) ;
                     uav_lon =  mavlink_msg_gps_raw_int_get_lon(&msg);
                    #ifndef BARO_ALT
-                    uav_alt = (int32_t)round(mavlink_msg_gps_raw_int_get_alt(&msg)/100.0f); // to cm
+                    uav_alt = (int32_t)round(mavlink_msg_gps_raw_int_get_alt(&msg)/10.0f); // from mm to cm
                    #endif
                     uav_fix_type = (uint8_t) mavlink_msg_gps_raw_int_get_fix_type(&msg);
                     uav_satellites_visible = (uint8_t) mavlink_msg_gps_raw_int_get_satellites_visible(&msg);
@@ -104,7 +105,7 @@ void read_mavlink(){
                     uav_groundspeed = (int)round(mavlink_msg_vfr_hud_get_groundspeed(&msg));
                     uav_airspeed = (uint8_t)round(mavlink_msg_vfr_hud_get_airspeed(&msg));
                   #ifdef BARO_ALT
-                    uav_alt = (int)round(mavlink_msg_vfr_hud_get_alt(&msg) * 100.0f);  // to cm
+                    uav_alt = (int32_t)round(mavlink_msg_vfr_hud_get_alt(&msg) * 100.0f);  // from m to cm
                   #endif
                 }
                 break;

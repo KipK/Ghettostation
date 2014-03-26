@@ -35,13 +35,6 @@ uint8_t      uav_flightmode = 16;            // Flight mode(0-19): 0: Manual, 1:
 
 long lastpacketreceived;
 static boolean      enable_frame_request = 0;
-//MAVLink session control
-static boolean      mavbeat = 0;
-//static boolean      landing = 0;
-//static float        lastMAVBeat = 0;
-//static boolean      waitingMAVBeats = 1;
-//static uint8_t      apm_mav_system; 
-//static uint8_t      apm_mav_component;
 
 boolean getBit(byte Reg, byte whichBit) {
     boolean State;
