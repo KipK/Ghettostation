@@ -219,8 +219,10 @@ template <class T> int EEPROM_write(int ee, const T& value)
 {
     const byte* p = (const byte*)(const void*)&value;
     unsigned int i;
+    cli();
     for (i = 0; i < sizeof(value); i++)
           EEPROM.write(ee++, *p++);
+    sei();
     return i;
 }
 
@@ -228,8 +230,10 @@ template <class T> int EEPROM_read(int ee, T& value)
 {
     byte* p = (byte*)(void*)&value;
     unsigned int i;
+    cli();
     for (i = 0; i < sizeof(value); i++)
           *p++ = EEPROM.read(ee++);
+    sei();
     return i;
 }
 
@@ -255,7 +259,8 @@ struct config_t
 
 void clear_eeprom() {
 	// clearing eeprom
-	for (int i = 0; i < 1025; i++)
+        cli();
+	for (int i = 0; i < 1025; i++)          
 		EEPROM.write(i, 0);
 		// eeprom is clear  we can write default config
         //writing 4 setting banks.
@@ -273,7 +278,8 @@ void clear_eeprom() {
           configuration.telemetry = 0;
           configuration.bearing = 0;
 	  EEPROM_write(config_bank[j], configuration);
-        }       
+        }
+        sei();       
 }
 
 
