@@ -11,7 +11,7 @@ void gps_read() {
          }
 	uav_lat = GPS.Lattitude * 10000000.0;;
 	uav_lon = GPS.Longitude * 10000000.0;
-	uav_alt = GPS.Altitude / 10; //from mm to cm
+	uav_alt = round(GPS.Altitude / 10.0f); //from mm to cm
 	uav_groundspeed = round(GPS.Ground_Speed / 100.0f); // in m/s
 	uav_heading = round(GPS.Ground_Course / 100.0f);  // in deg
         } 
