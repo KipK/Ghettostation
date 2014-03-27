@@ -13,7 +13,6 @@ static float        vs = 0;
 
 static unsigned long dt = 0;
 static float tdistance = 0.0f;
-static float ddistance = 0.0f;
 static char strclear[]="\x20\x20\x20\x20\x20\x20\x20\x20";
 
 

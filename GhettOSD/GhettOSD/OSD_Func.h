@@ -98,7 +98,8 @@ void setVars(OSD &osd)
         FTime = (millis()/1000.0f);
         start_Time = FTime;
         start_battery_reading = osd_battery_remaining_A;
-        last_battery_reading = osd_battery_remaining_A;    
+        last_battery_reading = osd_battery_remaining_A;
+        dt = millis();   
      }
      else {
       disarmed_time += (millis()/1000.0f) - (landed_at_time/1000.0f); // increment time spent on ground after disarm in case of arming again.
@@ -111,13 +112,8 @@ void setVars(OSD &osd)
      //armed, was armed before ==>> in flight, update vars
      start_Time = (millis()/1000) - FTime - disarmed_time;
      flight_status = 1; //in flight
-     if (dt != 0) {
-       tdistance += (osd_groundspeed * (millis() - dt) / 1000.0);
-       dt = millis();
-     }
-     else {
-       dt = millis();
-     }
+     tdistance += (osd_groundspeed * (millis() - dt) / 1000.0);
+     dt = millis();
   }
   else if((motor_armed == 0) && (last_armed == 1)) {
        dt = 0;
