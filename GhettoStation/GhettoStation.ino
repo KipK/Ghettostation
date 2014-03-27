@@ -192,7 +192,7 @@ void loop() {
   if (loop50hz.check() == 1) {
         // update servos
          if (current_activity == 1 || current_activity == 0) {
-             if(home_dist>DONTTRACKUNDER) {
+             if((home_dist / 100) > DONTTRACKUNDER) {
                servoPathfinder(Bearing,Elevation); // refresh servo 
              }
          }
