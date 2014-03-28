@@ -52,10 +52,14 @@
 #include "LightTelemetry.cpp"
 #endif
 #ifdef PROTOCOL_MAVLINK
-
 #include "Mavlink.cpp"
 #endif
-
+#ifdef PROTOCOL_NMEA
+#include "GPS_NMEA.cpp"
+#endif
+#ifdef PROTOCOL_UBLOX
+#include "GPS_UBLOX.cpp"
+#endif
 
 /*
  * BOF preprocessor bug prevent
@@ -494,7 +498,7 @@ void rightButtonReleaseEvents(Button &btn)
                   case 8:  configuration.tilt_minangle++; break;
                   case 9:  servoconf_tmp[3]++;            break;
                   case 10: configuration.tilt_maxangle++; break;
-                  case 12: if (configuration.telemetry < 3) configuration.telemetry += 1;  break; 
+                  case 12: if (configuration.telemetry < 5) configuration.telemetry += 1;  break; 
                   case 13: if (configuration.baudrate  < 7) configuration.baudrate += 1;   break; 
                   case 14: if (current_bank < 3) current_bank += 1; else current_bank = 0; break;  
           }
@@ -703,6 +707,18 @@ void get_telemetry() {
       read_mavlink(); 
     }
 #endif
+
+#if defined (PROTOCOL_NMEA)
+   if (configuration.telemetry==4) {
+       gps_nmea_read();      
+   }
+#endif
+#if defined (PROTOCOL_UBLOX)
+   if (configuration.telemetry==5) {
+       gps_ublox_read();      
+   }
+#endif
+
 }
 
 void telemetry_off() {

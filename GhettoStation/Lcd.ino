@@ -278,11 +278,17 @@ void lcddisp_telemetry() {
                                  //currentline = "MSP"; break;
                                 string_telemetry3.copy(currentline); break;
                         case 2:
-                                //currentline = "AudioModem"; break;
+                                //currentline = "LTM"; break;
                                 string_telemetry4.copy(currentline); break;
                         case 3:
                                 //currentline = "MavLink"; break;
                                 string_telemetry5.copy(currentline); break;
+                        case 4:
+                                //currentline = "NMEA"; break;
+                                string_telemetry6.copy(currentline); break;
+                        case 5:
+                                //currentline = "UBLOX"; break;
+                                string_telemetry7.copy(currentline); break;
                         
                      }
                      break;

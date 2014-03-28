@@ -3,6 +3,8 @@
 #define PROTOCOL_MSP                            // MSP from Multiwii 
 #define PROTOCOL_LIGHTTELEMETRY                 // Ghettostation internal protocol. 
 #define PROTOCOL_MAVLINK                        // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
+#define PROTOCOL_NMEA                           //GPS NMEA ASCII protocol
+#define PROTOCOL_UBLOX                          //GPS UBLOX binary protocol
 /* ######################################## HAL ####################################################*/
 #ifdef TEENSYPLUS2
 // This line defines a "Uart" object to access the serial port
@@ -128,7 +130,10 @@ FLASH_STRING(string_telemetry1, "  SELECT PROTOCOL:  ");
 FLASH_STRING(string_telemetry2, "      UAVTALK     >>");
 FLASH_STRING(string_telemetry3, "<<    MULTIWII    >>");
 FLASH_STRING(string_telemetry4, "<< LIGHTTELEMETRY >>");
-FLASH_STRING(string_telemetry5, "<<     MAVLINK      ");
+FLASH_STRING(string_telemetry5, "<<     MAVLINK    >>");
+FLASH_STRING(string_telemetry6, "<<      NMEA      >>");
+FLASH_STRING(string_telemetry7, "<<      UBLOX       ");
+
 FLASH_STRING(string_baudrate,   "  SELECT BAUDRATE:  ");
 FLASH_STRING(string_baudrate0,  "        1200      >>");
 FLASH_STRING(string_baudrate1,  "<<      2400      >>");

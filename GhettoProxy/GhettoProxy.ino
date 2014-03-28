@@ -58,11 +58,6 @@ nop();
 #ifdef PROTOCOL_UBLOX
 #include "GPS_UBLOX.cpp"
 #endif
-#ifdef PROTOCOL_MTK
-#include "GPS_MTK.cpp"
-#endif
-
-
 
 //################################### SETTING OBJECTS ###############################################
 
@@ -173,7 +168,7 @@ void get_telemetry() {
       read_mavlink(); 
 #endif
 
-#if defined (PROTOCOL_NMEA) || defined (PROTOCOL_UBLOX) || defined (PROTOCOL_MTK)
+#if defined (PROTOCOL_NMEA) || defined (PROTOCOL_UBLOX)
  gps_read();
 #endif
 }
