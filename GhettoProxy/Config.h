@@ -9,9 +9,6 @@
      TX: D9 on arduino mini/nano 
 
 */
-//#define SOFTSERIAL_TX 9      //Digital pin used by SoftSerial for sending data to ground.
-
-//#define SOFTSERIAL_RX 8      //Digital pin used by SoftSerial for receiving data from ground ( unused yet )
 /*############################################## CONFIGURATION ####################################################
  # Comment/uncomment/edit according to your needs.
  ##################################################################################################################*/
@@ -21,12 +18,11 @@
 // Choose only one.
 
 //#define PROTOCOL_UAVTALK                      // OpenPilot / Taulabs protocol
-//#define PROTOCOL_MSP                          // MSP from Multiwii 
-#define PROTOCOL_MAVLINK                        // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
-
-// Telemetry from GPS only ( NMEA / UBLOX / MTK ).
-// Uncomment appropriate #include in GhettoProxy.ino
-//#define PROTOCOL_GPS
+//#define PROTOCOL_MSP                          // MSP from Multiwii / Baseflight
+//#define PROTOCOL_MAVLINK                      // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
+//#define PROTOCOL_NMEA                           //GPS NMEA ASCII protocol
+#define PROTOCOL_UBLOX                        //GPS UBLOX binary protocol
+//#define PROTOCOL_MTK                         //GPS MTK binary protocol
 
 //!uncomment to use altitude from Baro. Use GPs alt if commented.
 #define BARO_ALT

@@ -41,14 +41,6 @@ nop();
 */
 
 
-#ifdef PROTOCOL_GPS
-/* Uncomment the gps protocol you use */
-//#include <GPS_NMEA.h>
-//#include <GPS_UBLOX.h>
-//#include <GPS_MTK.h>
-#endif
-
-
 #ifdef PROTOCOL_UAVTALK
 #include "UAVTalk.cpp"
 #endif
@@ -57,9 +49,17 @@ nop();
 #endif
 #ifdef PROTOCOL_MAVLINK
 #include <AP_Common.h>
-//#include <AP_Math.h>
 #include <GCS_MAVLink.h>
 #include "Mavlink.cpp"
+#endif
+#ifdef PROTOCOL_NMEA
+#include "GPS_NMEA.cpp"
+#endif
+#ifdef PROTOCOL_UBLOX
+#include "GPS_UBLOX.cpp"
+#endif
+#ifdef PROTOCOL_MTK
+#include "GPS_MTK.cpp"
 #endif
 
 

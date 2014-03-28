@@ -1,3 +1,4 @@
+#define PROTOCOL_LIGHTTELEMETRY
 FastSerialPort0(Serial);
 AltSoftSerial SerialPort2;
 
@@ -61,4 +62,4 @@ float toDeg(float angle) {
         return angle;
 }
 
-#define PROTOCOL_LIGHTTELEMETRY
+
