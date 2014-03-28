@@ -24,8 +24,8 @@
 #define PROTOCOL_UBLOX                        //GPS UBLOX binary protocol
 //#define PROTOCOL_MTK                         //GPS MTK binary protocol
 
-//!uncomment to use altitude from Baro. Use GPs alt if commented.
-#define BARO_ALT
+//!uncomment to use altitude from Baro. Use GPS alt if commented.
+//#define BARO_ALT
 
 //INPUT BAUDRATE
  #define INPUT_BAUD 57600

@@ -173,7 +173,7 @@ void get_telemetry() {
       read_mavlink(); 
 #endif
 
-#if defined(PROTOCOL_GPS )
+#if defined (PROTOCOL_NMEA) || defined (PROTOCOL_UBLOX) || defined (PROTOCOL_MTK)
  gps_read();
 #endif
 }
@@ -198,6 +198,13 @@ Serial.print("uav_roll = ");
 Serial.println(uav_roll);
 Serial.print("uav_heading = ");
 Serial.println(uav_heading);
+Serial.print("uav_lat = ");
+Serial.println(uav_lat);
+Serial.print("uav_lon = ");
+Serial.println(uav_lon);
+Serial.print("uav_speed = ");
+Serial.println(uav_groundspeed);
+
 //SerialPort1.print("softserial_delay = ");
 //SerialPort1.println(softserial_delay);
 //SerialPort1.print("packet_drops = ");
