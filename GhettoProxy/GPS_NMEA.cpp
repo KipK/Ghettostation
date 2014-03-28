@@ -168,7 +168,7 @@ void GPS_NMEA_Class::parse_nmea_gps(void)
       NMEA_check = parseHex(buffer[bufferidx-3])*16 + parseHex(buffer[bufferidx-2]);    // Read the checksums characters
       if (GPS_checksum == NMEA_check){      // Checksum validation
         parseptr = strchr(buffer, ',')+1;
-        Ground_Course = parsenumber(parseptr,2);      // Ground course in degrees * 100
+        Ground_Course = parsenumber(parseptr,2) * 10;      // Ground course in degrees * 100
         parseptr = strchr(parseptr, ',')+1;
         parseptr = strchr(parseptr, ',')+1;
         parseptr = strchr(parseptr, ',')+1;
