@@ -19,8 +19,8 @@
 
 //#define PROTOCOL_UAVTALK                      // OpenPilot / Taulabs protocol
 //#define PROTOCOL_MSP                          // MSP from Multiwii / Baseflight
-//#define PROTOCOL_MAVLINK                      // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
-#define PROTOCOL_NMEA                           //GPS NMEA ASCII protocol
+#define PROTOCOL_MAVLINK                      // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
+//#define PROTOCOL_NMEA                           //GPS NMEA ASCII protocol
 //#define PROTOCOL_UBLOX                        //GPS UBLOX binary protocol
 //#define PROTOCOL_MTK                         //GPS MTK binary protocol
 
@@ -37,4 +37,4 @@
 #define OUTPUT_BAUD 2400
 
 
-#define DEBUG
+//#define DEBUG
