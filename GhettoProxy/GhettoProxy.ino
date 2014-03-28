@@ -204,7 +204,10 @@ Serial.print("uav_lon = ");
 Serial.println(uav_lon);
 Serial.print("uav_speed = ");
 Serial.println(uav_groundspeed);
-
+Serial.print("uav_fix_type = ");
+Serial.println(uav_fix_type);
+Serial.print("uav_satellites_visible = ");
+Serial.println(uav_satellites_visible);
 //SerialPort1.print("softserial_delay = ");
 //SerialPort1.println(softserial_delay);
 //SerialPort1.print("packet_drops = ");
