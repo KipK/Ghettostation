@@ -15,7 +15,6 @@ Input Protocols:
     Multiwii MSP
     GPS NMEA (ascii)
     GPS UBlox (binary)
-    GPS MTK (binary)
 
 This is made to be used with Ghettostation antenna tracker & ground osd.
 
