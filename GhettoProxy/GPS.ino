@@ -1,4 +1,4 @@
-#if defined (PROTOCOL_NMEA) || defined (PROTOCOL_UBLOX) || defined (PROTOCOL_MTK)
+#if defined (PROTOCOL_NMEA) || defined (PROTOCOL_UBLOX)
 void gps_read() {
     GPS.Read();
     if (GPS.NewData)  // New GPS data?
@@ -6,14 +6,11 @@ void gps_read() {
           
          uav_satellites_visible = GPS.NumSats;
          uav_fix_type = GPS.Fix;
-         #if defined (PROTOCOL_NMEA) || defined (PROTOCOL_UBLOX)
          if (uav_fix_type == 1) {
              uav_fix_type = 3; // 3D fix
          }
          else 
              uav_fix_type == 1; // no fix
-         #endif
-         // MTK already have 4 sat fix status.
 	uav_lat = GPS.Lattitude;
 	uav_lon = GPS.Longitude;
         #if defined (PROTOCOL_NMEA)

@@ -22,7 +22,6 @@
 #define PROTOCOL_MAVLINK                      // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
 //#define PROTOCOL_NMEA                           //GPS NMEA ASCII protocol
 //#define PROTOCOL_UBLOX                        //GPS UBLOX binary protocol
-//#define PROTOCOL_MTK                         //GPS MTK binary protocol
 
 //!uncomment to use altitude from Baro. Use GPS alt if commented.
 //#define BARO_ALT
