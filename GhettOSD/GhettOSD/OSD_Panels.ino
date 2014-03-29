@@ -602,10 +602,12 @@ void panRose(int first_col, int first_line){
 // Status : not tested
 
 void panHomeDir(int first_col, int first_line){
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-    showArrow((uint8_t)osd_home_direction,0);
-    osd.closePanel();
+    if (osd_got_home == 1) {
+        osd.setPanel(first_col, first_line);
+        osd.openPanel();
+        showArrow((uint8_t)osd_home_direction,0);
+        osd.closePanel();
+    }
 }
 
 /* **************************************************************** */
@@ -731,6 +733,7 @@ void panOff(){
 // ---------------- EXTRA FUNCTIONS ----------------------
 // Show those fancy 2 char arrows
 void showArrow(uint8_t rotate_arrow,uint8_t method) {  
+    
     int arrow_set1 = 0x90;
     //We trust that we receive rotate_arrow [1, 16] so 
     //it's no needed (rotate_arrow <= 16) in the if clause
@@ -738,7 +741,9 @@ void showArrow(uint8_t rotate_arrow,uint8_t method) {
     //arrow_set2 = arrow_set1 + 1;
 //    if(method == 1) osd.printf("%c%3.0f%c|%c%c%2.0f%c",0x1D,(double)(osd_windspeed * converts),spe, (byte)arrow_set1, (byte)(arrow_set1 + 1),(double)(osd_windspeedz * converts),spe);
     if(method == 1) osd.printf("%c%3.0f%c|%c%c%2.0f%c",0x1d,(double)(osd_windspeed * converts),spe, arrow_set1, arrow_set1 + 1,(double)(nor_osd_windspeed * converts),spe);
-    else if(method == 2) osd.printf("%c%c%4i%c", arrow_set1, arrow_set1 + 1, off_course, 0x05);   
+    else if(method == 2) {
+      osd.printf("%c%c%4i%c", arrow_set1, arrow_set1 + 1, off_course, 0x05);  
+    } 
     else osd.printf("%c%c", arrow_set1, arrow_set1 + 1);
 }
 
