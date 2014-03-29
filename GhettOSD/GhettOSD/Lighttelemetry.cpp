@@ -69,7 +69,7 @@ void ltm_check() {
     osd_lat = (int32_t)ltmread_u32() / 10000000.0;
     osd_lon = (int32_t)ltmread_u32() / 10000000.0;
     osd_groundspeed = (float)(ltmread_u8()); 
-    osd_alt = (int32_t) round (((int32_t)ltmread_u32()) / 100.0f);      // altitude from cm to m.
+    osd_alt = ((int32_t)ltmread_u32()) / 100.0f;      // altitude from cm to m.
     uint8_t ltm_satsfix = ltmread_u8();
     osd_satellites_visible         = (ltm_satsfix >> 2) & 0xFF;
     osd_fix_type                   = ltm_satsfix & 0b00000011;
@@ -114,7 +114,7 @@ void ltm_check() {
   {
     osd_home_lat = (int32_t)ltmread_u32() / 10000000.0;
     osd_home_lon = (int32_t)ltmread_u32() / 10000000.0;
-    osd_home_alt = (int32_t)round (ltmread_u32() / 100.0f); // altitude from cm to m.
+    osd_home_alt = (int32_t)(ltmread_u32()) / 100.0f; // altitude from cm to m.
     LTMpassed = 1;
     osd_got_home = 1;
   }

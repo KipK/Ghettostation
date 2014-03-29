@@ -1006,11 +1006,10 @@ void debug() {
        Serial.println(Bearing);
        Serial.print("H Be:");
        Serial.println(home_bearing);
-       Serial.print("H lat=");
-       Serial.println(home_lat/10000000.0,7);
-       Serial.println(home_lon/10000000.0,7);
-       Serial.print("lonscaledown=");
-       Serial.println(lonScaleDown);
+       Serial.print("uav_fix_type=");
+       Serial.println(uav_fix_type);
+       Serial.print("uav_satellites_visible=");
+       Serial.println(uav_satellites_visible);
        Serial.print("pitch:");
        Serial.println(uav_pitch);
        Serial.print("roll:");

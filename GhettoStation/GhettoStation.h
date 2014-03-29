@@ -35,7 +35,7 @@ int       softserial_delay = (int)round(10000000.0f/(OSD_BAUD)); // time to wait
 int32_t      uav_lat = 0;                    // latitude
 int32_t      uav_lon = 0;                    // longitude
 float        lonScaleDown=0.0;               // longitude scaling
-uint8_t      uav_satellites_visible = 0;     // number of satelites
+uint8_t      uav_satellites_visible = 0;     // number of satellites
 uint8_t      uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
 int32_t      uav_alt = 0;                    // altitude (dm)
 int32_t      rel_alt = 0;                     // relative altitude to home
