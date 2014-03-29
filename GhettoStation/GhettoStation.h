@@ -19,9 +19,7 @@ HardwareSerial SerialPort1(Serial1);
  #ifdef OSD_OUTPUT
   HardwareSerial SerialPort2(Serial2);
  #endif
- #ifdef DEBUG
  HardwareSerial SerialDebug(Serial);
- #endif
 #endif
 
 int       softserial_delay = (int)round(10000000.0f/(OSD_BAUD)); // time to wait between each byte sent.
