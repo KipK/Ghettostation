@@ -10,7 +10,7 @@
 #define PROTOCOL_LIGHTTELEMETRY
 
 //battery capacity 
-#define BAT_CAPACITY 4400
+#define BAT_CAPACITY 4400 // used for remaining battery, but you should use total amp consumed on osd instead, it's more flexible.
 
 // EEPROM Stepping, be careful not to overstep. 
 // We reserved floats for just to be sure if some values needs to be
