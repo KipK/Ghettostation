@@ -168,7 +168,7 @@ init_lcdscreen();
 
 //######################################## MAIN LOOP #####################################################################
 void loop() {
- get_telemetry(); 
+  
  
  if (loop1hz.check()) {
         //todo
@@ -204,6 +204,7 @@ void loop() {
          
     
   }
+  get_telemetry();
      
 }
 
@@ -233,7 +234,7 @@ void check_activity() {
                     lcddisp_tracking();
                     if (enter_button.holdTime() >= 700 && enter_button.held()) { //long press 
                         current_activity = 0;
-                        telemetry_off();
+                        //telemetry_off();
                     }
                 }
                 break;
@@ -245,6 +246,9 @@ void check_activity() {
                     }
                     else 
                         lcddisp_homeok();
+                }
+                if (enter_button.holdTime() >= 700 && enter_button.held()) { //long press 
+                    current_activity = 0;
                 }
                 break;
         case 3:             //PAN_MINPWM
@@ -721,18 +725,18 @@ void get_telemetry() {
 
 }
 
-void telemetry_off() {
-  //reset uav data
-  uav_lat = 0;
-  uav_lon = 0;                    
-  uav_satellites_visible = 0;     
-  uav_fix_type = 0;               
-  uav_alt = 0;                    
-  uav_groundspeed = 0;
-  protocol = "";
-  telemetry_ok = false;
-  home_sent = 0;
-  }
+//void telemetry_off() {
+//  //reset uav data
+//  uav_lat = 0;
+//  uav_lon = 0;                    
+//  uav_satellites_visible = 0;     
+//  uav_fix_type = 0;               
+//  uav_alt = 0;                    
+//  uav_groundspeed = 0;
+//  protocol = "";
+//  telemetry_ok = false;
+//  home_sent = 0;
+//  }
   
 //######################################## SERVOS #####################################################################
 

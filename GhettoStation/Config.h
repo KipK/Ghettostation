@@ -22,14 +22,14 @@
 // BEARING REFERENCE TO NORTH METHOD
 //#define BEARING_METHOD_1  // 1=calculation from home pos & uav pos heading 20m away straight to neutral pan servo pos.        
 //#define BEARING_METHOD_2   // 2=manually enter the heading reference from a compass        
-  #define BEARING_METHOD_3   // 3=use compass from the uav. Point it to the neutral direction of your tracker.                
+#define BEARING_METHOD_3   // 3=use compass from the uav. Point it to the neutral direction of your tracker.                
 //#define BEARING_METHOD_4  // 4=Use internal HMC5883 compass reading                          
                
  #define MAGDEC -600  // Your local Magnetic Declination in radian. Get it from here: http://magnetic-declination.com/  then convert it in milliradian: http://www.wolframalpha.com/input/?i=%280%C2%B0+5%27%29+in+radians 
                      // only needed if using internal compass.
 
 //Minimum distance in meters where it will stop moving servos.
- #define DONTTRACKUNDER  6
+ #define DONTTRACKUNDER  5
 
 // Prevent Ghettostation to send packets to the flightcontroler
 // Usefull if you're using OSD or a GCS at the same time.
