@@ -100,7 +100,8 @@ boolean home_bear    = false;
 //servo temp configuration before saving
 int servoconf_tmp[4];
 int servoconfprev_tmp[4];
-
+uint8_t test_servo_step = 1;
+uint16_t test_servo_cnt = 360;
 //baudrate selection
 long baudrates[8]= {1200, 2400, 4800, 9600, 19200, 38400, BAUDRATE56K, 115200};
 
@@ -124,6 +125,8 @@ FLASH_STRING(string_shome11,    "Enter:Start Tracking");
 FLASH_STRING(string_shome12,    "<< Menu     Reset >>");
 FLASH_STRING(string_servos1,    "    [PAN SERVO]     ");
 FLASH_STRING(string_servos2,    "    [TILT SERVO]    ");
+FLASH_STRING(string_servos3,    "   TESTING SERVOS   ");
+FLASH_STRING(string_servos4,    "   CONFIGURATION    ");
 FLASH_STRING(string_telemetry1, "  SELECT PROTOCOL:  ");
 FLASH_STRING(string_telemetry2, "      UAVTALK     >>");
 FLASH_STRING(string_telemetry3, "<<    MULTIWII    >>");

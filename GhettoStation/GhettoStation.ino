@@ -107,11 +107,8 @@ HMC5883L compass;
 
 void setup() {
 
-
-//init LCD
-init_lcdscreen();
-
-
+        //init LCD
+        init_lcdscreen();
 
 	//init setup
 	init_menu();
@@ -134,8 +131,7 @@ init_lcdscreen();
 	if (configuration.config_crc != CONFIG_VERSION) {
 		clear_eeprom();
                 delay(20);
-		}
-
+	}
 
          //start serial com	
 	init_serial();
@@ -195,7 +191,7 @@ void loop() {
   }
   if (loop50hz.check() == 1) {
         // update servos
-         if (current_activity == 1 || current_activity == 0) {
+         if (current_activity == 1) {
              if((home_dist / 100) > DONTTRACKUNDER) {
                servoPathfinder(Bearing,Elevation); // refresh servo 
              }
@@ -366,7 +362,12 @@ void check_activity() {
             break;
         case 11:               //TEST_SERVO
             test_servos();
-            current_activity = 0; 
+            if (enter_button.holdTime() >= 700 && enter_button.held()) {//long press
+                current_activity=0;
+                test_servo_cnt = 360;
+                test_servo_step = 1;
+                servoPathfinder(0,0);
+            }
             break;
         
         case 12:                //Configure Telemetry
@@ -849,30 +850,51 @@ void servoPathfinder(int angle_b, int angle_a){   // ( bearing, elevation )
 
 
 void test_servos() {
-  servoPathfinder(0, 0);
+  lcddisp_testservo();
+  switch (test_servo_step) {
+     case 1:        
+         if (test_servo_cnt > 180) {
+             servoPathfinder(test_servo_cnt,(360-test_servo_cnt)/6);
+            test_servo_cnt--; 
+         }
+         else 
+             test_servo_step = 2;
+         break;
+     case 2:
+         if (test_servo_cnt < 360) {
+             servoPathfinder(test_servo_cnt,(360-test_servo_cnt)/6);
+             test_servo_cnt++;   
+         }
+         else {
+             test_servo_step = 3;
+             test_servo_cnt = 0;
+         }
+         break;
+     case 3:
+         if (test_servo_cnt < 360) {
+               servoPathfinder(test_servo_cnt, test_servo_cnt/4);
+               test_servo_cnt++;
+         }
+         else {
+             test_servo_step = 4;
+             test_servo_cnt = 0;
+         }
+         break;
+     case 4:
+         if (test_servo_cnt < 360) {
+               servoPathfinder(test_servo_cnt, 90-(test_servo_cnt/4)); 
+               test_servo_cnt++;
+         }
+         else {
+             // finished
+             test_servo_step = 1;
+             current_activity = 0;
+             servoPathfinder(0,0);             
+         }
+         break;
+  }
   
-  // testing tilt
-  
-  for ( int i = 359; i > 180; i--) {
-  servoPathfinder(i,(360-i)/6);
-  delay(100);
-  }
-  for ( int i = 181; i < 359; i++) {
-  servoPathfinder(i,(360-i)/6);
-  delay(100);
-  }
-    
-  for (int i=0; i < 360; i++) {
-    servoPathfinder(i, i/4); 
-    delay(100);
-  }
-  for (int i=0; i < 360; i++) {
-    servoPathfinder(i, 90-(i/4)); 
-    delay(100);
-  }
-  //finished going back to neutral
-    servoPathfinder(0,0);
-  
+
   
 }
 
@@ -900,35 +922,31 @@ void antenna_tracking() {
 
 
 void calc_tracking(int32_t lon1, int32_t lat1, int32_t lon2, int32_t lat2, int32_t alt) {
-  
-
-// //calculating Bearing & Elevation  in degree decimal
-  Bearing = calc_bearing(lon1,lat1,lon2,lat2);
-  Elevation = calc_elevation(alt);
+    //calculating Bearing & Elevation  in degree decimal
+    Bearing = calc_bearing(lon1,lat1,lon2,lat2);
+    Elevation = calc_elevation(alt);
 }
 
 
 int16_t calc_bearing(int32_t lon1, int32_t lat1, int32_t lon2, int32_t lat2) {
-
- float dLat = (lat2 - lat1);
- float dLon = (float)(lon2 - lon1) * lonScaleDown;
- home_dist = sqrt(sq(fabs(dLat)) + sq(fabs(dLon))) * 1.113195; // home dist in cm.
- int16_t b = (int)round( -90 + (atan2(dLat, -dLon) * 57.295775));
- if(b < 0) b += 360;	
- return b;
- 
+    float dLat = (lat2 - lat1);
+    float dLon = (float)(lon2 - lon1) * lonScaleDown;
+    home_dist = sqrt(sq(fabs(dLat)) + sq(fabs(dLon))) * 1.113195; // home dist in cm.
+    int16_t b = (int)round( -90 + (atan2(dLat, -dLon) * 57.295775));
+    if(b < 0) b += 360;	
+    return b; 
 }
 
 int16_t calc_elevation(int32_t alt) {
-  float at = atan2(alt, home_dist);
-  at = at * 57,2957795;
-  int16_t e = (int16_t)round(at);
-  return e;
+    float at = atan2(alt, home_dist);
+    at = at * 57,2957795;
+    int16_t e = (int16_t)round(at);
+    return e;
 }
 
 void calc_longitude_scaling(int32_t lat) {
-  float rads       = (abs((float)lat) / 10000000.0) * 0.0174532925;
-  lonScaleDown = cos(rads);
+    float rads       = (abs((float)lat) / 10000000.0) * 0.0174532925;
+    lonScaleDown = cos(rads);
 }
 
 
@@ -945,31 +963,29 @@ void retrieve_mag() {
 //  compass.SetScale(1.3); // Set the scale of the compass.
 //  compass.SetMeasurementMode(Measurement_Continuous); // Set the measurement mode to Continuous
 // Retrieve the raw values from the compass (not scaled).
-  MagnetometerRaw raw = compass.ReadRawAxis();
+    MagnetometerRaw raw = compass.ReadRawAxis();
 // Retrieved the scaled values from the compass (scaled to the configured scale).
-  MagnetometerScaled scaled = compass.ReadScaledAxis();
+    MagnetometerScaled scaled = compass.ReadScaledAxis();
 //
 // Calculate heading when the magnetometer is level, then correct for signs of axis.
-float heading = atan2(scaled.YAxis, scaled.XAxis);
+    float heading = atan2(scaled.YAxis, scaled.XAxis);
 
 // Once you have your heading, you must then add your ‘Declination Angle’, which is the ‘Error’ of the magnetic field in your location.
 // Find yours here: http://www.magnetic-declination.com/
 
-
-
-float declinationAngle = MAGDEC / 1000; 
-heading += declinationAngle;
-
-// Correct for when signs are reversed.
-if(heading < 0)
-heading += 2*PI;
-
-// Check for wrap due to addition of declination.
-if(heading > 2*PI)
-heading -= 2*PI;
-
-// Convert radians to degrees for readability.
-home_bearing = (int)round(heading * 180/M_PI);
+    float declinationAngle = MAGDEC / 1000; 
+    heading += declinationAngle;
+    
+    // Correct for when signs are reversed.
+    if(heading < 0)
+    heading += 2*PI;
+    
+    // Check for wrap due to addition of declination.
+    if(heading > 2*PI)
+    heading -= 2*PI;
+    
+    // Convert radians to degrees for readability.
+    home_bearing = (int)round(heading * 180/M_PI);
 }
 #endif
 
