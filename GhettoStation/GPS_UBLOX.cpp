@@ -187,10 +187,11 @@ void GPS_UBLOX_Class::parse_ubx_gps(void)
       break;
     case 0x03://ID NAV-STATUS 
       //if(UBX_buffer[4] >= 0x03)
-	  if((UBX_buffer[4] >= 0x03)&&(UBX_buffer[5]&0x01))        
+      if((UBX_buffer[4] >= 0x03)&&(UBX_buffer[5]&0x01))        
         Fix=1; //valid position        
       else
         Fix=0; //invalid position
+      NewData=1;
       break;
 
     case 0x06://ID NAV-SOL
@@ -200,6 +201,7 @@ void GPS_UBLOX_Class::parse_ubx_gps(void)
         Fix=0; //invalid position        
       UBX_ecefVZ=join_4_bytes(&UBX_buffer[36]);  //Vertical Speed in cm/s
       NumSats=UBX_buffer[47];                    //Number of sats...     
+      NewData=1;
       break;
 
     case 0x12:// ID NAV-VELNED 
@@ -217,6 +219,7 @@ void GPS_UBLOX_Class::parse_ubx_gps(void)
       headacc = join_4_bytes(&UBX_buffer[j]) // Heading accuracy
       j+=4;
       */
+      NewData=1;
       break; 
       }
     }   
@@ -273,6 +276,7 @@ void gps_ublox_read() {
         uav_alt = GPS_UBLOX.Altitude; //in cm
 	uav_groundspeed = round(GPS_UBLOX.Ground_Speed / 100.0f); // in m/s
 	uav_heading = round(GPS_UBLOX.Ground_Course / 100.0f);  // in deg
+        GPS_UBLOX.NewData = 0;
         } 
   
 }

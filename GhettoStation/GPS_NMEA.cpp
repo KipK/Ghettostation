@@ -167,6 +167,7 @@ void GPS_NMEA_Class::parse_nmea_gps(void)
     if (buffer[bufferidx-4]=='*'){           // Check for the "*" character
       NMEA_check = parseHex(buffer[bufferidx-3])*16 + parseHex(buffer[bufferidx-2]);    // Read the checksums characters
       if (GPS_checksum == NMEA_check){      // Checksum validation
+        NewData = 1;  // New GPS Data
         parseptr = strchr(buffer, ',')+1;
         Ground_Course = parsenumber(parseptr,2) * 10;      // Ground course in degrees * 100
         parseptr = strchr(parseptr, ',')+1;
@@ -271,6 +272,7 @@ void gps_nmea_read() {
 	uav_alt = round(GPS_NMEA.Altitude / 10.0f); //from mm to cm
 	uav_groundspeed = round(GPS_NMEA.Ground_Speed / 100.0f); // in m/s
 	uav_heading = round(GPS_NMEA.Ground_Course / 100.0f);  // in deg
+        GPS_NMEA.NewData = 0;
         } 
   
 }
