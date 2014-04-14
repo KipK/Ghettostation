@@ -191,7 +191,13 @@ void osd_refresh()
 
     setVars(osd); 
     
-    writePanels();       // writing enabled panels (check OSD_Panels Tab)
+    if (osd_enabled) {
+        writePanels();       // writing enabled panels (check OSD_Panels Tab)
+    }
+    else if (osd_clear = 1) {
+        osd.clear();
+        osd_clear = 0;
+    }
     
 }
 

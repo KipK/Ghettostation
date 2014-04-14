@@ -1,6 +1,7 @@
 /*Panels variables*/
 //Will come from APM telem port
 
+static uint8_t      osd_enabled = 0;
 static int          lastLTMpacket;
 static uint8_t      LTM_ok = 0;
 static float        max_home_distance = 0;

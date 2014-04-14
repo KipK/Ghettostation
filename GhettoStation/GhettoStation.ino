@@ -159,6 +159,8 @@ void setup() {
   compass.SetScale(1.3); // Set the scale of the compass.
   compass.SetMeasurementMode(Measurement_Continuous); // Set the measurement mode to Continuous
 #endif
+  
+  delay(3000);  // Wait until osd is initialised
 
 }
 
@@ -393,6 +395,15 @@ void check_activity() {
                 servoconf_tmp[1] = configuration.pan_maxpwm;
                 servoconf_tmp[2] = configuration.tilt_minpwm;
                 servoconf_tmp[3] = configuration.tilt_maxpwm;
+                home_sent = 0;
+                current_activity=0;
+            }
+            break;
+        case 15:                //Configure OSD
+            lcddisp_osd();
+            if (enter_button.holdTime() >= 700 && enter_button.held()) { //long press
+                EEPROM_write(config_bank[int(current_bank)], configuration);
+                home_sent = 0; // force resend an OFrame for osd update
                 current_activity=0;
             }
             break;
@@ -431,6 +442,7 @@ void enterButtonReleaseEvents(Button &btn)
 #endif
                  configuration.bearing = home_bearing;
                  EEPROM_write(config_bank[int(current_bank)], configuration);
+                 home_sent = 0;  // resend an OFrame to osd
             }
             else if ((gps_fix) && (home_pos) && (home_bear)) {
               // START TRACKING 
@@ -465,6 +477,7 @@ void leftButtonReleaseEvents(Button &btn)
                   case 12:  if (configuration.telemetry > 0) configuration.telemetry -= 1;  break; 
                   case 13:  if (configuration.baudrate > 0)  configuration.baudrate -= 1;   break;
                   case 14:  if (current_bank > 0) current_bank -= 1; else current_bank = 3; break;
+                  case 15:  if (configuration.osd_enabled == 0) configuration.osd_enabled = 1; else configuration.osd_enabled = 0;    break;
              }                              
         }
         else if (current_activity==2) {
@@ -506,6 +519,7 @@ void rightButtonReleaseEvents(Button &btn)
                   case 12: if (configuration.telemetry < 5) configuration.telemetry += 1;  break; 
                   case 13: if (configuration.baudrate  < 7) configuration.baudrate += 1;   break; 
                   case 14: if (current_bank < 3) current_bank += 1; else current_bank = 0; break;  
+                  case 15: if (configuration.osd_enabled == 0) configuration.osd_enabled = 1; else configuration.osd_enabled = 0;    break;
           }
     }
     else if (current_activity==2) {
@@ -550,6 +564,9 @@ void init_menu() {
                         m1m3m1Menu.add_item(&m1m3m1i3Item, &configure_test_servo);
                 m1m3Menu.add_item(&m1m3i2Item, &configure_telemetry); // select telemetry protocol ( Teensy++2 only ) 
                 m1m3Menu.add_item(&m1m3i3Item, &configure_baudrate); // select telemetry protocol
+                #ifdef OSD_OUTPUT
+                m1m3Menu.add_item(&m1m3i4Item, &configure_osd); // enable/disable osd
+                #endif
         rootMenu.add_item(&m1i4Item, &screen_bank); //set home position
 	displaymenu.set_root_menu(&rootMenu);
 }
@@ -599,8 +616,7 @@ void configure_tilt_maxangle(MenuItem* p_menu_item) {
 	current_activity = 10;
 }
 
-void configure_test_servo(MenuItem* p_menu_item) {
-  
+void configure_test_servo(MenuItem* p_menu_item) {  
        current_activity = 11;
 }
 
@@ -615,6 +631,12 @@ void configure_baudrate(MenuItem* p_menu_item) {
 void screen_bank(MenuItem* p_menu_item) {
 	current_activity = 14;
 }
+
+#ifdef OSD_OUTPUT
+void configure_osd(MenuItem* p_menu_item) {
+      current_activity = 15;
+}
+#endif
 
 
 //######################################## TELEMETRY FUNCTIONS #############################################

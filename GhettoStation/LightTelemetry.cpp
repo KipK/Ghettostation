@@ -301,6 +301,8 @@ static void send_LTM_Oframe()  // this farme is only dedicated to OSD.
     LTBuff[12]= (home_alt >> 8*1) & 0xFF;
     LTBuff[13]= (home_alt >> 8*2) & 0xFF;
     LTBuff[14]= (home_alt >> 8*3) & 0xFF;
+    LTBuff[15]= (configuration.osd_enabled >> 8*0) & 0xFF;
+    LTBuff[16]= (home_bear >> 8*0) & 0XFF;
    
     send_LTM_Packet(LTBuff,LIGHTTELEMETRY_OFRAMELENGTH);
     
@@ -310,7 +312,7 @@ void ltm_write() {
         send_LTM_Aframe();
         send_LTM_Sframe();
         send_LTM_Gframe();
-        if (home_bear && (home_sent == 0)) {
+        if (home_sent == 0) {
             // send 3 times home position data to OSD
             send_LTM_Oframe();
             delay(20);

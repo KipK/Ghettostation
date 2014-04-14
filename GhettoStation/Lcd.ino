@@ -384,6 +384,37 @@ void lcddisp_bank() {
     }
 }
 
+void lcddisp_osd() {
+    for ( int i = 1 ; i<5; i++ ) {
+       char currentline[21]="";
+       char extract[21];
+       switch (i) {
+           case 1: 
+                     string_osd1.copy(currentline);  break;
+           case 2:
+                     strcpy(currentline, string_load2.copy(extract)); break;
+           case 3:
+                     switch (configuration.osd_enabled) {
+                       
+                        case 0:
+                                 // NO
+                                string_osd3.copy(currentline);  break;
+                        case 1:
+                                 //YES
+                                string_osd2.copy(currentline);  break;
+                     }
+                     break;
+       
+           case 4:      
+                     string_shome5.copy(currentline); break;
+           }
+       for ( int l = strlen(currentline); l<20 ; l++ ) {
+	 strcat(currentline," ");
+       }
+       store_lcdline(i,currentline);
+    }
+}
+
 void lcddisp_testservo() {
 
     for ( int i = 1 ; i<5; i++ ) {

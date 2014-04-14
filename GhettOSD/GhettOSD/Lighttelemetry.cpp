@@ -26,7 +26,7 @@
 #define LIGHTTELEMETRY_GFRAMELENGTH 18
 #define LIGHTTELEMETRY_AFRAMELENGTH 10
 #define LIGHTTELEMETRY_SFRAMELENGTH 11
-#define LIGHTTELEMETRY_OFRAMELENGTH 16
+#define LIGHTTELEMETRY_OFRAMELENGTH 18
 
   static uint8_t LTMserialBuffer[LIGHTTELEMETRY_GFRAMELENGTH-4];
   static uint8_t LTMreceiverIndex;
@@ -115,8 +115,10 @@ void ltm_check() {
     osd_home_lat = (int32_t)ltmread_u32() / 10000000.0;
     osd_home_lon = (int32_t)ltmread_u32() / 10000000.0;
     osd_home_alt = (int32_t)(ltmread_u32()) / 100.0f; // altitude from cm to m.
+    osd_enabled  = ltmread_u8();
+    osd_got_home = ltmread_u8();
+    if (osd_enabled == 0) osd_clear = 1;
     LTMpassed = 1;
-    osd_got_home = 1;
   }
 }
 

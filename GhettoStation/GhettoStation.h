@@ -149,6 +149,9 @@ FLASH_STRING(string_bank1,      BANK1);
 FLASH_STRING(string_bank2,      BANK2);
 FLASH_STRING(string_bank3,      BANK3);
 FLASH_STRING(string_bank4,      BANK4);
+FLASH_STRING(string_osd1,       "      ENABLE OSD    ");
+FLASH_STRING(string_osd2,       "<<       YES      >>");
+FLASH_STRING(string_osd3,       "<<       NO       >>");
 
 /*########################################### MENU ##################################################*/
 MenuSystem displaymenu;
@@ -170,6 +173,7 @@ Menu m1m3Menu("CONFIG");
 		MenuItem m1m3m1i3Item("TEST");
         MenuItem m1m3i2Item("TELEMETRY");
         MenuItem m1m3i3Item("BAUDRATE");
+        MenuItem m1m3i4Item("OSD");
 MenuItem m1i4Item("SWITCH SETTINGS");
 
 /*##################################### COMMON FUNCTIONS #############################################*/
@@ -259,6 +263,7 @@ struct config_t
   int baudrate;
   int telemetry;
   int bearing;
+  uint8_t osd_enabled;
 } configuration;
 
 
@@ -283,6 +288,7 @@ void clear_eeprom() {
 	  configuration.baudrate = 6;
           configuration.telemetry = 0;
           configuration.bearing = 0;
+          configuration.osd_enabled = 0;
 	  EEPROM_write(config_bank[j], configuration);
         }
         sei();       
