@@ -258,7 +258,9 @@ void gps_ublox_read() {
     GPS_UBLOX.Read();
     if (GPS_UBLOX.NewData)  // New GPS data?
         {
-          
+         telemetry_ok = true;
+         lastpacketreceived = millis();
+	 protocol = "UBX"; 
          uav_satellites_visible = GPS_UBLOX.NumSats;
          uav_fix_type = GPS_UBLOX.Fix;
          if (uav_fix_type == 1) {

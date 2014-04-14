@@ -2,7 +2,6 @@
 #define GPS_NMEA_h
 
 #define GPS_BUFFERSIZE 120 
-
 class GPS_NMEA_Class
 {
   private:

@@ -256,7 +256,9 @@ void gps_nmea_read() {
     GPS_NMEA.Read();
     if (GPS_NMEA.NewData)  // New GPS data?
         {
-          
+         telemetry_ok = true;
+         lastpacketreceived = millis();
+	 protocol = "NMEA"; 
          uav_satellites_visible = GPS_NMEA.NumSats;
          uav_fix_type = GPS_NMEA.Fix;
          if (uav_fix_type == 1) {

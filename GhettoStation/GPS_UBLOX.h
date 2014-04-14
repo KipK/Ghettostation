@@ -2,7 +2,6 @@
 #define GPS_UBLOX_h
 
 #define UBX_MAXPAYLOAD 60
-
 class GPS_UBLOX_Class
 {
   private:
