@@ -64,31 +64,38 @@ void refresh_lcd() {
 }
 
 void lcddisp_menu() {
-        Menu const* displaymenu_current = displaymenu.get_current_menu();
-	MenuComponent const* displaymenu_sel = displaymenu_current->get_selected();
-
-        for (int n = 1; n < 5; ++n) {
-          char currentline[21];
-	//
-            if ( (displaymenu_current->get_num_menu_components()) >= n ) {
-                
-      		  MenuComponent const* displaymenu_comp = displaymenu_current->get_menu_component(n-1);
-      		  sprintf(currentline,displaymenu_comp->get_name());
-                          for ( int l = strlen(currentline); l<19 ; l++ ) {
-	                        strcat(currentline," ");
-				}			  
-      		  if (displaymenu_sel == displaymenu_comp) strcat(currentline,"<");
-                  else strcat(currentline," ");
-            }
-            else {
-               //empty_line.toCharArray(string_buffer,21);
-               string_load2.copy(currentline);
-            }
-		store_lcdline(n, currentline);
-		
-	};
-		
+    Menu const* displaymenu_current = displaymenu.get_current_menu();
+    MenuComponent const* displaymenu_sel = displaymenu_current->get_selected();
+    
+    uint8_t selected_item;
+    uint8_t menu_components_number;
+    uint8_t m;
+    selected_item = displaymenu_current->get_cur_menu_component_num();
+    menu_components_number = displaymenu_current->get_num_menu_components();  
+    for (int n = 1; n < 5 ; n++)  {      
+        char currentline[21];
+        if ( menu_components_number >= n ) {
+            if (menu_components_number <= 4)
+                m = n; 
+            else if (selected_item < (menu_components_number - selected_item - 1 ))
+                m =  selected_item + n ;
+            else 
+                m =  menu_components_number - (menu_components_number - n -1);
+            MenuComponent const* displaymenu_comp = displaymenu_current->get_menu_component(m-1);
+            sprintf(currentline,displaymenu_comp->get_name());
+            for ( int l = strlen(currentline); l<19 ; l++ ) {
+                strcat(currentline," ");
+            }			  
+            if (displaymenu_sel == displaymenu_comp) strcat(currentline,"<");
+            else strcat(currentline," ");
+         }
+         else {
+             string_load2.copy(currentline);
+         }
+         store_lcdline(n, currentline);
+    }
 }
+
 
 // SET_HOME SCREEN
 void lcddisp_sethome() {
@@ -138,77 +145,60 @@ void lcddisp_sethome() {
    } 
 }
 
-#ifdef BEARING_METHOD_1
 void lcddisp_setbearing() {
-    for ( int i = 1 ; i<5; i++ ) {
-       char currentline[21] = "";
-       switch (i) {
-           case 1: 
+    switch (configuration.bearing_method) {
+        case 2:
+            if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
+                home_bearing+=10;
+                if (home_bearing > 359) home_bearing = 0;
+                delay(500);
+                }
+            else if ( left_button.holdTime() >= 700 && left_button.isPressed() ) {
+                home_bearing-=10;
+                if (home_bearing < 0) home_bearing = 359;
+                delay(500);   
+            }
+            break;
+        case 3:
+            home_bearing = uav_heading;  // use compass data from the uav. 
+            break;
+        case 4:
+            retrieve_mag();
+            break;
+    }
+    for ( int i = 1 ; i<5; i++ ) {            
+        char currentline[21] = "";
+        switch (i) {
+            case 1: 
                 if (!telemetry_ok) { strcpy(currentline,"P:NO TELEMETRY"); }
                 else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type); 
                 break;
-           case 2:
-                string_load2.copy(currentline);  break;
-           case 3:
-                string_shome8.copy(currentline); break;
-           case 4:      
+            case 2:
+                switch (configuration.bearing_method) {
+                    case 1:       
+                        string_load2.copy(currentline);  break;
+                    default:
+                        string_shome7.copy(currentline);  break;
+                }
+            case 3:
+                switch (configuration.bearing_method) {
+                    case 1:
+                        string_shome8.copy(currentline); break;
+                    case 2:
+                        sprintf(currentline, "     << %3d >>", home_bearing); break;
+                    default:
+                        sprintf(currentline, "        %3d   ", home_bearing); break;
+                }       
+            case 4:      
                 string_shome9.copy(currentline); break;
-
+    
        }
        for ( int l = strlen(currentline); l<20 ; l++ ) {
-	 strcat(currentline," ");
-	 }
+    	 strcat(currentline," ");
+       }
        store_lcdline(i,currentline);
     }
 }
-#endif
-
-#if defined (BEARING_METHOD_2) || defined (BEARING_METHOD_3) || defined (BEARING_METHOD_4)
-void lcddisp_setbearing() {
-    #if defined (BEARING_METHOD_4)
-    retrieve_mag();
-    #endif
-    #if defined (BEARING_METHOD_3)
-    home_bearing = uav_heading;  // use compass data from the uav. 
-    #endif
-    #if defined (BEARING_METHOD_2)
-    if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
-        home_bearing+=10;
-        if (home_bearing > 359) home_bearing = 0;
-        delay(500);
-    }
-    else if ( left_button.holdTime() >= 700 && left_button.isPressed() ) {
-        home_bearing-=10;
-        if (home_bearing < 0) home_bearing = 359;
-        delay(500);
-    }
-    #endif
-    for ( int i = 1 ; i<5; i++ ) {
-       char currentline[21] = "";
-       switch (i) {
-           case 1: 
-                if (!telemetry_ok) { strcpy(currentline, "P:NO TELEMETRY"); }
-                else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type);
-                break;
-           case 2:
-                string_shome7.copy(currentline);  break;
-           case 3:
-                sprintf(currentline, "     << %3d >>", home_bearing); break;
-           case 4:      
-                string_load2.copy(currentline); break;
-       }
-       
-       for ( int l = strlen(currentline); l<20 ; l++ ) {
-	 strcat(currentline," ");
-	 }
-       store_lcdline(i,currentline);
-       
-       //checking long press left right
-
- }
-}
-#endif
-
 
 void lcddisp_homeok() {
     for ( int i = 1 ; i<5; i++ ) {
@@ -413,6 +403,43 @@ void lcddisp_osd() {
        }
        store_lcdline(i,currentline);
     }
+}
+
+void lcddisp_bearing_method() {
+    for ( int i = 1 ; i<5; i++ ) {
+       char currentline[21]="";
+       char extract[21];
+       switch (i) {
+           case 1: 
+                        string_bearing0.copy(currentline);  break;
+           case 2:
+                        string_load2.copy(currentline);  break;
+           case 3:
+                     switch (configuration.bearing_method) {
+                        case 1:
+                                 //currentline = "MSP"; break;
+                                string_bearing1.copy(currentline); break;
+                        case 2:
+                                //currentline = "LTM"; break;
+                                string_bearing2.copy(currentline); break;
+                        case 3:
+                                //currentline = "MavLink"; break;
+                                string_bearing3.copy(currentline); break;
+                        case 4:
+                                //currentline = "NMEA"; break;
+                                string_bearing4.copy(currentline); break;
+                     }
+                     break;h
+           case 4:      
+                        strcpy(currentline, string_shome5.copy(extract)); break;
+
+       }
+       for ( int l = strlen(currentline); l<20 ; l++ ) {
+	 strcat(currentline," ");
+       }
+       store_lcdline(i,currentline);
+    }
+  
 }
 
 void lcddisp_testservo() {

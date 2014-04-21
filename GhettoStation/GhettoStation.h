@@ -5,6 +5,7 @@
 #define PROTOCOL_MAVLINK                        // Mavlink for Ardupilot / Autoquad / PixHawk / Taulabs (UAVOmavlinkBridge)
 #define PROTOCOL_NMEA                           //GPS NMEA ASCII protocol
 #define PROTOCOL_UBLOX                          //GPS UBLOX binary protocol
+#define COMPASS                                 //Keep it enabled even if unused
 /* ######################################## HAL ####################################################*/
 #ifdef TEENSYPLUS2
 // This line defines a "Uart" object to access the serial port
@@ -152,6 +153,11 @@ FLASH_STRING(string_bank4,      BANK4);
 FLASH_STRING(string_osd1,       "      ENABLE OSD    ");
 FLASH_STRING(string_osd2,       "<<       YES      >>");
 FLASH_STRING(string_osd3,       "<<       NO       >>");
+FLASH_STRING(string_bearing0,       "   BEARING METHOD   ");
+FLASH_STRING(string_bearing1,       "1: Put UAV 20m away ");
+FLASH_STRING(string_bearing2,       "2: Manual           ");
+FLASH_STRING(string_bearing3,       "3: FC Compass       ");
+FLASH_STRING(string_bearing4,       "4: GS Compass       "); 
 
 /*########################################### MENU ##################################################*/
 MenuSystem displaymenu;
@@ -174,6 +180,7 @@ Menu m1m3Menu("CONFIG");
         MenuItem m1m3i2Item("TELEMETRY");
         MenuItem m1m3i3Item("BAUDRATE");
         MenuItem m1m3i4Item("OSD");
+        MenuItem m1m3i5Item("BEARING METHOD");
 MenuItem m1i4Item("SWITCH SETTINGS");
 
 /*##################################### COMMON FUNCTIONS #############################################*/
@@ -264,6 +271,7 @@ struct config_t
   int telemetry;
   int bearing;
   uint8_t osd_enabled;
+  uint8_t bearing_method;
 } configuration;
 
 
@@ -289,6 +297,7 @@ void clear_eeprom() {
           configuration.telemetry = 0;
           configuration.bearing = 0;
           configuration.osd_enabled = 0;
+          configuration.bearing_method = 1;
 	  EEPROM_write(config_bank[j], configuration);
         }
         sei();       

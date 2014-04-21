@@ -29,11 +29,6 @@
 #endif
 #include <Wire.h> 
 
-#ifdef BEARING_METHOD_4 //use additional hmc5883L mag breakout
-//HMC5883L i2c mag b
-#include <HMC5883L.h>
-#endif
-
 #include <Metro.h>
 #include <MenuSystem.h>
 #include <Button.h>
@@ -41,6 +36,11 @@
 #include <Flash.h>
 #include <EEPROM.h>
 #include "GhettoStation.h"
+
+#ifdef COMPASS //use additional hmc5883L mag breakout
+//HMC5883L i2c mag b
+#include <HMC5883L.h>
+#endif
 
 #ifdef PROTOCOL_UAVTALK
 #include "UAVTalk.cpp"
@@ -99,7 +99,7 @@ Button right_button = Button(RIGHT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 Button left_button = Button(LEFT_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 Button enter_button = Button(ENTER_BUTTON_PIN,BUTTON_PULLUP_INTERNAL);
 
-#if defined(BEARING_METHOD_4)
+#if defined(COMPASS)
 HMC5883L compass;
 #endif
 
@@ -135,8 +135,7 @@ void setup() {
 
          //start serial com	
 	init_serial();
-         
-	
+        	
 	// attach servos 
 	attach_servo(pan_servo, PAN_SERVOPIN, configuration.pan_minpwm, configuration.pan_maxpwm);
 	attach_servo(tilt_servo, TILT_SERVOPIN, configuration.tilt_minpwm, configuration.tilt_maxpwm); 
@@ -150,14 +149,11 @@ void setup() {
        left_button.releaseHandler(leftButtonReleaseEvents);
        right_button.releaseHandler(rightButtonReleaseEvents);
        
-
-
-//COMPASS
-#if defined(BEARING_METHOD_4)
-  compass = HMC5883L(); // Construct a new HMC5883 compass.
-  delay(100);
-  compass.SetScale(1.3); // Set the scale of the compass.
-  compass.SetMeasurementMode(Measurement_Continuous); // Set the measurement mode to Continuous
+#if defined(COMPASS)
+        compass = HMC5883L(); // Construct a new HMC5883 compass.
+        delay(100);
+        compass.SetScale(1.3); // Set the scale of the compass.
+        compass.SetMeasurementMode(Measurement_Continuous); // Set the measurement mode to Continuous
 #endif
   
   delay(3000);  // Wait until osd is initialised
@@ -166,12 +162,10 @@ void setup() {
 
 //######################################## MAIN LOOP #####################################################################
 void loop() {
-  
- 
+   
  if (loop1hz.check()) {
         //todo
-        // readGSvbat();
-      
+        // readGSvbat();      
        }
   
   if (loop10hz.check() == 1) {
@@ -406,6 +400,13 @@ void check_activity() {
                 home_sent = 0; // force resend an OFrame for osd update
                 current_activity=0;
             }
+            break;      
+        case 16:                //Configure bearing method
+            lcddisp_bearing_method();
+            if (enter_button.holdTime() >= 700 && enter_button.held()) { //long press
+                EEPROM_write(config_bank[int(current_bank)], configuration);
+                current_activity=0;
+            }
             break;
         }         
 }
@@ -431,15 +432,22 @@ void enterButtonReleaseEvents(Button &btn)
             }
             
             else if ((gps_fix) && (home_pos) && (!home_bear)) {
-             // saving home bearing
-#ifdef BEARING_METHOD_1             
-                 //set_bearing(); 
-                 home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // store bearing relative to north
-                 home_bear = true;
-#else
-                //bearing reference is set manually from a compass
-                 home_bear = true;
-#endif
+             
+                 //set_bearing();
+                 switch (configuration.bearing_method) {
+                    case 1: 
+                        home_bearing = calc_bearing(home_lon, home_lat, uav_lon, uav_lat); // store bearing relative to north
+                        home_bear = true;
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                        home_bear = true;
+                    default: 
+                        configuration.bearing_method = 1; // shouldn't happened, restoring default value.
+                        break;
+                 }
+
                  configuration.bearing = home_bearing;
                  EEPROM_write(config_bank[int(current_bank)], configuration);
                  home_sent = 0;  // resend an OFrame to osd
@@ -478,15 +486,16 @@ void leftButtonReleaseEvents(Button &btn)
                   case 13:  if (configuration.baudrate > 0)  configuration.baudrate -= 1;   break;
                   case 14:  if (current_bank > 0) current_bank -= 1; else current_bank = 3; break;
                   case 15:  if (configuration.osd_enabled == 0) configuration.osd_enabled = 1; else configuration.osd_enabled = 0;    break;
+                  case 16:  if (configuration.bearing_method > 1) configuration.bearing_method -= 1; else configuration.bearing_method = 4; break;
              }                              
         }
         else if (current_activity==2) {
-                #if defined(BEARING_METHOD_2)      
-                if (home_pos && !home_bear) {
-                    home_bearing--;
-                    if (home_bearing<0) home_bearing = 359;
-                }
-                #endif     
+                if (configuration.bearing_method == 2) {      
+                    if (home_pos && !home_bear) {
+                        home_bearing--;
+                        if (home_bearing<0) home_bearing = 359;
+                    }
+                }    
                 if (gps_fix && home_pos && home_bear) {
                     current_activity = 0;
                 }
@@ -520,25 +529,26 @@ void rightButtonReleaseEvents(Button &btn)
                   case 13: if (configuration.baudrate  < 7) configuration.baudrate += 1;   break; 
                   case 14: if (current_bank < 3) current_bank += 1; else current_bank = 0; break;  
                   case 15: if (configuration.osd_enabled == 0) configuration.osd_enabled = 1; else configuration.osd_enabled = 0;    break;
+                  case 16:  if (configuration.bearing_method < 5) configuration.bearing_method += 1; else configuration.bearing_method = 1; break;
           }
     }
     else if (current_activity==2) {
 
-#if defined(BEARING_METHOD_2) 
-           if (home_pos && !home_bear) {
-                  home_bearing++;
-                          if (home_bearing>359) home_bearing = 0;
-               }
-#endif    
-           if (home_pos && home_bear) {
-              // reset home pos
-              home_pos = false;
-              home_bear = false;
-              home_sent = 0;
-           }
+        if (configuration.bearing_method == 2) { 
+            if (home_pos && !home_bear) {
+                home_bearing++;
+                if (home_bearing>359) home_bearing = 0;
+            }
+        }   
+        if (home_pos && home_bear) {
+            // reset home pos
+            home_pos = false;
+            home_bear = false;
+            home_sent = 0;
+        }
     }
      else if (current_activity==1 && home_pos && home_bear) {
-          home_bearing++;
+         home_bearing++;
    }
    
   }
@@ -567,6 +577,7 @@ void init_menu() {
                 #ifdef OSD_OUTPUT
                 m1m3Menu.add_item(&m1m3i4Item, &configure_osd); // enable/disable osd
                 #endif
+                m1m3Menu.add_item(&m1m3i5Item, &configure_bearing_method); // select tracker bearing reference method
         rootMenu.add_item(&m1i4Item, &screen_bank); //set home position
 	displaymenu.set_root_menu(&rootMenu);
 }
@@ -638,6 +649,9 @@ void configure_osd(MenuItem* p_menu_item) {
 }
 #endif
 
+void configure_bearing_method(MenuItem* p_menu_item) {
+      current_activity = 16;
+}
 
 //######################################## TELEMETRY FUNCTIONS #############################################
 void init_serial() {
@@ -768,105 +782,76 @@ void get_telemetry() {
 
 void move_servo(PWMServo &s, int stype, int a, int mina, int maxa) {
 
- if (stype == 1) {
-		//convert angle for pan to pan servo reference point: 0° is pan_minangle
-		if (a <= 180) {
-			a = mina + a;
-		} else if ((a > 180) && (a < (360-mina))) {
-                        //relevant only for 360° configs
-			a = a - mina;
-                }
-                else if ((a > 180) && (a > (360-mina))) {
-                          a = mina - (360-a);
-                     
-		}
-                // map angle to microseconds
-                int microsec = map(a, 0, mina+maxa, configuration.pan_minpwm, configuration.pan_maxpwm);
-                //int newangle = map(a,0, mina+maxa, 0, 180);
-                
-                s.writeMicroseconds( microsec );
-                //s.write( newangle );
-	 }
-  else if (stype == 2){
-                
-                //map angle to microseconds
-                int microsec = map(a, mina, maxa, configuration.tilt_minpwm, configuration.tilt_maxpwm);
-                //int newangle = map(a, mina, maxa, 0, 180);
-
-	        //s.write( newangle );
-                s.writeMicroseconds( microsec );
-
-	}
-	
-
-
-
+    if (stype == 1) {
+        //convert angle for pan to pan servo reference point: 0° is pan_minangle
+        if (a <= 180) {
+            a = mina + a;
+	    } else if ((a > 180) && (a < (360-mina))) {
+                //relevant only for 360° configs
+		a = a - mina;
+            } else if ((a > 180) && (a > (360-mina))) {
+                a = mina - (360-a);         
+	    }
+            // map angle to microseconds
+            int microsec = map(a, 0, mina+maxa, configuration.pan_minpwm, configuration.pan_maxpwm);
+            s.writeMicroseconds( microsec );
+    }
+    else if (stype == 2){
+            //map angle to microseconds
+            int microsec = map(a, mina, maxa, configuration.tilt_minpwm, configuration.tilt_maxpwm);
+            s.writeMicroseconds( microsec );
+    }
 }
 
 void servoPathfinder(int angle_b, int angle_a){   // ( bearing, elevation )
 //find the best way to move pan servo considering 0° reference face toward
-	if (angle_b <= 180) {
-			if ( configuration.pan_maxangle >= angle_b ) {
-			//works for all config
-                                        //define limits
-					if (angle_a <= configuration.tilt_minangle) {
-					 // checking if we reach the min tilt limit
-						angle_a = configuration.tilt_minangle;
-					}
-                                        else if (angle_a >configuration.tilt_maxangle) {
-                                         //shouldn't happend but just in case
-                                              angle_a = configuration.tilt_maxangle; 
-                                        }
-
-			}
-			 else if ( configuration.pan_maxangle < angle_b ) {
-                         //relevant for 180° tilt config only, in case bearing is superior to pan_maxangle
-				
-				angle_b = 180+angle_b;
-                                if (angle_b >= 360) {
-                                   angle_b = angle_b - 360;
-                                }
-
-
-                                // invert pan axis 
-				if ( configuration.tilt_maxangle >= ( 180-angle_a )) {
-					// invert pan & tilt for 180° Pan 180° Tilt config
-
-					angle_a = 180-angle_a;
-					
-				}
-				
-				else if (configuration.tilt_maxangle < ( 180-angle_a )) {
-				 // staying at nearest max pos
-				 angle_a = configuration.tilt_maxangle;
-				}
-				
-				
-			 }
-	}
-	
-	else if ( angle_b > 180 )
-		if( configuration.pan_minangle > 360-angle_b ) {
-		//works for all config
-			if (angle_a < configuration.tilt_minangle) {
-			// checking if we reach the min tilt limit
-						angle_a = configuration.tilt_minangle;
-			}
-		}
-		else if ( configuration.pan_minangle <= 360-angle_b ) {
-			angle_b = angle_b - 180;
-			if ( configuration.tilt_maxangle >= ( 180-angle_a )) {
-				// invert pan & tilt for 180/180 conf
-				angle_a = 180-angle_a;
-				}
-			else if (configuration.tilt_maxangle < ( 180-angle_a)) {
-				// staying at nearest max pos
-				angle_a = configuration.tilt_maxangle;
-		}
-	}
-
-	move_servo(pan_servo, 1, angle_b, configuration.pan_minangle, configuration.pan_maxangle);
-	move_servo(tilt_servo, 2, angle_a, configuration.tilt_minangle, configuration.tilt_maxangle);
+    if (angle_b <= 180) {
+        if ( configuration.pan_maxangle >= angle_b ) {
+        //define limits
+	    if (angle_a <= configuration.tilt_minangle) {
+	    // checking if we reach the min tilt limit
+	        angle_a = configuration.tilt_minangle;
+	    } else if (angle_a >configuration.tilt_maxangle) {
+            //shouldn't happend but just in case
+                angle_a = configuration.tilt_maxangle; 
+            }
+        } else if ( configuration.pan_maxangle < angle_b ) {
+        //relevant for 180° tilt config only, in case bearing is superior to pan_maxangle
+	    angle_b = 180+angle_b;
+            if (angle_b >= 360) {
+                angle_b = angle_b - 360;
+            }
+            // invert pan axis 
+	    if ( configuration.tilt_maxangle >= ( 180-angle_a )) {
+	        // invert pan & tilt for 180° Pan 180° Tilt config
+                angle_a = 180-angle_a;
+            }
+            else if (configuration.tilt_maxangle < ( 180-angle_a )) {
+	        // staying at nearest max pos
+	        angle_a = configuration.tilt_maxangle;
+            }
+        }
+    }
+    else if ( angle_b > 180 )
+        if( configuration.pan_minangle > 360-angle_b ) {
+	    if (angle_a < configuration.tilt_minangle) {
+                // checking if we reach the min tilt limit
+                angle_a = configuration.tilt_minangle;
+            }
+        } else if ( configuration.pan_minangle <= 360-angle_b ) {
+        angle_b = angle_b - 180;
+        if ( configuration.tilt_maxangle >= ( 180-angle_a )) {
+            // invert pan & tilt for 180/180 conf
+            angle_a = 180-angle_a;
+        }
+        else if (configuration.tilt_maxangle < ( 180-angle_a)) {
+            // staying at nearest max pos
+            angle_a = configuration.tilt_maxangle;
+        }
+    }
+    
+    move_servo(pan_servo, 1, angle_b, configuration.pan_minangle, configuration.pan_maxangle);
+    move_servo(tilt_servo, 2, angle_a, configuration.tilt_minangle, configuration.tilt_maxangle);
 }
 
 
@@ -925,19 +910,15 @@ void test_servos() {
 void antenna_tracking() {
 // Tracking general function
     //only move servo if gps has a 3D fix, or standby to last known position.
-    if (gps_fix && telemetry_ok) {
-	
-		rel_alt = uav_alt - home_alt; // relative altitude to ground in decimeters
-		calc_tracking( home_lon, home_lat, uav_lon, uav_lat, rel_alt); //calculate tracking bearing/azimuth
-		//set current GPS bearing relative to home_bearing
-		
-		if(Bearing >= home_bearing){
-			Bearing -= home_bearing;
-		}
-		else
-		{
-			Bearing += 360 - home_bearing;
-		}
+    if (gps_fix && telemetry_ok) {	
+        rel_alt = uav_alt - home_alt; // relative altitude to ground in decimeters
+        calc_tracking( home_lon, home_lat, uav_lon, uav_lat, rel_alt); //calculate tracking bearing/azimuth
+        //set current GPS bearing relative to home_bearing
+        if(Bearing >= home_bearing){
+            Bearing -= home_bearing;
+        }
+	else 
+            Bearing += 360 - home_bearing;
    } 
 }
 
@@ -975,15 +956,8 @@ void calc_longitude_scaling(int32_t lat) {
 
 //######################################## COMPASS #############################################
 
-#if defined(BEARING_METHOD_4)
-
+#if defined(COMPASS)
 void retrieve_mag() {
-
-////  HMC5883L compass;
-////  compass = HMC5883L(); // Construct a new HMC5883 compass.
-////  delay(100);
-//  compass.SetScale(1.3); // Set the scale of the compass.
-//  compass.SetMeasurementMode(Measurement_Continuous); // Set the measurement mode to Continuous
 // Retrieve the raw values from the compass (not scaled).
     MagnetometerRaw raw = compass.ReadRawAxis();
 // Retrieved the scaled values from the compass (scaled to the configured scale).
@@ -999,12 +973,10 @@ void retrieve_mag() {
     heading += declinationAngle;
     
     // Correct for when signs are reversed.
-    if(heading < 0)
-    heading += 2*PI;
+    if (heading < 0)    heading += 2*PI;
     
     // Check for wrap due to addition of declination.
-    if(heading > 2*PI)
-    heading -= 2*PI;
+    if (heading > 2*PI) heading -= 2*PI;
     
     // Convert radians to degrees for readability.
     home_bearing = (int)round(heading * 180/M_PI);

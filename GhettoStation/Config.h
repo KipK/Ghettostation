@@ -1,7 +1,7 @@
 /*############################################## CONFIGURATION ####################################################
  # Comment/uncomment/edit according to your needs.
  ##################################################################################################################*/
- #define CONFIG_VERSION 2011 // Edit only if you want to reset eeprom
+ #define CONFIG_VERSION 1001 // Edit only if you want to reset eeprom
 //########## BOARD ################################################################################################
 #define TEENSYPLUS2 // Teensy++2 support. 
 //#define MEGA // Arduino Mega board
@@ -18,12 +18,7 @@
  
 //Use Mag+imu for heading or GPS heading if not set ( not used for tracker only osd relay )
   #define MAGHEADING 1
-
-// BEARING REFERENCE TO NORTH METHOD
-//#define BEARING_METHOD_1  // 1=calculation from home pos & uav pos heading 20m away straight to neutral pan servo pos.        
-//#define BEARING_METHOD_2   // 2=manually enter the heading reference from a compass        
-#define BEARING_METHOD_3   // 3=use compass from the uav. Point it to the neutral direction of your tracker.                
-//#define BEARING_METHOD_4  // 4=Use internal HMC5883 compass reading                          
+                         
                
  #define MAGDEC -600  // Your local Magnetic Declination in radian. Get it from here: http://magnetic-declination.com/  then convert it in milliradian: http://www.wolframalpha.com/input/?i=%280%C2%B0+5%27%29+in+radians 
                      // only needed if using internal compass.
@@ -51,7 +46,7 @@
  #define OSD_BAUD 57600
 //########### LCD ##################################################################################################
 //LCD model
-#define LCDLCM1602 // (adress: 0x27) HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
+#define LCDLCM1602 // (adress: 0x27 or 0x20) HobbyKing IIC/I2C/TWI Serial 2004 20x4, LCM1602 IIC A0 A1 A2 & YwRobot Arduino LCM1602 IIC V1
 //#define LCDGYLCD  // (adress: 0x20) Arduino-IIC-LCD GY-LCD-V1Arduino-IIC-LCD GY-LCD-V1
 //#define LCD03I2C  // (adress: 0x63 or  0xc6) LCD03 / LCD05 
 
