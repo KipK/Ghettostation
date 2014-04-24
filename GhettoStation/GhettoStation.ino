@@ -114,7 +114,7 @@ void setup() {
     current_bank = EEPROM.read(0);
     if (current_bank > 3) {
         current_bank = 0;
-        EPROM.write(0,0);
+        EEPROM.write(0,0);
     }
     EEPROM_read(config_bank[int(current_bank)], configuration);
     // set temp value for servo pwm config

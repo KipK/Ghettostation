@@ -429,7 +429,7 @@ void lcddisp_bearing_method() {
                                 //currentline = "NMEA"; break;
                                 string_bearing4.copy(currentline); break;
                      }
-                     break;h
+                     break;
            case 4:      
                         strcpy(currentline, string_shome5.copy(extract)); break;
 
