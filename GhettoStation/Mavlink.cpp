@@ -6,7 +6,8 @@
 // true when we have received at least 1 MAVLink packet
 static bool mavlink_active;
 static uint8_t crlf_count = 0;
-static boolean      mavbeat = 0;
+static boolean mavbeat = 0;
+static uint8_t apm_mav_type;
 
 static int packet_drops = 0;
 static int parse_error = 0;
@@ -53,27 +54,41 @@ void read_mavlink(){
                     mavbeat = 1;
                     //apm_mav_system    = msg.sysid;
                     //apm_mav_component = msg.compid;
-   // TODO there's different flightmodes value depending of arducopter or arduplane. 
-   // Need to check first vehicle type, then we will apply correct flightmode map.
-   // for now only arducopter is supported.
+                    apm_mav_type      = mavlink_msg_heartbeat_get_type(&msg);
                     uav_flightmode = (uint8_t)mavlink_msg_heartbeat_get_custom_mode(&msg);
-                    switch (uav_flightmode) {
-                        case 0: uav_flightmode = 2; break;       //Stabilize 
-                        case 1: uav_flightmode = 1; break;       //Acro 
-                        case 2: uav_flightmode = 8; break;       //Alt Hold
-                        case 3: uav_flightmode = 10; break;      //Auto
-                        case 4: uav_flightmode = 10; break;      //Guided -> Auto
-                        case 5: uav_flightmode = 9; break;       //Loiter
-                        case 6: uav_flightmode = 13; break;      //RTL
-                        case 7: uav_flightmode = 12; break;      //Circle
-                        case 8: uav_flightmode = 9 ; break;      //Position -> Loiter
-                        case 9: uav_flightmode = 15; break;      //Land
-                        case 10: uav_flightmode = 9; break;      //OF LOiter
-                        case 11: uav_flightmode = 5; break;      //Drift -> Stabilize1
-                        case 12: uav_flightmode = 6; break;      //Sport -> Stabilize2
-                        default: uav_flightmode = 19; break;     //Unknown                      
+                    if (apm_mav_type == 2)    //ArduCopter MultiRotor or ArduCopter Heli
+                    {                         
+                        switch (uav_flightmode) {
+                            case 0: uav_flightmode = 2;   break;      //Stabilize 
+                            case 1: uav_flightmode = 1;   break;      //Acro 
+                            case 2: uav_flightmode = 8;   break;      //Alt Hold
+                            case 3: uav_flightmode = 10;  break;      //Auto
+                            case 4: uav_flightmode = 10;  break;      //Guided -> Auto
+                            case 5: uav_flightmode = 9;   break;      //Loiter
+                            case 6: uav_flightmode = 13;  break;      //RTL
+                            case 7: uav_flightmode = 12;  break;      //Circle
+                            case 8: uav_flightmode = 9 ;  break;      //Position -> Loiter
+                            case 9: uav_flightmode = 15;  break;      //Land
+                            case 10: uav_flightmode = 9;  break;      //OF LOiter
+                            case 11: uav_flightmode = 5;  break;      //Drift -> Stabilize1
+                            case 12: uav_flightmode = 6;  break;      //Sport -> Stabilize2
+                            default: uav_flightmode = 19; break;      //Unknown                      
+                        }
                     }
-                    
+                    else if (apm_mav_type == 1)    //ArduPlane
+                    {
+                        switch (uav_flightmode) {
+                            case 0:                       break;       //Manual
+                            case 1:  uav_flightmode = 12; break;       //Circle
+                            case 2:                       break;       //Stabilize
+                            case 5:  uav_flightmode = 16; break;       //FlyByWire A
+                            case 6:  uav_flightmode = 17; break;       //FlyByWire B
+                            case 10:                      break;       //Auto
+                            case 11: uav_flightmode = 13; break;       //RTH
+                            case 12: uav_flightmode = 9;  break;       //Loiter
+                            default: uav_flightmode = 19; break;       //Unknown
+                        }
+                    }
                     //Mode (arducoper armed/disarmed)
                     uav_arm = mavlink_msg_heartbeat_get_base_mode(&msg);
                     if(getBit(uav_arm,7)) uav_arm = 1;
