@@ -5,7 +5,7 @@ void init_lcdscreen() {
     Serial.println("starting lcd"); 
 #endif
 
-
+  read_voltage();
   char extract[20];
 // init LCD
     LCD.begin(20,4);
@@ -23,7 +23,10 @@ void init_lcdscreen() {
         LCD.setCursor(0,2);
     LCD.print(string_load3.copy(extract));
         LCD.setCursor(0,3);
-    LCD.print(string_load4.copy(extract));
+    char currentline[21];
+    char bufferV[6];
+    sprintf(currentline,"Battery: %s V", dtostrf(voltage_actual, 4, 2, bufferV));
+    LCD.print(currentline);
     delay(1500); //delay to init lcd in time.
 }
 
@@ -77,17 +80,19 @@ void lcddisp_menu() {
         if ( menu_components_number >= n ) {
             if (menu_components_number <= 4)
                 m = n; 
-            else if (selected_item < (menu_components_number - selected_item - 1 ))
+            else if (selected_item < (menu_components_number - selected_item - 1))
                 m =  selected_item + n ;
             else 
-                m =  menu_components_number - (menu_components_number - n -1);
-            MenuComponent const* displaymenu_comp = displaymenu_current->get_menu_component(m-1);
+                m =  menu_components_number - (menu_components_number - n - 1);
+            MenuComponent const* displaymenu_comp = displaymenu_current->get_menu_component(m - 1);
             sprintf(currentline,displaymenu_comp->get_name());
             for ( int l = strlen(currentline); l<19 ; l++ ) {
                 strcat(currentline," ");
             }             
-            if (displaymenu_sel == displaymenu_comp) strcat(currentline,"<");
-            else strcat(currentline," ");
+            if (displaymenu_sel == displaymenu_comp) 
+                strcat(currentline,"<");
+            else 
+                strcat(currentline," ");
          }
          else {
              string_load2.copy(currentline);
@@ -434,8 +439,42 @@ void lcddisp_bearing_method() {
     } 
 }
 
-void lcddisp_testservo() {
 
+void lcddisp_voltage_ratio() {
+    read_voltage();
+    if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
+              voltage_ratio += 0.1;
+              delay(500);
+        }
+        else if ( left_button.holdTime() >= 700 && left_button.isPressed() ) {
+              voltage_ratio -= 0.1;
+              delay(500);
+        }
+    for ( int i = 1 ; i<5; i++ ) {
+        char currentline[21]="";
+        char extract[21];
+        switch (i) {
+            case 1: 
+                string_voltage0.copy(currentline);  break;
+            case 2:
+                char bufferV[6];
+                sprintf(currentline,"Voltage: %s V", dtostrf(voltage_actual, 4, 2, bufferV));
+                break;
+            case 3:
+                char bufferX[5];
+                sprintf(currentline,"Ratio:  %s ", dtostrf(voltage_ratio, 3, 2, bufferV));
+                break;
+            case 4:      
+                strcpy(currentline, string_shome5.copy(extract));  break;
+        }
+        for ( int l = strlen(currentline); l<20 ; l++ ) {
+            strcat(currentline," ");
+        }
+        store_lcdline(i,currentline);
+    } 
+}
+
+void lcddisp_testservo() {
     for ( int i = 1 ; i<5; i++ ) {
         char currentline[21]="";
         char extract[21];

@@ -31,7 +31,9 @@ int       softserial_delay = (int)round(10000000.0f/(OSD_BAUD)); // time to wait
  
 /* ########################################  VARIABLES #####################################################*/
 
-
+float        voltage_ratio;              // voltage divider ratio for gs battery reading
+float        voltage_actual = 0.0;           // gs battery voltage in mv
+uint8_t      buzzer_status = 0;            
 //Telemetry variables
 int32_t      uav_lat = 0;                    // latitude
 int32_t      uav_lon = 0;                    // longitude
@@ -39,7 +41,7 @@ float        lonScaleDown=0.0;               // longitude scaling
 uint8_t      uav_satellites_visible = 0;     // number of satellites
 uint8_t      uav_fix_type = 0;               // GPS lock 0-1=no fix, 2=2D, 3=3D
 int32_t      uav_alt = 0;                    // altitude (dm)
-int32_t      rel_alt = 0;                     // relative altitude to home
+int32_t      rel_alt = 0;                    // relative altitude to home
 uint16_t     uav_groundspeed = 0;            // ground speed in km/h
 uint8_t      uav_groundspeedms = 0;          // ground speed in m/s
 int16_t      uav_pitch = 0;                  // attitude pitch
@@ -110,8 +112,7 @@ long baudrates[8]= {1200, 2400, 4800, 9600, 19200, 38400, BAUDRATE56K, 115200};
 
 FLASH_STRING(string_load1,      "  [GHETTOSTATION]   ");
 FLASH_STRING(string_load2,      "                    ");
-FLASH_STRING(string_load3,      " __________________ ");
-FLASH_STRING(string_load4,      "      Welcome       ");
+FLASH_STRING(string_load3,      "Rev 1.1.0-dev   ");
 FLASH_STRING(string_shome1,     "  Waiting for Data  ");
 FLASH_STRING(string_shome2,     "   No GPS 3D FIX    ");
 FLASH_STRING(string_shome3,     "3D FIX! Alt:");
@@ -158,7 +159,7 @@ FLASH_STRING(string_bearing1,       "1: Put UAV 20m away ");
 FLASH_STRING(string_bearing2,       "2: Manual           ");
 FLASH_STRING(string_bearing3,       "3: FC Compass       ");
 FLASH_STRING(string_bearing4,       "4: GS Compass       "); 
-
+FLASH_STRING(string_voltage0,       "ADJUST VOLTAGE RATIO"); 
 /*########################################### MENU ##################################################*/
 MenuSystem displaymenu;
 Menu rootMenu("");
@@ -166,24 +167,29 @@ MenuItem m1i1Item("START");
 MenuItem m1i2Item("SET HOME");
 Menu m1m3Menu("CONFIG");
 	Menu m1m3m1Menu("SERVOS");	
-		Menu m1m3m1m1Menu("PAN");
-				MenuItem m1m3m1m1l1Item("MINPWM");
-				MenuItem m1m3m1m1l2Item("MAXPWM");
-				MenuItem m1m3m1m1l3Item("MINANGLE");
-				MenuItem m1m3m1m1l4Item("MAXANGLE");			
-		Menu m1m3m1m2Menu("TILT");
-				MenuItem m1m3m1m2l1Item("MINPWM");
-				MenuItem m1m3m1m2l2Item("MAXPWM");
-				MenuItem m1m3m1m2l3Item("MINANGLE");
-				MenuItem m1m3m1m2l4Item("MAXANGLE");			
-		MenuItem m1m3m1i3Item("TEST");
-        MenuItem m1m3i2Item("TELEMETRY");
-        MenuItem m1m3i3Item("BAUDRATE");
-        MenuItem m1m3i4Item("OSD");
-        MenuItem m1m3i5Item("BEARING METHOD");
+            Menu m1m3m1m1Menu("PAN");
+                MenuItem m1m3m1m1l1Item("MINPWM");
+                MenuItem m1m3m1m1l2Item("MAXPWM");
+                MenuItem m1m3m1m1l3Item("MINANGLE");
+                MenuItem m1m3m1m1l4Item("MAXANGLE");			
+	    Menu m1m3m1m2Menu("TILT");
+                MenuItem m1m3m1m2l1Item("MINPWM");
+                MenuItem m1m3m1m2l2Item("MAXPWM");
+                MenuItem m1m3m1m2l3Item("MINANGLE");
+                MenuItem m1m3m1m2l4Item("MAXANGLE");			
+            MenuItem m1m3m1i3Item("TEST");
+        Menu m1m3m2Menu("TELEMETRY");
+            MenuItem m1m3m2i1Item("PROTOCOL");
+            MenuItem m1m3m2i2Item("BAUDRATE");        
+        Menu m1m3m3Menu("OTHERS");
+            MenuItem m1m3m3i1Item("OSD");
+            MenuItem m1m3m3i2Item("BEARING METHOD");
+            MenuItem m1m3m3i3Item("BATTERY ALERT");
 MenuItem m1i4Item("SWITCH SETTINGS");
 
+
 /*##################################### COMMON FUNCTIONS #############################################*/
+
 boolean getBit(byte Reg, byte whichBit) {
     boolean State;
     State = Reg & (1 << whichBit);
@@ -256,49 +262,51 @@ template <class T> int EEPROM_read(int ee, T& value)
 
 
 //Configuration stored in EEprom
-struct config_t
+struct config_t // 28 bytes
 {
-  int config_crc;
-  int pan_minpwm;
-  int pan_minangle;
-  int pan_maxpwm;
-  int pan_maxangle;
-  int tilt_minpwm;
-  int tilt_minangle;
-  int tilt_maxpwm;
-  int tilt_maxangle;
-  int baudrate;
-  int telemetry;
-  int bearing;
-  uint8_t osd_enabled;
-  uint8_t bearing_method;
+    int config_crc;
+    int pan_minpwm;
+    int pan_minangle; 
+    int pan_maxpwm;
+    int pan_maxangle;
+    int tilt_minpwm;
+    int tilt_minangle;
+    int tilt_maxpwm;
+    int tilt_maxangle;
+    int baudrate;
+    int telemetry;
+    int bearing;
+    uint8_t osd_enabled;
+    uint8_t bearing_method;
+    uint16_t voltage_ratio;
 } configuration;
 
 
 
 void clear_eeprom() {
-	// clearing eeprom
-        cli();
-	for (int i = 0; i < 1025; i++)          
-		EEPROM.write(i, 0);
-		// eeprom is clear  we can write default config
+    // clearing eeprom
+    cli();
+    for (int i = 0; i < 1025; i++)          
+        EEPROM.write(i, 0);
+	// eeprom is clear  we can write default config
         //writing 4 setting banks.
         for (int j = 0; j < 4; j++) {          
-	  configuration.config_crc = CONFIG_VERSION;  // config version check
-	  configuration.pan_minpwm = PAN_MINPWM;
-	  configuration.pan_minangle = PAN_MINANGLE;
-	  configuration.pan_maxpwm = PAN_MAXPWM;
-	  configuration.pan_maxangle = PAN_MAXANGLE;
-	  configuration.tilt_minpwm = TILT_MINPWM;
-	  configuration.tilt_minangle = TILT_MINANGLE;
-	  configuration.tilt_maxpwm = TILT_MAXPWM;
-          configuration.tilt_maxangle = TILT_MAXANGLE;
-	  configuration.baudrate = 6;
-          configuration.telemetry = 0;
-          configuration.bearing = 0;
-          configuration.osd_enabled = 0;
-          configuration.bearing_method = 1;
-	  EEPROM_write(config_bank[j], configuration);
+	    configuration.config_crc = CONFIG_VERSION;  // config version check
+	    configuration.pan_minpwm = PAN_MINPWM;
+	    configuration.pan_minangle = PAN_MINANGLE;
+	    configuration.pan_maxpwm = PAN_MAXPWM;
+	    configuration.pan_maxangle = PAN_MAXANGLE;
+	    configuration.tilt_minpwm = TILT_MINPWM;
+	    configuration.tilt_minangle = TILT_MINANGLE;
+	    configuration.tilt_maxpwm = TILT_MAXPWM;
+            configuration.tilt_maxangle = TILT_MAXANGLE;
+	    configuration.baudrate = 6;
+            configuration.telemetry = 0;
+            configuration.bearing = 0;
+            configuration.osd_enabled = 0;
+            configuration.bearing_method = 1;
+            configuration.voltage_ratio = VOLTAGE_RATIO;  // ratio*10
+	    EEPROM_write(config_bank[j], configuration);
         }
         sei();       
 }

@@ -106,8 +106,7 @@ HMC5883L compass;
 //#################################### SETUP LOOP ####################################################
 
 void setup() {
-    //init LCD
-    init_lcdscreen();
+
     //init setup
     init_menu();  
     //retrieve configuration from EEPROM
@@ -123,13 +122,15 @@ void setup() {
     servoconf_tmp[2] = configuration.tilt_minpwm;
     servoconf_tmp[3] = configuration.tilt_maxpwm;
     home_bearing = configuration.bearing; // use last bearing position of previous session.
+    voltage_ratio = (float)(configuration.voltage_ratio/100.0);
     delay(20);
     //clear eeprom & write default parameters if config is empty or wrong
     if (configuration.config_crc != CONFIG_VERSION) {
         clear_eeprom();
         delay(20);
     }
-
+    //init LCD
+    init_lcdscreen();
          //start serial com 
     init_serial();
             
@@ -161,8 +162,7 @@ void setup() {
 void loop() {
    
    if (loop1hz.check()) {
-        //todo
-        // readGSvbat();      
+        read_voltage();      
     }
   
     if (loop10hz.check() == 1) {
@@ -182,6 +182,16 @@ void loop() {
         #if defined(DEBUG)
         debug();
         #endif
+        switch (buzzer_status) {
+            case 1:
+                playTones(1);
+                break;
+            case 2:
+                playTones(2);
+                break;
+            default:
+                break;            
+        }
     }
     if (loop50hz.check() == 1) {
         //update servos
@@ -190,8 +200,8 @@ void loop() {
                 servoPathfinder(Bearing,Elevation); // refresh servo 
             }
         }
-  }
-  get_telemetry();    
+    }
+    get_telemetry();    
 }
 
 //######################################## ACTIVITIES #####################################################################
@@ -202,7 +212,8 @@ void check_activity() {
     } 
     else 
         gps_fix = false;
-    switch (current_activity) {
+    switch (current_activity) 
+    {
         case 0:             //MENU
                 Bearing = 0; Elevation = DEFAULTELEVATION;   
                 lcddisp_menu();
@@ -401,7 +412,15 @@ void check_activity() {
                 current_activity=0;
             }
             break;
-        }         
+        case 17:               //Configure voltage multiplier
+            lcddisp_voltage_ratio();
+            if (enter_button.holdTime() >= 700 && enter_button.held()) { //long press
+                configuration.voltage_ratio = (uint16_t)(voltage_ratio * 100.0f);
+                EEPROM_write(config_bank[int(current_bank)], configuration);
+                current_activity=0;
+            }
+            break;
+    }         
 }
 
 //######################################## BUTTONS #####################################################################
@@ -475,6 +494,7 @@ void leftButtonReleaseEvents(Button &btn)
                   case 14:  if (current_bank > 0) current_bank -= 1; else current_bank = 3; break;
                   case 15:  if (configuration.osd_enabled == 0) configuration.osd_enabled = 1; else configuration.osd_enabled = 0;    break;
                   case 16:  if (configuration.bearing_method > 1) configuration.bearing_method -= 1; else configuration.bearing_method = 4; break;
+                  case 17:  if (voltage_ratio >= 1.0) voltage_ratio -= 0.01; break;
              }                              
         }
         else if (current_activity==2) {
@@ -516,7 +536,8 @@ void rightButtonReleaseEvents(Button &btn)
                 case 13: if (configuration.baudrate  < 7) configuration.baudrate += 1;   break; 
                 case 14: if (current_bank < 3) current_bank += 1; else current_bank = 0; break;  
                 case 15: if (configuration.osd_enabled == 0) configuration.osd_enabled = 1; else configuration.osd_enabled = 0;    break;
-                case 16:  if (configuration.bearing_method < 5) configuration.bearing_method += 1; else configuration.bearing_method = 1; break;
+                case 16: if (configuration.bearing_method < 5) configuration.bearing_method += 1; else configuration.bearing_method = 1; break;
+                case 17: voltage_ratio += 0.01; break;
             }
         }
         else if (current_activity==2) {
@@ -556,13 +577,16 @@ void init_menu() {
                 m1m3m1m2Menu.add_item(&m1m3m1m2l2Item, &configure_tilt_maxpwm); // tilt max pwm
                 m1m3m1m2Menu.add_item(&m1m3m1m2l3Item, &configure_tilt_minangle); // tilt min angle
                 m1m3m1m2Menu.add_item(&m1m3m1m2l4Item, &configure_tilt_maxangle); // tilt max angle
-                m1m3m1Menu.add_item(&m1m3m1i3Item, &configure_test_servo);
-                m1m3Menu.add_item(&m1m3i2Item, &configure_telemetry); // select telemetry protocol ( Teensy++2 only ) 
-                m1m3Menu.add_item(&m1m3i3Item, &configure_baudrate); // select telemetry protocol
-                #ifdef OSD_OUTPUT
-                m1m3Menu.add_item(&m1m3i4Item, &configure_osd); // enable/disable osd
-                #endif
-                m1m3Menu.add_item(&m1m3i5Item, &configure_bearing_method); // select tracker bearing reference method
+            m1m3m1Menu.add_item(&m1m3m1i3Item, &configure_test_servo);
+        m1m3Menu.add_menu(&m1m3m2Menu);  //Telemetry
+            m1m3m2Menu.add_item(&m1m3m2i1Item, &configure_telemetry); // select telemetry protocol ( Teensy++2 only ) 
+            m1m3m2Menu.add_item(&m1m3m2i2Item, &configure_baudrate); // select telemetry protocol
+        m1m3Menu.add_menu(&m1m3m3Menu);  //Others        
+#ifdef OSD_OUTPUT
+            m1m3m3Menu.add_item(&m1m3m3i1Item, &configure_osd); // enable/disable osd
+#endif
+            m1m3m3Menu.add_item(&m1m3m3i2Item, &configure_bearing_method); // select tracker bearing reference method
+            m1m3m3Menu.add_item(&m1m3m3i3Item, &configure_voltage_ratio);    // set minimum voltage
         rootMenu.add_item(&m1i4Item, &screen_bank); //set home position
     displaymenu.set_root_menu(&rootMenu);
 }
@@ -635,6 +659,10 @@ void configure_osd(MenuItem* p_menu_item) {
 
 void configure_bearing_method(MenuItem* p_menu_item) {
     current_activity = 16;
+}
+
+void configure_voltage_ratio(MenuItem* p_menu_item) {
+    current_activity = 17;
 }
 
 //######################################## TELEMETRY FUNCTIONS #############################################
@@ -959,6 +987,44 @@ void retrieve_mag() {
 }
 #endif
 
+//######################################## BATTERY ALERT#######################################
+
+void read_voltage() {
+    voltage_actual = (analogRead(ADC_VOLTAGE) * 5.0 / 1024.0) * voltage_ratio;
+    if (voltage_actual <= MIN_VOLTAGE2)
+         buzzer_status = 2;
+    else if (voltage_actual <= MIN_VOLTAGE1)
+         buzzer_status = 1;
+    else
+         buzzer_status = 0;
+}
+
+void playTones(uint8_t alertlevel) {
+    static int toneCounter = 0;
+    toneCounter += 1;
+    switch  (toneCounter) {
+        case 1:
+            tone(BUZZER_PIN ,  1047, 100); break;
+        case 4:
+            if (alertlevel == 1)
+                tone(BUZZER_PIN , 1047,100);
+            else if (alertlevel == 2)
+                tone(BUZZER_PIN , 1047,500);
+            break;
+        case 50:
+            if (alertlevel == 2) {
+                toneCounter = 0; 
+            }
+            break;
+        case 100:
+            if (alertlevel == 1) {
+                toneCounter = 0; 
+            }
+            break;
+        default: 
+            break;
+    }
+}
 
 //######################################## DEBUG #############################################
 
