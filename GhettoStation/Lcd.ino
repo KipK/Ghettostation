@@ -157,12 +157,14 @@ void lcddisp_setbearing() {
         case 2:
             if (right_button.holdTime() >= 700 && right_button.isPressed() ) {
                 home_bearing+=10;
-                if (home_bearing > 359) home_bearing = 0;
+                if (home_bearing > 359) 
+                    home_bearing = 0;
                 delay(500);
                 }
             else if ( left_button.holdTime() >= 700 && left_button.isPressed() ) {
                 home_bearing-=10;
-                if (home_bearing < 0) home_bearing = 359;
+                if (home_bearing < 0) 
+                    home_bearing = 359;
                 delay(500);   
             }
             break;
@@ -172,36 +174,43 @@ void lcddisp_setbearing() {
         case 4:
             retrieve_mag();
             break;
+        default:
+            break;
     }
-    for ( int i = 1 ; i<5; i++ ) {            
+    for (int i = 1 ; i<5; i++) {            
         char currentline[21] = "";
+        char extract[21];
         switch (i) {
             case 1: 
-                if (!telemetry_ok) { strcpy(currentline,"P:NO TELEMETRY"); }
-                else if (telemetry_ok) sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type); 
+                if (!telemetry_ok) 
+                {
+                    strcpy(currentline,"P:NO TELEMETRY"); 
+                }
+                else if (telemetry_ok)
+                    sprintf(currentline,"P:%s SATS:%d FIX:%d", protocol, uav_satellites_visible, uav_fix_type); 
                 break;
             case 2:
-                switch (configuration.bearing_method) {
-                    case 1:       
-                        string_load2.copy(currentline);  break;
-                    default:
-                        string_shome7.copy(currentline);  break;
-                }
+               if (configuration.bearing_method == 1) 
+                   string_load2.copy(currentline);  
+               else
+                   string_shome7.copy(currentline);
+               break;
             case 3:
-                switch (configuration.bearing_method) {
-                    case 1:
-                        string_shome8.copy(currentline); break;
-                    case 2:
-                        sprintf(currentline, "     << %3d >>", home_bearing); break;
-                    default:
-                        sprintf(currentline, "        %3d   ", home_bearing); break;
-                }       
+                if (configuration.bearing_method == 1)
+                    string_shome8.copy(currentline);
+                else if (configuration.bearing_method == 2)
+                    sprintf(currentline, "     << %3d >>", home_bearing);
+                else
+                    sprintf(currentline, "        %3d   ", home_bearing);
+                break;     
             case 4:      
                 string_shome9.copy(currentline); break;
+            default:
+                break;
     
        }
        for ( int l = strlen(currentline); l<20 ; l++ ) {
-         strcat(currentline," ");
+           strcat(currentline," ");
        }
        store_lcdline(i,currentline);
     }

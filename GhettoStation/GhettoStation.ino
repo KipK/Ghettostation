@@ -133,7 +133,7 @@ void setup() {
     init_lcdscreen();
          //start serial com 
     init_serial();
-            
+    
     // attach servos 
     attach_servo(pan_servo, PAN_SERVOPIN, configuration.pan_minpwm, configuration.pan_maxpwm);
     attach_servo(tilt_servo, TILT_SERVOPIN, configuration.tilt_minpwm, configuration.tilt_maxpwm); 
@@ -235,7 +235,8 @@ void check_activity() {
                 }
                 break;
         case 2:            //SET HOME
-                if (!home_pos) lcddisp_sethome();
+                if (!home_pos) 
+                    lcddisp_sethome();
                 else if (home_pos) {
                     if (!home_bear) { 
                         lcddisp_setbearing();   
@@ -452,6 +453,7 @@ void enterButtonReleaseEvents(Button &btn)
                     case 3:
                     case 4:
                         home_bear = true;
+                        break;
                     default: 
                         configuration.bearing_method = 1; // shouldn't happened, restoring default value.
                         break;

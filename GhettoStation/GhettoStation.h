@@ -235,7 +235,7 @@ void detach_servo(PWMServo &s) {
 }
 
 
-int config_bank[]= {1, 51, 101,151}; // 50 bytes reserved per bank. 
+int config_bank[]= {1, 101, 201,301}; // 50 bytes reserved per bank. 
 uint8_t current_bank;
 
 template <class T> int EEPROM_write(int ee, const T& value)
