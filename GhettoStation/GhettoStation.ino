@@ -87,7 +87,10 @@ nop();
   #endif
 #endif
 
-
+#ifdef GLCDEnable
+  #include <glcd.h>
+  #include "fonts/SystemFont5x7.h"
+#endif
 
 
 //##### LOOP RATES

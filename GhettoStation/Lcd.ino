@@ -8,26 +8,42 @@ void init_lcdscreen() {
   read_voltage();
   char extract[20];
 // init LCD
-    LCD.begin(20,4);
-        delay(20);
-        LCD.backlight();        
-    delay(250);         
-    LCD.noBacklight();      
-    delay(250);
-        LCD.backlight(); 
-        delay(250);
-        LCD.setCursor(0,0);
-    LCD.print(string_load1.copy(extract));
-        LCD.setCursor(0,1);
-        LCD.print(string_load2.copy(extract));
-        LCD.setCursor(0,2);
-    LCD.print(string_load3.copy(extract));
-        LCD.setCursor(0,3);
+#ifdef GLCDEnable
+    GLCD.Init(NON_INVERTED);
+    GLCD.SelectFont(System5x7);
+    LCD.begin(20,4); // No idea why this is still needed for GLCD, but it breaks without
+    GLCD.CursorTo(0,0);
+    GLCD.println(string_load1.copy(extract));
+    GLCD.println(string_load2.copy(extract));
+    GLCD.println(string_load3.copy(extract));
     char currentline[21];
     char bufferV[6];
     sprintf(currentline,"Battery: %s V", dtostrf(voltage_actual, 4, 2, bufferV));
-    LCD.print(currentline);
+    GLCD.println(currentline);
     delay(1500); //delay to init lcd in time.
+
+#else
+    LCD.begin(20,4);
+        delay(20);
+    LCD.backlight();        
+    	delay(250);         
+    LCD.noBacklight();      
+    	delay(250);
+    LCD.backlight(); 
+        delay(250);
+    LCD.setCursor(0,0);
+    LCD.print(string_load1.copy(extract));
+    LCD.setCursor(0,1);
+    LCD.print(string_load2.copy(extract));
+    LCD.setCursor(0,2);
+    LCD.print(string_load3.copy(extract));
+    LCD.setCursor(0,3);
+    	char currentline[21];
+    	char bufferV[6];
+    	sprintf(currentline,"Battery: %s V", dtostrf(voltage_actual, 4, 2, bufferV));
+    LCD.print(currentline);
+    	delay(1500); //delay to init lcd in time.
+#endif
 }
 
 void store_lcdline( int i, char sbuffer[20] ) {
@@ -45,25 +61,32 @@ void store_lcdline( int i, char sbuffer[20] ) {
         case 4: 
                 strcpy(lcd_line4,sbuffer);
                 break;
-                default: 
-                                break;
-           
+        default: 
+                break;
     }
 
 }
 
 void refresh_lcd() {
-   // refreshing lcd at defined update.
-        // update lines
-        //LCD.clear();
-        LCD.setCursor(0,0);
-    LCD.print(lcd_line1);
+// refreshing lcd at defined update.
+// update lines
+
+#ifdef GLCDEnable
+       	GLCD.CursorTo(0,0);
+	GLCD.println(lcd_line1);
+    	GLCD.println(lcd_line2);
+    	GLCD.println(lcd_line3);
+        GLCD.println(lcd_line4);
+#else
+	LCD.setCursor(0,0);
+	LCD.print(lcd_line1);
         LCD.setCursor(0,1);
-    LCD.print(lcd_line2);
+    	LCD.print(lcd_line2);
         LCD.setCursor(0,2);
-    LCD.print(lcd_line3);
+    	LCD.print(lcd_line3);
         LCD.setCursor(0,3);
         LCD.print(lcd_line4);
+#endif
 }
 
 void lcddisp_menu() {
