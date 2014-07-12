@@ -3,8 +3,8 @@
  ##################################################################################################################*/
  #define CONFIG_VERSION 1003 // Changing this will reset eeprom to default values
 //########## BOARD ################################################################################################
- #define TEENSYPLUS2 // Teensy++2 support. 
-//#define MEGA // Arduino Mega board
+ //#define TEENSYPLUS2 // Teensy++2 support. 
+#define MEGA // Arduino Mega board
 
 //########## OPTIONS ###############################################################################################
 
@@ -32,6 +32,9 @@
 
 // Default tilt angle used when not tracking.
  #define DEFAULTELEVATION  15
+
+// Filter out gps reading if too far from last result (in meters)
+#define GPS_DISTANCE_DELTA_MAX 1000
 
 //Memory bank name to display on LCD (18 char max)
  #define BANK1  "1.2 GHZ"
