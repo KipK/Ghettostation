@@ -3,8 +3,8 @@
  ##################################################################################################################*/
  #define CONFIG_VERSION 1003 // Changing this will reset eeprom to default values
 //########## BOARD ################################################################################################
- //#define TEENSYPLUS2 // Teensy++2 support. 
-#define MEGA // Arduino Mega board
+ #define TEENSYPLUS2 // Teensy++2 support. 
+//#define MEGA // Arduino Mega board
 
 //########## OPTIONS ###############################################################################################
 
