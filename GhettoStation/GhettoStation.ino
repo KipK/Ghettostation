@@ -716,6 +716,14 @@ void filterGPS()
     uav_groundspeed = last_groundspeed;
     uav_heading = last_heading;
   }
+  else
+  {
+    last_lon = uav_lon;
+    last_lat = uav_lat;
+    last_alt = uav_alt;
+    last_groundspeed = uav_groundspeed;
+    last_heading = uav_heading;
+  }
 }
 
 //Preparing adding other protocol
