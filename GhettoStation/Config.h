@@ -33,6 +33,9 @@
 // Default tilt angle used when not tracking.
  #define DEFAULTELEVATION  15
 
+// Filter out gps reading if too far from last result (in meters)
+#define GPS_DISTANCE_DELTA_MAX 1000
+
 //Memory bank name to display on LCD (18 char max)
  #define BANK1  "1.2 GHZ"
  #define BANK2  "5.8 Ghz"
