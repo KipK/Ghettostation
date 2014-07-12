@@ -86,7 +86,6 @@ nop();
   LiquidCrystal_I2C LCD(I2CADRESS, 4, 5, 6, 0, 1, 2, 3, 7, NEGATIVE);  //   Arduino-IIC-LCD GY-LCD-V1
   #endif
 #endif
-
 #ifdef GLCDEnable
   #include <glcd.h>
   #include "fonts/SystemFont5x7.h"
