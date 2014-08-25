@@ -56,12 +56,12 @@
 //#define LCDGYLCD  // (adress: 0x20) Arduino-IIC-LCD GY-LCD-V1Arduino-IIC-LCD GY-LCD-V1
 //#define LCD03I2C  // (adress: 0x63 or  0xc6) LCD03 / LCD05 
 //#define GLCDEnable // Graphical LCD - Using system5x7 font so its nearly 20x4 size
-
+//#define OLEDLCD  // Oled 128x64 i2c LCD (address 0x3C or 0x3D)
 
 // I2C LCD Adress
 #define I2CADRESS 0x27 // LCD03/05 have 0x63 or 0xc6 ( even if it's written 0xc6 when powering the lcd03, in fact it uses 0x63 so try booth)
-                        // LCM1602 uses 0x27 & GY-LCD use 0x20
-
+                       // LCM1602 uses 0x27 & GY-LCD use 0x20
+                       // OLED_LCD use 0x3d or 0x3d
 //#################################### SERVOS ENDPOINTS #############################################################
 // NO NEED TO EDIT THIS
 //. Those are just default values when not configured.
