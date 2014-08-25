@@ -7,7 +7,24 @@ void init_lcdscreen() {
 
   read_voltage();
   char extract[20];
+
 // init LCD
+#ifdef OLEDLCD
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0,0);
+  display.println(string_load1.copy(extract));
+  display.println(string_load2.copy(extract));
+  display.println(string_load3.copy(extract));
+  char currentline[21];
+  char bufferV[6];
+  sprintf(currentline,"Battery: %s V", dtostrf(voltage_actual, 4, 2, bufferV));
+  display.println(currentline);
+  display.display();
+  delay(2500); //delay to init lcd in time.
+  display.clearDisplay();
+#else
+
 #ifdef GLCDEnable
     GLCD.Init(NON_INVERTED);
     GLCD.SelectFont(System5x7);
@@ -44,6 +61,7 @@ void init_lcdscreen() {
     LCD.print(currentline);
     	delay(1500); //delay to init lcd in time.
 #endif
+#endif
 }
 
 void store_lcdline( int i, char sbuffer[20] ) {
@@ -70,6 +88,17 @@ void store_lcdline( int i, char sbuffer[20] ) {
 void refresh_lcd() {
 // refreshing lcd at defined update.
 // update lines
+
+#ifdef OLEDLCD
+        display.clearDisplay();
+        display.setCursor(0,0);
+        display.println(lcd_line1);
+    	display.println(lcd_line2);
+    	display.println(lcd_line3);
+        display.println(lcd_line4);
+        display.display();
+        delay(100);
+#endif
 
 #ifdef GLCDEnable
        	GLCD.CursorTo(0,0);

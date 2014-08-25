@@ -90,7 +90,12 @@ nop();
   #include <glcd.h>
   #include "fonts/SystemFont5x7.h"
 #endif
-
+#ifdef OLEDLCD
+  #include <Adafruit_GFX.h>
+  #include <Adafruit_SSD1306.h>
+  #define OLED_RESET 4
+  Adafruit_SSD1306 display(OLED_RESET);
+#endif
 
 //##### LOOP RATES
 Metro loop1hz = Metro(1000); // 1hz loop
@@ -132,6 +137,14 @@ void setup() {
         delay(20);
     }
     //init LCD
+#ifdef OLEDLCD
+  display.begin(SSD1306_SWITCHCAPVCC,I2CADRESS);  // initialize with the I2C addr 0x3D (for the 128x64)
+  display.display(); // show splashscreen
+  delay(2000);
+  display.clearDisplay();   // clears the screen and buffer
+  // init done
+#endif
+
     init_lcdscreen();
          //start serial com 
     init_serial();
