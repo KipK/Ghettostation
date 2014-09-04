@@ -25,28 +25,30 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#define	FLIGHTTELEMETRYSTATS_OBJID			0x2F7E2902
-#define FLIGHTTELEMETRYSTATS_OBJID_001                  0x6737BB5A
-#define	GCSTELEMETRYSTATS_OBJID				0xABC72744
-#define GCSTELEMETRYSTATS_OBJID_001                     0xCAD1DC0A              // different ID for 14.02.01
-#define	ATTITUDEACTUAL_OBJID				0x33DAD5E6
-#define ATTITUDESTATE_OBJID                             0xD7E0D964              // new name since OP VERSION_RELEASE_14_02_1
-#define	FLIGHTSTATUS_OBJID				0x9B6A127E              // Op
-#define	FLIGHTSTATUS_OBJID_001				0x0ED79A04		// Op next
-#define	FLIGHTSTATUS_OBJID_002				0x1B7AEB74		// OP next
-#define FLIGHTSTATUS_OBJID_003                          0x0B37AA16              // OP
-#define FLIGHTSTATUS_OBJID_004                          0x6CECFBC2              // Taulabs 
-#define	MANUALCONTROLCOMMAND_OBJID			0x5C2F58AC              // Taulabs ( only used for RSSI )
-#define MANUALCONTROLCOMMAND_OBJID_001                  0xB8C7F78A              // different ID for 14.02.01
-#define GPSPOSITION_OBJID				0xE2A323B6
-#define GPSPOSITIONSENSOR_OBJID                         0x1A5748CE              // new name since VERSION_RELEASE_14_02_1
-#define AIRSPEEDACTUAL_OBJID                            0x133A3280
-#define FLIGHTBATTERYSTATE_OBJID			0xD2083596
-#define BAROALTITUDE_OBJID				0x99622E6A
-#define BAROSENSOR_OBJID                                0x48120EA6      // new name since VERSION_RELEASE_14_02_1
+#define	FLIGHTTELEMETRYSTATS_OBJID          0x2F7E2902
+#define FLIGHTTELEMETRYSTATS_OBJID_001      0x6737BB5A
+#define	GCSTELEMETRYSTATS_OBJID             0xABC72744
+#define GCSTELEMETRYSTATS_OBJID_001         0xCAD1DC0A              // different ID for 14.02.01
+#define	ATTITUDEACTUAL_OBJID                0x33DAD5E6
+#define ATTITUDESTATE_OBJID                 0xD7E0D964              // new name since OP VERSION_RELEASE_14_02_1
+#define	FLIGHTSTATUS_OBJID                  0x9B6A127E              // Op
+#define	FLIGHTSTATUS_OBJID_001              0x0ED79A04      // Op next
+#define	FLIGHTSTATUS_OBJID_002              0x1B7AEB74      // OP next
+#define FLIGHTSTATUS_OBJID_003              0x0B37AA16      // OP
+#define FLIGHTSTATUS_OBJID_004              0x6CECFBC2      // Taulabs 
+#define FLIGHTSTATUS_OBJID_005              0xC2E431BA      //Taulabs current next.
+#define	MANUALCONTROLCOMMAND_OBJID          0x5C2F58AC              // Taulabs ( only used for RSSI )
+#define MANUALCONTROLCOMMAND_OBJID_001      0xB8C7F78A              // different ID for 14.02.01
+#define GPSPOSITION_OBJID                   0xE2A323B6
+#define GPSPOSITION_OBJID_001               0x40BCC84E              //new Taulabs next ID.
+#define GPSPOSITIONSENSOR_OBJID             0x1A5748CE              // new name since VERSION_RELEASE_14_02_1
+#define AIRSPEEDACTUAL_OBJID                0x133A3280
+#define FLIGHTBATTERYSTATE_OBJID            0xD2083596
+#define BAROALTITUDE_OBJID                  0x99622E6A
+#define BAROSENSOR_OBJID                    0x48120EA6      // new name since VERSION_RELEASE_14_02_1
 
-#define OPLINKSTATUS_OBJID				0x669C55E2
-#define OPLINKSTATUS_OBJID_001                          0xBE2584BA
+#define OPLINKSTATUS_OBJID                  0x669C55E2
+#define OPLINKSTATUS_OBJID_001              0xBE2584BA
 
 
 #define FLIGHTTELEMETRYSTATS_OBJ_LEN                    21
@@ -75,9 +77,9 @@
 #define	ATTITUDEACTUAL_OBJ_PITCH			20
 #define	ATTITUDEACTUAL_OBJ_YAW				24
 
-#define	FLIGHTSTATUS_OBJ_ARMED				0
-#define	FLIGHTSTATUS_OBJ_FLIGHTMODE			1
-#define FLIGHTSTATUS_OBJ_CONTROLSOURCE                  2               //Taulabs only
+#define	FLIGHTSTATUS_OBJ_ARMED              0
+#define	FLIGHTSTATUS_OBJ_FLIGHTMODE         1
+#define FLIGHTSTATUS_OBJ_CONTROLSOURCE      2               //Taulabs only
 
 #define	GPSPOSITION_OBJ_LAT				0
 #define	GPSPOSITION_OBJ_LON				4

@@ -349,9 +349,10 @@ int uavtalk_read(void) {
 				case FLIGHTSTATUS_OBJID_001:
 				case FLIGHTSTATUS_OBJID_002:
 				case FLIGHTSTATUS_OBJID_003:
-                                case FLIGHTSTATUS_OBJID_004:
-        	                	uav_arm = uavtalk_get_int8(&msg, FLIGHTSTATUS_OBJ_ARMED);
-                                       //remap flight modes id to Ghettostation ones
+                case FLIGHTSTATUS_OBJID_004:
+                case FLIGHTSTATUS_OBJID_005:
+                                        uav_arm = uavtalk_get_int8(&msg, FLIGHTSTATUS_OBJ_ARMED);
+                                        //remap flight modes id to Ghettostation ones
                                         switch (uavtalk_get_int8(&msg, FLIGHTSTATUS_OBJ_FLIGHTMODE)) {
                                             case 0: uav_flightmode = 0;  break;   //manual
                                             case 1: uav_flightmode = 5;  break;   //stabilized 1
@@ -386,6 +387,7 @@ int uavtalk_read(void) {
 
 				break;
 				case GPSPOSITION_OBJID:
+                case GPSPOSITION_OBJID_001:
 				case GPSPOSITIONSENSOR_OBJID:
 					uav_lat			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LAT);
 					uav_lon			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LON);
