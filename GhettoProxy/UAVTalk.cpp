@@ -99,38 +99,38 @@ void uavtalk_send_msg(uavtalk_message_t *msg) {
 		return;
 	
 	c = (uint8_t) (msg->Sync);
-	Serial.write(c);
+	SerialPort1.write(c);
 	msg->Crc = crc_table[0 ^ c];
 	c = (uint8_t) (msg->MsgType);
-	Serial.write(c);
+	SerialPort1.write(c);
 	msg->Crc = crc_table[msg->Crc ^ c];
 	c = (uint8_t) (msg->Length & 0xff);
-	Serial.write(c);
+	SerialPort1.write(c);
 	msg->Crc = crc_table[msg->Crc ^ c];
 	c = (uint8_t) ((msg->Length >> 8) & 0xff);
-	Serial.write(c);
+	SerialPort1.write(c);
 	msg->Crc = crc_table[msg->Crc ^ c];
 	c = (uint8_t) (msg->ObjID & 0xff);
-	Serial.write(c);
+	SerialPort1.write(c);
 	msg->Crc = crc_table[msg->Crc ^ c];
 	c = (uint8_t) ((msg->ObjID >> 8) & 0xff);
-	Serial.write(c);
+	SerialPort1.write(c);
 	msg->Crc = crc_table[msg->Crc ^ c];
 	c = (uint8_t) ((msg->ObjID >> 16) & 0xff);
-	Serial.write(c);
+	SerialPort1.write(c);
 	msg->Crc = crc_table[msg->Crc ^ c];
 	c = (uint8_t) ((msg->ObjID >> 24) & 0xff);
-	Serial.write(c);
+	SerialPort1.write(c);
 	msg->Crc = crc_table[msg->Crc ^ c];
 	if (msg->Length > 8) {
 	  d = msg->Data;
 	  for (i=0; i<msg->Length-8; i++) {
 		c = *d++;
-		Serial.write(c);
+		SerialPort1.write(c);
 		msg->Crc = crc_table[msg->Crc ^ c];
           }
 	}
-	Serial.write(msg->Crc);
+	SerialPort1.write(msg->Crc);
 }
 
 
@@ -310,11 +310,12 @@ int uavtalk_read(void) {
 	uint8_t show_prio_info = 0;
 	
 	// grabbing data
-	while (Serial.available() > 0) {
-		uint8_t c = Serial.read();
+	while (SerialPort1.available() > 0) {
+		uint8_t c = SerialPort1.read();
 		
 		// parse data to msg
 		if (uavtalk_parse_char(c, &msg)) {
+            telemetry_ok = true;
             lastpacketreceived = millis();
 			// consume msg
 			switch (msg.ObjID) {
@@ -348,9 +349,10 @@ int uavtalk_read(void) {
 				case FLIGHTSTATUS_OBJID_001:
 				case FLIGHTSTATUS_OBJID_002:
 				case FLIGHTSTATUS_OBJID_003:
-                                case FLIGHTSTATUS_OBJID_004:
-        	                	uav_arm = uavtalk_get_int8(&msg, FLIGHTSTATUS_OBJ_ARMED);
-                                       //remap flight modes id to Ghettostation ones
+                case FLIGHTSTATUS_OBJID_004:
+                case FLIGHTSTATUS_OBJID_005:
+                                        uav_arm = uavtalk_get_int8(&msg, FLIGHTSTATUS_OBJ_ARMED);
+                                        //remap flight modes id to Ghettostation ones
                                         switch (uavtalk_get_int8(&msg, FLIGHTSTATUS_OBJ_FLIGHTMODE)) {
                                             case 0: uav_flightmode = 0;  break;   //manual
                                             case 1: uav_flightmode = 5;  break;   //stabilized 1
@@ -385,6 +387,7 @@ int uavtalk_read(void) {
 
 				break;
 				case GPSPOSITION_OBJID:
+                case GPSPOSITION_OBJID_001:
 				case GPSPOSITIONSENSOR_OBJID:
 					uav_lat			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LAT);
 					uav_lon			= uavtalk_get_int32(&msg, GPSPOSITION_OBJ_LON);
@@ -394,7 +397,7 @@ int uavtalk_read(void) {
                                         #ifndef BARO_ALT
 					uav_alt			= (int32_t) round (uavtalk_get_float(&msg, GPSPOSITION_OBJ_ALTITUDE) * 100.0f);
                                         #endif
-					uav_groundspeed		= uavtalk_get_float(&msg, GPSPOSITION_OBJ_GROUNDSPEED);
+					uav_groundspeed		= (uint16_t)uavtalk_get_float(&msg, GPSPOSITION_OBJ_GROUNDSPEED);
 				break;
 
 				case FLIGHTBATTERYSTATE_OBJID:
@@ -406,7 +409,7 @@ int uavtalk_read(void) {
 				case BAROALTITUDE_OBJID:
 				case BAROSENSOR_OBJID:
                                         #ifdef BARO_ALT
-					uav_alt		= (int32_t) (uavtalk_get_float(&msg, BAROALTITUDE_OBJ_ALTITUDE) * 100.0);
+					uav_alt		= (int32_t) round (uavtalk_get_float(&msg, BAROALTITUDE_OBJ_ALTITUDE) * 100.0f);
                                         #endif
 				break;
 				case OPLINKSTATUS_OBJID:
