@@ -695,49 +695,6 @@ void init_serial() {
 
 }
 
-// ignore last GPS result if too far from last reading (spurious ?)
-void filterGPS()
-{
-  static uint16_t init = 0;
-  static int32_t  last_lat, last_lon;
-  static uint32_t last_alt;
-  static uint16_t last_groundspeed;
-  static int16_t  last_heading;
-  
-  if(init < 100) {
-    last_lon = uav_lon;
-    last_lat = uav_lat;
-    last_alt = uav_alt;
-    last_groundspeed = uav_groundspeed;
-    last_heading = uav_heading;
-    init++;
-    return;
-  }
-  // calc distance to last point
-  float gpsLat0 = (float)last_lat / 1000000.0f;
-  float gpsLat = (float)uav_lat / 1000000.0f;
-  float gpsLong0 = (float)last_lon / 1000000.0f;
-  float gpsLong = (float)uav_lon / 1000000.0f;
-  float delLat = abs(gpsLat0-gpsLat)*111194.9;
-  float delLong = 111194.9*abs(gpsLong0-gpsLong)*cos(radians((gpsLat0+gpsLat)/2));
-  float distance = sqrt(pow(delLat,2)+pow(delLong,2));
-  if( distance > (float)GPS_DISTANCE_DELTA_MAX) {
-    uav_lon = last_lon;
-    uav_lat = last_lat;
-    uav_alt = last_alt;
-    uav_groundspeed = last_groundspeed;
-    uav_heading = last_heading;
-  }
-  else
-  {
-    last_lon = uav_lon;
-    last_lat = uav_lat;
-    last_alt = uav_alt;
-    last_groundspeed = uav_groundspeed;
-    last_heading = uav_heading;
-  }
-}
-
 //Preparing adding other protocol
 void get_telemetry() {
 
@@ -822,13 +779,11 @@ void get_telemetry() {
    if (configuration.telemetry==4) {
        gps_nmea_read();      
    }
-   filterGPS();
 #endif
 #if defined (PROTOCOL_UBLOX)
    if (configuration.telemetry==5) {
        gps_ublox_read();      
    }
-   filterGPS();
 #endif
 }
 
