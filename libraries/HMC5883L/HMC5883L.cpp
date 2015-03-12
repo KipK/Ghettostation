@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include <WProgram.h> 
+#include <Arduino.h>
 #include "HMC5883L.h"
 
 HMC5883L::HMC5883L()
