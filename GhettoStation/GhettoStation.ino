@@ -18,7 +18,7 @@
 
 
 #include <avr/pgmspace.h>
-#include <arduino.h>
+#include <Arduino.h>
 #ifdef DEBUG
 #include <MemoryFree.h>
 #endif
