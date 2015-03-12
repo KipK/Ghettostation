@@ -123,32 +123,6 @@ static inline void *memcpy_P(void *dest, const prog_char_t *src, size_t n)
     return memcpy_P(dest, (const char *)src, n);
 }
 
-// strlcat_P() in AVR libc seems to be broken 
-static inline size_t strlcat_P(char *d, const char *s, size_t bufsize)
-{
-	size_t len1 = strlen(d);
-	size_t len2 = strlen_P(s);
-	size_t ret = len1 + len2;
-    
-	if (len1+len2 >= bufsize) {
-		if (bufsize < (len1+1)) {
-			return ret;
-		}
-		len2 = bufsize - (len1+1);
-	}
-	if (len2 > 0) {
-		memcpy_P(d+len1, s, len2);
-		d[len1+len2] = 0;
-	}
-	return ret;
-}
-
-static inline char *strncpy_P(char *buffer, const char *pstr, size_t buffer_size)
-{
-    return strncpy_P(buffer, (const char *)pstr, buffer_size);
-}
-
-
 // read something the size of a pointer. This makes the menu code more
 // portable
 static inline uintptr_t pgm_read_pointer(const void *s)
