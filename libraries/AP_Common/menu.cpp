@@ -18,7 +18,7 @@ char Menu::_inbuf[MENU_COMMANDLINE_MAX];
 Menu::arg Menu::_argv[MENU_ARGS_MAX + 1];
 
 // constructor
-Menu::Menu(const prog_char *prompt, const Menu::command *commands, uint8_t entries, preprompt ppfunc) :
+Menu::Menu(const char *prompt, const Menu::command *commands, uint8_t entries, preprompt ppfunc) :
     _prompt(prompt),
     _commands(commands),
     _entries(entries),
