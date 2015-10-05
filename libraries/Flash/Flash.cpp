@@ -20,7 +20,7 @@
 
 #include "Flash.h"
 
-_FLASH_STRING::_FLASH_STRING(const prog_char *arr) : _arr(arr) 
+_FLASH_STRING::_FLASH_STRING(const char *arr) : _arr(arr) 
 { }
 
 void _FLASH_STRING::print(Print &stream) const

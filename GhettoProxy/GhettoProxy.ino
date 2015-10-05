@@ -16,7 +16,9 @@
 
 #include <FastSerial.h>
 #include <avr/pgmspace.h>
-#include <arduino.h>
+#include <Arduino.h>
+
+#include <AP_Math.h>
 
 #include "Config.h"
 

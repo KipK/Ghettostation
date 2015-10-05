@@ -52,7 +52,7 @@ extern "C" {
 #undef PROGMEM 
 #define PROGMEM __attribute__(( section(".progmem.data") )) 
 #undef PSTR 
-#define PSTR(s) (__extension__({static prog_char __c[] PROGMEM = (s); &__c[0];})) 
+#define PSTR(s) (__extension__({static char __c[] PROGMEM = (s); &__c[0];})) 
 
 #define GETBYTE(flag, mask, pnt)        ({                              \
                         unsigned char __c;                              \
@@ -258,7 +258,7 @@ BetterStream::_vprintf (unsigned char in_progmem, const char *fmt, va_list ap)
                                 p = PSTR("inf");
                                 if (vtype & FTOA_NAN)
                                         p = PSTR("nan");
-                                while ( (ndigs = pgm_read_byte((const prog_char *)p)) != 0) {
+                                while ( (ndigs = pgm_read_byte((const char *)p)) != 0) {
                                         if (flags & FL_FLTUPP)
                                                 ndigs += 'I' - 'i';
                                         write(ndigs);
