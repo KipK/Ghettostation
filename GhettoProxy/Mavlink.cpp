@@ -112,7 +112,20 @@ void read_mavlink(){
                     uav_lat =  mavlink_msg_gps_raw_int_get_lat(&msg) ;
                     uav_lon =  mavlink_msg_gps_raw_int_get_lon(&msg);
                    #ifndef BARO_ALT
-                    uav_alt = (int32_t)round(mavlink_msg_gps_raw_int_get_alt(&msg)/10.0f); // from mm to cm
+                    static int32_t home_alt = 0;
+                    static bool home_alt_set = false;
+                    uav_alt = (int32_t)round(mavlink_msg_vfr_hud_get_alt(&msg) * 100.0f);  // from m to cm
+                    if(home_alt_set == false && uav_arm == 1){
+                      home_alt = uav_alt;
+                      home_alt_set = true;
+                    }
+                    if(home_alt_set == true && uav_arm == 0){
+                      home_alt = 0;
+                      home_alt_set = false;
+                    }
+                    if(home_alt_set == true && uav_arm == 1){
+                      uav_alt = uav_alt - home_alt;
+                    }
                    #endif
                     uav_fix_type = (uint8_t) mavlink_msg_gps_raw_int_get_fix_type(&msg);
                     uav_satellites_visible = (uint8_t) mavlink_msg_gps_raw_int_get_satellites_visible(&msg);
